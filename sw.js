@@ -1,4 +1,4 @@
-const CACHE_NAME = 'precificador-shopee-pro-v2';
+const CACHE_NAME = 'precificador-pro-v2';
 const APP_SHELL = [
   './',
   './index.html',
