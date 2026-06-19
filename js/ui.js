@@ -178,17 +178,21 @@ function _bindCalcInputChange() {
 
 function _updateSellerTypeSelect(select, plat) {
   const wrapper = document.getElementById('seller-type-wrapper');
+  const labelEl = document.querySelector('label[for="calc-tipo-vendedor"]');
   if (!select || !plat) return;
 
   select.innerHTML = '';
 
   if (!plat.tiposVendedor?.length) {
     if (wrapper) wrapper.style.display = 'none';
+    if (labelEl) labelEl.textContent = 'Tipo de vendedor';
     setState({ sellerType: Object.keys(plat.faixas)[0] });
     return;
   }
 
   if (wrapper) wrapper.style.display = '';
+  if (labelEl) labelEl.textContent = plat.labelTipoVendedor || 'Tipo de vendedor';
+
   plat.tiposVendedor.forEach((t) => {
     const opt = document.createElement('option');
     opt.value = t.key;
@@ -241,9 +245,10 @@ function _handleCalcular() {
     return;
   }
 
-  resultado._faixa    = calcInputs._faixaLabel;
-  resultado._platNome = plat.nome;
-  resultado._platCor  = plat.cor;
+  resultado._faixa         = calcInputs._faixaLabel;
+  resultado._platNome      = plat.nome;
+  resultado._platCor       = plat.cor;
+  resultado._comissaoLabel = `${calcInputs.comissaoPlataforma}%`;
 
   registerCalculo();
   setState({ lastResult: resultado, activePlatform: plat.id, sellerType: tipoVend });
@@ -560,8 +565,8 @@ export function renderExtrato(resultado) {
     { label: 'Custo do produto',  valor: -bd.custosProduto,       classe: 'row-deduction' },
     { label: 'Frete',             valor: -bd.freteValor,          classe: 'row-deduction' },
     { label: 'Outros custos',     valor: -bd.custosAdicionais,    classe: 'row-deduction' },
-    { label: 'Comissão',          valor: -bd.comissaoValor,       classe: 'row-deduction' },
-    { label: 'Taxa fixa anúncio', valor: -bd.taxaAnuncioValor,    classe: 'row-deduction' },
+    { label: `Comissão ${resultado._comissaoLabel ? `(${resultado._comissaoLabel})` : ''}`.trim(), valor: -bd.comissaoValor,    classe: 'row-deduction' },
+    { label: 'Taxa fixa anúncio',                                                                  valor: -bd.taxaAnuncioValor, classe: 'row-deduction' },
     { label: 'Imposto',           valor: -bd.impostoValor,        classe: 'row-deduction' },
     ...(resultado.desconto > 0 ? [{
       label:  `Desconto (${resultado.desconto}%)`,

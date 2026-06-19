@@ -2,6 +2,13 @@
 // Responsabilidade: tabela de taxas do Mercado Livre Brasil
 // Fonte: https://www.mercadolivre.com.br/ajuda/custos-de-vender_1338
 // Atualizado: Jun/2026 — verificar trimestralmente
+//
+// Estrutura de taxas ML Brasil 2026:
+//   Clássico (gold_special): 11% comissão + R$4 (≤R$79,99) / R$6 (≥R$80)
+//   Premium  (gold_pro):     19% comissão + R$4 (≤R$79,99) / R$6 (≥R$80)
+// Taxa fixa cobre custo de envio no Mercado Envios ME2 (acima do threshold)
+// Flex (self_service) cobra taxa fixa adicional em produtos abaixo do threshold
+// ⚠️ Valide em: mercadolivre.com.br/ajuda/custos-de-vender_1338
 
 export default {
   id:    'mercadolivre',
@@ -11,40 +18,32 @@ export default {
   corFundo:   '#fff3c0',
   corTexto:   '#b45309',
 
-  // Tipos de vendedor disponíveis para esta plataforma
+  // Label customizado para o select de tipo (sobrescreve "Tipo de vendedor")
+  labelTipoVendedor: 'Tipo de anúncio',
+
+  // Tipos de anúncio disponíveis no ML Brasil
   tiposVendedor: [
-    { key: 'cnpj',      label: 'CNPJ' },
-    { key: 'cpf_menor', label: 'CPF < R$450' },
-    { key: 'cpf_maior', label: 'CPF > R$450' },
+    { key: 'classico', label: 'Clássico'  },
+    { key: 'premium',  label: 'Premium'   },
   ],
 
-  // Campanha promocional adiciona taxa extra
+  // Campanha promocional (Product Ads) adiciona taxa extra sobre o preço de venda
   campanha:    true,
-  taxaCampanha: 2.5, // % adicional quando campanha ativa
+  taxaCampanha: 2.5,
 
-  // Faixas de taxa por tipo de vendedor
-  // comissao: % sobre o valor de venda
-  // fixo: valor fixo em R$ por venda
-  // variavel: % adicional (0 no ML Brasil atualmente)
-  // max: limite superior da faixa (Infinity = sem limite)
+  // Faixas de taxa por tipo de anúncio
+  // comissao: % sobre o valor de venda (cobrado pelo ML)
+  // fixo:     R$ por venda (cobre custo ME2 na maioria dos casos)
+  // variavel: % adicional (0 no ML BR)
+  // max:      teto da faixa em R$ (Infinity = sem limite)
   faixas: {
-    cnpj: [
-      { max: 79.99,    comissao: 20, fixo: 4,  variavel: 0, label: 'até R$79,99' },
-      { max: 199.99,   comissao: 14, fixo: 16, variavel: 0, label: 'R$80 a R$199,99' },
-      { max: 499.99,   comissao: 14, fixo: 26, variavel: 0, label: 'R$200 a R$499,99' },
-      { max: Infinity, comissao: 14, fixo: 26, variavel: 0, label: 'acima de R$500' },
+    classico: [
+      { max: 79.99,    comissao: 11, fixo: 4, variavel: 0, label: 'Clássico (11%) até R$79,99' },
+      { max: Infinity, comissao: 11, fixo: 6, variavel: 0, label: 'Clássico (11%) acima de R$80' },
     ],
-    cpf_menor: [
-      { max: 79.99,    comissao: 20, fixo: 4,  variavel: 0, label: 'até R$79,99' },
-      { max: 199.99,   comissao: 14, fixo: 16, variavel: 0, label: 'R$80 a R$199,99' },
-      { max: 499.99,   comissao: 14, fixo: 26, variavel: 0, label: 'R$200 a R$499,99' },
-      { max: Infinity, comissao: 14, fixo: 26, variavel: 0, label: 'acima de R$500' },
-    ],
-    cpf_maior: [
-      { max: 79.99,    comissao: 20, fixo: 4,  variavel: 0, label: 'até R$79,99' },
-      { max: 199.99,   comissao: 16, fixo: 16, variavel: 0, label: 'R$80 a R$199,99' },
-      { max: 499.99,   comissao: 16, fixo: 26, variavel: 0, label: 'R$200 a R$499,99' },
-      { max: Infinity, comissao: 16, fixo: 26, variavel: 0, label: 'acima de R$500' },
+    premium: [
+      { max: 79.99,    comissao: 19, fixo: 4, variavel: 0, label: 'Premium (19%) até R$79,99' },
+      { max: Infinity, comissao: 19, fixo: 6, variavel: 0, label: 'Premium (19%) acima de R$80' },
     ],
   },
 };
