@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup — Tela Comparação</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f172a; color: #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 16px; max-width: 420px; margin: 0 auto; }
+
+  /* HEADER */
+  .header { display: flex; justify-content: space-between; align-items: center; padding: 14px 0 18px; }
+  .header-title { font-size: 18px; font-weight: 700; color: #f1f5f9; }
+  .header-sub { font-size: 11px; color: #64748b; margin-top: 2px; }
+  .pro-badge { background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; }
+  .free-badge { background: #1e293b; color: #94a3b8; font-size: 10px; padding: 3px 8px; border-radius: 20px; border: 1px solid #334155; }
+
+  /* NAV TABS */
+  .tabs { display: flex; background: #1e293b; border-radius: 10px; padding: 4px; gap: 2px; margin-bottom: 18px; }
+  .tab { flex: 1; text-align: center; padding: 8px 4px; font-size: 12px; border-radius: 7px; color: #64748b; cursor: pointer; font-weight: 500; }
+  .tab.active { background: #0f172a; color: #f1f5f9; font-weight: 600; }
+
+  /* INPUT CARD */
+  .card { background: #1e293b; border-radius: 14px; padding: 16px; margin-bottom: 14px; border: 1px solid #334155; }
+  .card-title { font-size: 12px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; }
+  .field { margin-bottom: 10px; }
+  .field label { font-size: 11px; color: #64748b; display: block; margin-bottom: 4px; }
+  .input-wrap { display: flex; align-items: center; background: #0f172a; border: 1px solid #334155; border-radius: 8px; overflow: hidden; }
+  .input-pre { padding: 0 10px; color: #64748b; font-size: 13px; border-right: 1px solid #334155; line-height: 36px; }
+  .mock-input { background: transparent; border: none; color: #f1f5f9; padding: 0 10px; font-size: 14px; height: 36px; flex: 1; }
+  .fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .range-row { display: flex; justify-content: space-between; }
+  .range-label { font-size: 11px; color: #64748b; }
+  .range-val { font-size: 12px; font-weight: 700; color: #34d399; }
+  .mock-range { width: 100%; height: 4px; background: linear-gradient(to right, #34d399 30%, #334155 30%); border-radius: 2px; margin: 8px 0 2px; }
+  .btn-calc { width: 100%; background: linear-gradient(135deg, #34d399, #059669); color: #022c22; font-weight: 700; border: none; border-radius: 10px; padding: 13px; font-size: 14px; margin-top: 4px; cursor: pointer; }
+
+  /* RESULTS RANKING */
+  .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .results-title { font-size: 13px; font-weight: 600; color: #94a3b8; }
+  .results-sub { font-size: 11px; color: #475569; }
+
+  .platform-card { background: #1e293b; border-radius: 14px; padding: 14px; margin-bottom: 10px; border: 1px solid #334155; position: relative; overflow: hidden; }
+  .platform-card.best { border-color: #34d399; background: #0d2d1f; }
+  .best-badge { position: absolute; top: 0; right: 0; background: #34d399; color: #022c22; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 0 14px 0 10px; }
+
+  .platform-row { display: flex; justify-content: space-between; align-items: center; }
+  .platform-name { display: flex; align-items: center; gap: 8px; }
+  .platform-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .platform-label { font-size: 14px; font-weight: 600; color: #f1f5f9; }
+  .platform-rank { font-size: 11px; color: #475569; }
+
+  .platform-price { text-align: right; }
+  .price-val { font-size: 18px; font-weight: 700; color: #f1f5f9; }
+  .price-label { font-size: 10px; color: #64748b; }
+
+  .platform-metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #1e3a2f; }
+  .platform-card:not(.best) .platform-metrics { border-top-color: #334155; }
+  .metric-item { text-align: center; }
+  .metric-val { font-size: 13px; font-weight: 600; }
+  .metric-val.green { color: #34d399; }
+  .metric-val.red { color: #f87171; }
+  .metric-val.gray { color: #94a3b8; }
+  .metric-label { font-size: 10px; color: #475569; margin-top: 2px; }
+
+  .expand-btn { width: 100%; background: none; border: none; color: #475569; font-size: 11px; margin-top: 10px; cursor: pointer; padding: 4px 0 0; display: flex; align-items: center; justify-content: center; gap: 4px; }
+
+  .badge-rank { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; }
+  .rank-1 { background: #f59e0b; color: #422006; }
+  .rank-2 { background: #334155; color: #94a3b8; }
+  .rank-3 { background: #334155; color: #94a3b8; }
+  .rank-4 { background: #334155; color: #94a3b8; }
+  .rank-5 { background: #334155; color: #94a3b8; }
+
+  .progress-bar { background: #1e293b; height: 3px; border-radius: 2px; margin-bottom: 18px; }
+  .progress-fill { background: #34d399; height: 3px; border-radius: 2px; width: 20%; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 10px; color: #475569; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <div class="header-title">Precificador PRO</div>
+    <div class="header-sub">Marketplace Seller · 2026</div>
+  </div>
+  <div class="free-badge">24 cálculos restantes</div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active">⚖️ Comparar</div>
+  <div class="tab">🧮 Calcular</div>
+  <div class="tab">📋 Histórico</div>
+</div>
+
+<!-- INPUTS -->
+<div class="card">
+  <div class="card-title">Dados do produto</div>
+  <div class="fields-row">
+    <div class="field">
+      <label>Custo do produto</label>
+      <div class="input-wrap"><span class="input-pre">R$</span><div class="mock-input">45,00</div></div>
+    </div>
+    <div class="field">
+      <label>Outros custos</label>
+      <div class="input-wrap"><span class="input-pre">R$</span><div class="mock-input">3,50</div></div>
+    </div>
+  </div>
+  <div class="field">
+    <label>Frete</label>
+    <div class="input-wrap"><span class="input-pre">R$</span><div class="mock-input">0,00</div></div>
+  </div>
+  <div class="field">
+    <div class="range-row">
+      <span class="range-label">Lucro desejado</span>
+      <span class="range-val">30%</span>
+    </div>
+    <div class="mock-range"></div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:#475569"><span>0%</span><span>200%</span></div>
+  </div>
+  <button class="btn-calc">⚖️ Comparar todas as plataformas</button>
+</div>
+
+<!-- PROGRESS BAR (free mode) -->
+<div>
+  <div class="progress-label"><span>Cálculos gratuitos</span><span>6 de 30 usados</span></div>
+  <div class="progress-bar"><div class="progress-fill"></div></div>
+</div>
+
+<!-- RESULTS -->
+<div class="results-header">
+  <div class="results-title">Ranking por lucro líquido</div>
+  <div class="results-sub">baseado em R$ 45,00 custo · 30% margem</div>
+</div>
+
+<!-- #1 BEST -->
+<div class="platform-card best">
+  <div class="best-badge">🏆 Melhor opção</div>
+  <div class="platform-row">
+    <div class="platform-name">
+      <div class="badge-rank rank-1">1</div>
+      <div class="platform-dot" style="background:#f59e0b"></div>
+      <div>
+        <div class="platform-label">Mercado Livre</div>
+        <div class="platform-rank">CNPJ · Clássico</div>
+      </div>
+    </div>
+    <div class="platform-price">
+      <div class="price-val">R$ 89,90</div>
+      <div class="price-label">preço sugerido</div>
+    </div>
+  </div>
+  <div class="platform-metrics">
+    <div class="metric-item">
+      <div class="metric-val green">R$ 17,43</div>
+      <div class="metric-label">lucro líq.</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-val gray">19,4%</div>
+      <div class="metric-label">margem real</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-val red">18,1%</div>
+      <div class="metric-label">% plataforma</div>
+    </div>
+  </div>
+  <button class="expand-btn">▼ Ver extrato detalhado</button>
+</div>
+
+<!-- #2 -->
+<div class="platform-card">
+  <div class="platform-row">
+    <div class="platform-name">
+      <div class="badge-rank rank-2">2</div>
+      <div class="platform-dot" style="background:#ee4d2d"></div>
+      <div>
+        <div class="platform-label">Shopee</div>
+        <div class="platform-rank">CNPJ · Padrão</div>
+      </div>
+    </div>
+    <div class="platform-price">
+      <div class="price-val">R$ 93,50</div>
+      <div class="price-label">preço sugerido</div>
+    </div>
+  </div>
+  <div class="platform-metrics">
+    <div class="metric-item">
+      <div class="metric-val green">R$ 15,20</div>
+      <div class="metric-label">lucro líq.</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-val gray">16,3%</div>
+      <div class="metric-label">margem real</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-val red">22,4%</div>
+      <div class="metric-label">% plataforma</div>
+    </div>
+  </div>
+  <button class="expand-btn">▼ Ver extrato detalhado</button>
+</div>
+
+<!-- #3 -->
+<div class="platform-card">
+  <div class="platform-row">
+    <div class="platform-name">
+      <div class="badge-rank rank-3">3</div>
+      <div class="platform-dot" style="background:#ff0050"></div>
+      <div>
+        <div class="platform-label">TikTok Shop</div>
+        <div class="platform-rank">Padrão</div>
+      </div>
+    </div>
+    <div class="platform-price">
+      <div class="price-val">R$ 96,00</div>
+      <div class="price-label">preço sugerido</div>
+    </div>
+  </div>
+  <div class="platform-metrics">
+    <div class="metric-item">
+      <div class="metric-val green">R$ 14,10</div>
+      <div class="metric-label">lucro líq.</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-val gray">14,7%</div>
+      <div class="metric-label">margem real</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-val red">24,9%</div>
+      <div class="metric-label">% plataforma</div>
+    </div>
+  </div>
+  <button class="expand-btn">▼ Ver extrato detalhado</button>
+</div>
+
+<!-- #4 blurred / PRO locked -->
+<div class="platform-card" style="opacity:0.4;filter:blur(2px);pointer-events:none">
+  <div class="platform-row">
+    <div class="platform-name">
+      <div class="badge-rank rank-4">4</div>
+      <div class="platform-dot" style="background:#ff6900"></div>
+      <div>
+        <div class="platform-label">Amazon</div>
+        <div class="platform-rank">FBM</div>
+      </div>
+    </div>
+    <div class="platform-price">
+      <div class="price-val">R$ 99,00</div>
+      <div class="price-label">preço sugerido</div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:-6px;margin-bottom:16px">
+  <div style="font-size:12px;color:#f59e0b">🔒 Amazon e Shein disponíveis no plano PRO</div>
+  <div style="font-size:11px;color:#475569;margin-top:2px">Desbloqueie cálculos ilimitados + todas as plataformas</div>
+</div>
+
+</body>
+</html>

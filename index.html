@@ -1,234 +1,203 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Precificador Marketplace PRO">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#EE4D2D">
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-  <title>Precificador Marketplace 2026 PRO</title>
-  <link rel="stylesheet" href="style.css">
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;
-n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];
-t=b.createElement(e);t.async=!0;
-t.src='https://connect.facebook.net/en_US/fbevents.js';
-s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}
-(window, document,'script');
-
-fbq('init', '1908155986319648');
-fbq('track', 'PageView');
-</script>
-
-<noscript>
-<img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=1908155986319648&ev=PageView&noscript=1"/>
-</noscript>
-<!-- End Meta Pixel Code -->
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#080f1e" />
+  <title>PrecificaPRO — Calculadora de Marketplaces</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="manifest" href="manifest.json" />
 </head>
 <body>
 
-<div class="header">
-  <div class="header-left">
-    <div class="sub">Marketplace Seller · 2026</div>
-    <div class="title">Precificador</div>
-  </div>
-  <div id="header-right">
-    <div class="counter-badge" id="badge-contador">
-      <div class="cn" id="counter-num">30</div>
-      <div class="cl">cálculos</div>
+  <!-- ===================== HEADER ===================== -->
+  <header class="app-header">
+    <div class="header-inner">
+      <span class="logo">PrecificaPRO</span>
+      <span class="plan-badge" id="plan-badge">FREE</span>
     </div>
-  </div>
-</div>
+    <nav class="tab-nav" role="tablist">
+      <button class="tab-btn active" data-route="comparar" role="tab">Comparar</button>
+      <button class="tab-btn" data-route="calcular" role="tab">Calcular</button>
+      <button class="tab-btn" data-route="historico" role="tab">Histórico</button>
+    </nav>
+  </header>
 
-<div class="content">
+  <!-- ===================== MAIN ===================== -->
+  <main class="app-main">
 
-  <div id="wrap-progresso">
-    <div class="progress-wrap">
-      <div class="progress-label">
-        <span>Cálculos gratuitos</span>
-        <span class="pv"><span id="progress-used">0</span> de 30 usados</span>
+    <!-- TELA 1: COMPARAR (#/comparar) -->
+    <section id="view-comparar" class="view" aria-label="Comparar plataformas">
+      <div class="view-inner">
+
+        <div class="card inputs-card">
+          <h2 class="card-title">Dados do produto</h2>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="cmp-custo">Custo do produto</label>
+              <input type="number" id="cmp-custo" placeholder="0,00" min="0" step="0.01" />
+            </div>
+            <div class="form-field">
+              <label for="cmp-extras">Outros custos</label>
+              <input type="number" id="cmp-extras" placeholder="0,00" min="0" step="0.01" />
+            </div>
+            <div class="form-field">
+              <label for="cmp-frete">Frete</label>
+              <input type="number" id="cmp-frete" placeholder="0,00" min="0" step="0.01" />
+            </div>
+            <div class="form-field form-field--full">
+              <label for="cmp-margem">Lucro desejado: <span id="cmp-margem-label">30%</span></label>
+              <input type="range" id="cmp-margem" min="0" max="200" value="30" />
+            </div>
+          </div>
+          <button class="btn btn--primary" id="btn-comparar">Comparar plataformas</button>
+        </div>
+
+        <!-- Winner Hero -->
+        <div id="cmp-winner" class="card winner-card hidden"></div>
+
+        <!-- Ranking das demais plataformas -->
+        <div id="cmp-ranking" class="ranking-list hidden"></div>
+
       </div>
-      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-    </div>
-  </div>
+    </section>
 
-  <div class="card">
-    <div class="card-title">Tipo de vendedor</div>
-    <div class="seg">
-      <button id="btn-cnpj" class="active" onclick="_st('cnpj')">CNPJ</button>
-      <button id="btn-cpf0" onclick="_st('cpf0')">CPF &lt; 450</button>
-      <button id="btn-cpf1" onclick="_st('cpf1')">CPF &gt; 450</button>
-    </div>
-    <div class="taxa-badge" id="taxa-info" style="display:none">18% comissão + 2% transação + R$4 fixo + R$1 serviço</div>
-  </div>
+    <!-- TELA 2: CALCULAR (#/calcular/:platform) -->
+    <section id="view-calcular" class="view hidden" aria-label="Calculadora individual">
+      <div class="view-inner">
 
-  <div class="card">
-    <div class="card-title">Dados do produto</div>
-    <div class="field">
-      <label>Custo do produto</label>
-      <div class="iw"><span class="pre">R$</span>
-        <input type="number" id="custo" placeholder="0,00" min="0" step="0.01" inputmode="decimal">
+        <!-- Carrossel de plataformas -->
+        <div class="platform-selector" id="platform-selector" role="tablist"></div>
+
+        <!-- Segmented control de tipo de vendedor -->
+        <div class="card" id="seller-type-card">
+          <h2 class="card-title">Tipo de vendedor</h2>
+          <div class="segmented-control" id="seller-type-control"></div>
+        </div>
+
+        <div class="card inputs-card">
+          <h2 class="card-title">Dados do produto</h2>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="calc-custo">Custo do produto</label>
+              <input type="number" id="calc-custo" placeholder="0,00" min="0" step="0.01" />
+            </div>
+            <div class="form-field">
+              <label for="calc-extras">Outros custos</label>
+              <input type="number" id="calc-extras" placeholder="0,00" min="0" step="0.01" />
+            </div>
+            <div class="form-field">
+              <label for="calc-frete">Frete</label>
+              <input type="number" id="calc-frete" placeholder="0,00" min="0" step="0.01" />
+            </div>
+            <div class="form-field form-field--full">
+              <label for="calc-margem">Lucro desejado: <span id="calc-margem-label">30%</span></label>
+              <input type="range" id="calc-margem" min="0" max="200" value="30" />
+            </div>
+            <div class="form-field form-field--full">
+              <label class="toggle-label">
+                <input type="checkbox" id="calc-campanha" />
+                <span>Campanha promocional ativa (+taxa)</span>
+              </label>
+            </div>
+          </div>
+          <button class="btn btn--primary" id="btn-calcular">Calcular</button>
+        </div>
+
+        <!-- Result Hero -->
+        <div id="calc-result" class="card result-hero hidden"></div>
+
+        <!-- Extrato linha a linha -->
+        <div id="calc-extrato" class="card extrato-card hidden">
+          <h2 class="card-title">Extrato detalhado</h2>
+          <table class="extrato-table" id="extrato-table"></table>
+        </div>
+
+        <!-- Botões pós-cálculo -->
+        <div id="calc-actions" class="action-row hidden">
+          <button class="btn btn--secondary" id="btn-salvar">Salvar no histórico</button>
+          <button class="btn btn--ghost" id="btn-limpar">Limpar</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TELA 3: HISTÓRICO (#/historico) -->
+    <section id="view-historico" class="view hidden" aria-label="Histórico de cálculos">
+      <div class="view-inner">
+
+        <div class="history-toolbar">
+          <input type="search" id="history-search" placeholder="Buscar produto..." />
+          <button class="btn btn--secondary btn--icon" id="btn-export-csv">⬇ CSV</button>
+        </div>
+
+        <div class="stats-bar" id="stats-bar">
+          <div class="stat">
+            <span class="stat-value" id="stat-total">0</span>
+            <span class="stat-label">cálculos</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="stat-max-lucro">—</span>
+            <span class="stat-label">maior lucro</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="stat-media-margem">—</span>
+            <span class="stat-label">margem média</span>
+          </div>
+        </div>
+
+        <!-- Chips de filtro por plataforma -->
+        <div class="filter-chips" id="filter-chips" role="group" aria-label="Filtrar por plataforma"></div>
+
+        <!-- Lista agrupada por data -->
+        <div id="history-list" class="history-list"></div>
+
+        <div class="danger-zone">
+          <button class="btn btn--danger" id="btn-clear-history">Limpar histórico</button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== MODAIS ===================== -->
+
+  <!-- Modal: nomear produto ao salvar -->
+  <div id="modal-salvar" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal">
+      <h3>Salvar no histórico</h3>
+      <input type="text" id="modal-produto-nome" placeholder="Nome do produto" maxlength="80" />
+      <div class="modal-actions">
+        <button class="btn btn--primary" id="btn-modal-confirmar">Salvar</button>
+        <button class="btn btn--ghost" id="btn-modal-cancelar">Cancelar</button>
       </div>
     </div>
-    <div class="field">
-      <label>Outros custos (Embalagem, etiquetas, etc.)</label>
-      <div class="iw"><span class="pre">R$</span>
-        <input type="number" id="embalagem" placeholder="0,00" min="0" step="0.01" inputmode="decimal">
+  </div>
+
+  <!-- Overlay: upgrade PRO -->
+  <div id="overlay-pro" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal modal--pro">
+      <h3>Limite gratuito atingido</h3>
+      <p>30 cálculos utilizados. Desbloqueie o PRO para cálculos ilimitados e histórico.</p>
+      <ul class="pro-benefits">
+        <li>Cálculos ilimitados</li>
+        <li>Histórico com busca e filtros</li>
+        <li>Exportação CSV</li>
+      </ul>
+      <input type="password" id="pro-senha" placeholder="Senha PRO" />
+      <div class="modal-actions">
+        <button class="btn btn--primary" id="btn-ativar-pro">Desbloquear PRO</button>
+        <button class="btn btn--ghost" id="btn-fechar-overlay">Fechar</button>
       </div>
     </div>
-    <div class="field">
-      <label>Frete</label>
-      <div class="iw"><span class="pre">R$</span>
-        <input type="number" id="outros" placeholder="0,00" min="0" step="0.01" inputmode="decimal">
-      </div>
-    </div>
-    <div class="field">
-      <label class="camp-label">
-        <input type="checkbox" id="toggle-campanha" class="camp-check">
-        <span class="camp-check-box"></span>
-        <span class="camp-check-text">Participando de campanha promocional <strong>(+2,5%)</strong></span>
-      </label>
-    </div>
-    <div class="field">
-      <div class="range-row">
-        <span class="range-label">Lucro desejado</span>
-        <span class="range-value" id="margem-out">30%</span>
-      </div>
-      <input type="range" id="margem" min="0" max="200" value="30" step="1"
-        oninput="document.getElementById('margem-out').textContent=this.value+'%'">
-      <div class="range-limits"><span>0%</span><span>200%</span></div>
-    </div>
-    <button class="btn-calc" onclick="_calc()">📊 Calcular preço de venda</button>
   </div>
 
-  <div class="alert" id="alert-box"></div>
+  <!-- Toast de feedback -->
+  <div id="toast" class="toast hidden" role="alert" aria-live="polite"></div>
 
-  <div id="resultado" class="hidden">
-    <div class="result-card">
-      <div class="result-label">Preço sugerido de venda</div>
-      <div class="result-price" id="r-preco">R$ 0,00</div>
-      <div class="faixa-pill" id="r-faixa">faixa: —</div>
-      <div class="rg">
-        <div class="rm"><div class="rl">Preço mínimo</div><div class="rv" id="r-minimo">R$ 0,00</div></div>
-        <div class="rm"><div class="rl">Lucro líquido</div><div class="rv" id="r-liquido">R$ 0,00</div></div>
-      </div>
-    </div>
-    <div class="metrics">
-      <div class="metric"><div class="ml">Lucro líquido</div><div class="mv green" id="m-lucro">R$ 0,00</div></div>
-      <div class="metric"><div class="ml">Margem de lucro</div><div class="mv green" id="m-margem">0,0 %</div></div>
-      <div class="metric"><div class="ml">Marketplace desconta</div><div class="mv red" id="m-taxas">R$ 0,00</div></div>
-      <div class="metric"><div class="ml">% que o Marketplace leva</div><div class="mv red" id="m-pct">0%</div></div>
-    </div>
-    <div class="extrato">
-      <div class="extrato-header"><span>Painel detalhado de deduções</span></div>
-      <div class="er section"><span class="el">Valor da venda</span><span class="ev" id="e-venda">R$ 0,00</span></div>
-      <div class="er sub-row"><span class="el">(-) Custo do produto</span><span class="ev neg" id="e-custo-prod">− R$ 0,00</span></div>
-      <div class="er sub-row"><span class="el">(-) Outros custos</span><span class="ev neg" id="e-embalagem">− R$ 0,00</span></div>
-      <div class="er sub-row"><span class="el">(-) Frete</span><span class="ev neg" id="e-outros">− R$ 0,00</span></div>
-      <div class="er sub-row"><span class="el">(-) Comissão da plataforma</span><span class="ev neg" id="e-comissao">− R$ 0,00</span></div>
-      <div class="er sub-row" id="row-transacao" style="display:none"><span class="el">(-) Taxa de transação (2%)</span><span class="ev neg" id="e-transacao">− R$ 0,00</span></div>
-      <div class="er sub-row"><span class="el">(-) Taxa fixa por item</span><span class="ev neg" id="e-fixo">− R$ 0,00</span></div>
-      <div class="er sub-row" id="row-servico" style="display:none"><span class="el">(-) Taxa de serviço</span><span class="ev neg" id="e-servico">− R$ 0,00</span></div>
-      <div class="er sub-row" id="row-cpf" style="display:none"><span class="el">(-) Taxa adicional CPF</span><span class="ev neg">− R$ 3,00</span></div>
-      <div class="er sub-row camp-row" id="row-campanha-ext" style="display:none"><span class="el camp-el">(-) Taxa de campanha (2,5%)</span><span class="ev camp-ev" id="e-campanha">− R$ 0,00</span></div>
-      <div class="er section"><span class="el">Total de taxas</span><span class="ev neg" id="e-total-taxas">− R$ 0,00</span></div>
-      <div class="er total"><span class="el">Lucro líquido</span><span class="ev pos" id="e-lucro">R$ 0,00</span></div>
-    </div>
-  </div>
+  <!-- Entry point — type="module" para suporte a imports/exports -->
+  <script type="module" src="js/app.js"></script>
 
-  <div class="footer"><span>Taxas Marketplace 2026 · PRO · Atualizado maio/2026</span></div>
-</div>
-
-<!-- ======= BLOQUEIO DE LIMITE ======= -->
-<div class="overlay bloqueio" id="bloqueio">
-  <div class="lock-icon">🔒</div>
-  <div class="lock-title">Seus 30 cálculos<br>gratuitos acabaram</div>
-  <div class="lock-sub">Desbloqueie o acesso PRO para calcular sem limites e ter sempre as taxas atualizadas.</div>
-  <div class="beneficios">
-    <div class="bt">Acesso PRO inclui</div>
-    <div class="beneficio">Cálculos ilimitados para sempre</div>
-    <div class="beneficio">Extrato igual ao painel do Marketplace</div>
-    <div class="beneficio">Todas as faixas CNPJ e CPF 2026</div>
-    <div class="beneficio">Preço mínimo e lucro real</div>
-    <div class="beneficio">Atualizações de taxas inclusas</div>
-  </div>
-  <button class="btn-comprar" onclick="_abrirCompra()">🛒 Quero acesso PRO</button>
-  <button class="btn-secondary" onclick="_abrirSenha()">🔑 Já comprei — tenho uma senha</button>
-</div>
-
-<!-- ======= TELA DE SENHA ======= -->
-<div class="overlay senha-tela" id="tela-senha">
-  <div style="font-size:48px;margin-bottom:14px">🔑</div>
-  <div class="senha-titulo">Ativar acesso PRO</div>
-  <div class="senha-sub">Digite a senha que você recebeu por e-mail após a compra</div>
-  <div class="senha-input-wrap">
-    <input type="text" id="campo-senha" placeholder="XXXX-XXXX" maxlength="20"
-      autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"
-      oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter')_ativarSenha()">
-  </div>
-  <div class="senha-erro" id="senha-erro">❌ Senha inválida. Verifique e tente novamente.</div>
-  <button class="btn-ativar" onclick="_ativarSenha()">✅ Ativar agora</button>
-  <button class="btn-secondary" onclick="_abrirCompra()">🛒 Ainda não comprei</button>
-  <button class="btn-voltar" onclick="_fecharSenha()">← Voltar</button>
-</div>
-
-<!-- ======= TELA DE SUCESSO ======= -->
-<div class="overlay sucesso-tela" id="tela-sucesso">
-
-  <div class="sucesso-icon">🎉</div>
-
-  <div class="sucesso-titulo">
-    Acesso PRO ativado!
-  </div>
-
-  <div class="sucesso-sub">
-    Parabéns! Agora você tem cálculos ilimitados
-    no Precificador Marketplace PRO.
-  </div>
-
-  <div style="
-    background:#f5f5f5;
-    padding:14px;
-    border-radius:14px;
-    margin:20px 0;
-    font-size:22px;
-    font-weight:bold;
-    color:#ff5722;
-    text-align:center;
-    width:100%;
-    max-width:320px;
-  ">
-    🔑 Senha: SHOP-2026
-  </div>
-
-  <button class="btn-comecar" onclick="_fecharSucesso()">
-    🚀 Começar a usar
-  </button>
-
-</div>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('./sw.js').catch(function(){});
-  });
-}
-</script>
-<script src="config.js"></script>
-<script src="auth.js"></script>
-<script src="app.js"></script>
 </body>
 </html>
-
-

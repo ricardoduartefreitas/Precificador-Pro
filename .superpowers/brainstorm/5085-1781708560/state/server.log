@@ -1,0 +1,16 @@
+{"type":"server-started","port":50486,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:50486","screen_dir":"/home/ruahtech/precificador-marketplace-2026/.superpowers/brainstorm/5085-1781708560/content","state_dir":"/home/ruahtech/precificador-marketplace-2026/.superpowers/brainstorm/5085-1781708560/state"}
+{"type":"screen-added","file":"/home/ruahtech/precificador-marketplace-2026/.superpowers/brainstorm/5085-1781708560/content/comparacao-dados.html"}
+{"source":"user-event","type":"click","text":"A\n    \n      Essencial\n      Preço sugerido + Lucro líquido + % que a plataforma leva\n      Foco em decidir rápido onde vale mais vender","choice":"a","id":null,"timestamp":1781708807359}
+{"source":"user-event","type":"click","text":"B\n    \n      Completo\n      Preço sugerido + Preço mínimo + Lucro líquido + Margem real + Total de taxas + % plataforma\n      Visão detalhada de cada plataforma lado a lado","choice":"b","id":null,"timestamp":1781708818633}
+{"source":"user-event","type":"click","text":"C\n    \n      Ranking com destaque\n      Cards rankeados por lucro líquido — destaca automaticamente a melhor opção, mostra preço + lucro + taxas de forma resumida\n      Decisão imediata: \"venda aqui\" em evidência","choice":"c","id":null,"timestamp":1781708828562}
+{"type":"screen-added","file":"/home/ruahtech/precificador-marketplace-2026/.superpowers/brainstorm/5085-1781708560/content/visual-style.html"}
+{"source":"user-event","type":"click","text":"Lucro líquido\n      R$ 47,32\n      \n        ML R$142\n        ✓ Melhor\n      \n    \n    \n      Dark Pro\n      Fundo escuro, acentos verdes/vermelhos para lucro/prejuízo. Visual de dashboard financeiro profissional.","choice":"a","id":null,"timestamp":1781708996249}
+{"source":"user-event","type":"click","text":"Lucro líquido\n      R$ 47,32\n      \n        ML R$142\n        ✓ Melhor\n      \n    \n    \n      Dark Pro\n      Fundo escuro, acentos verdes/vermelhos para lucro/prejuízo. Visual de dashboard financeiro profissional.","choice":"a","id":null,"timestamp":1781709000987}
+{"source":"user-event","type":"click","text":"Lucro líquido\n      R$ 47,32\n      \n        ML R$142\n        ✓ Melhor\n      \n    \n    \n      Dark Pro\n      Fundo escuro, acentos verdes/vermelhos para lucro/prejuízo. Visual de dashboard financeiro profissional.","choice":"a","id":null,"timestamp":1781709001187}
+{"type":"screen-added","file":"/home/ruahtech/precificador-marketplace-2026/.superpowers/brainstorm/5085-1781708560/content/arquitetura.html"}
+{"type":"screen-added","file":"/home/ruahtech/precificador-marketplace-2026/.superpowers/brainstorm/5085-1781708560/content/design-arquitetura.html"}
+{"type":"screen-added","file":"/home/ruahtech/precificador-marketplace-2026/.superpowers/brainstorm/5085-1781708560/content/tela-comparacao.html"}
+{"type":"screen-added","file":"/home/ruahtech/precificador-marketplace-2026/.superpowers/brainstorm/5085-1781708560/content/tela-comparacao-v2.html"}
+{"type":"screen-added","file":"/home/ruahtech/precificador-marketplace-2026/.superpowers/brainstorm/5085-1781708560/content/tela-calcular.html"}
+{"type":"screen-added","file":"/home/ruahtech/precificador-marketplace-2026/.superpowers/brainstorm/5085-1781708560/content/tela-historico.html"}
+{"type":"server-stopped","reason":"idle timeout"}

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup v2 — Comparação</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #080f1e;
+    color: #e2e8f0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    padding-bottom: 32px;
+  }
+
+  /* ── HEADER ── */
+  .app-header {
+    background: linear-gradient(180deg, #0d1a35 0%, #080f1e 100%);
+    padding: 20px 20px 0;
+    border-bottom: 1px solid #1a2744;
+  }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .app-name { font-size: 20px; font-weight: 800; letter-spacing: -.5px; }
+  .app-name span { color: #38bdf8; }
+  .app-sub { font-size: 11px; color: #475569; margin-top: 2px; }
+  .badge-free {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 11px;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .badge-free .dot { width: 6px; height: 6px; background: #34d399; border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  /* NAV */
+  .nav-tabs {
+    display: flex;
+    gap: 0;
+    margin: 0 -20px;
+  }
+  .nav-tab {
+    flex: 1;
+    text-align: center;
+    padding: 12px 8px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #475569;
+    position: relative;
+    cursor: pointer;
+  }
+  .nav-tab.active { color: #38bdf8; font-weight: 700; }
+  .nav-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 20%; right: 20%;
+    height: 2px;
+    background: #38bdf8;
+    border-radius: 2px 2px 0 0;
+  }
+  .nav-tab .icon { font-size: 16px; display: block; margin-bottom: 3px; }
+
+  /* ── INPUTS ── */
+  .section { padding: 20px 20px 0; }
+
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .input-full { margin-bottom: 10px; }
+
+  .input-group label { font-size: 10px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: .5px; display: block; margin-bottom: 5px; }
+  .input-box {
+    display: flex;
+    align-items: center;
+    background: #0d1a35;
+    border: 1px solid #1e3a5f;
+    border-radius: 10px;
+    height: 40px;
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+  .input-box:focus-within { border-color: #38bdf8; }
+  .input-pre { padding: 0 10px; font-size: 12px; color: #38bdf8; font-weight: 600; border-right: 1px solid #1e3a5f; height: 100%; display: flex; align-items: center; }
+  .input-val { padding: 0 10px; font-size: 14px; color: #f1f5f9; font-weight: 500; }
+
+  .margin-section { background: #0d1a35; border: 1px solid #1e3a5f; border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; }
+  .margin-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .margin-label { font-size: 10px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: .5px; }
+  .margin-val { font-size: 20px; font-weight: 800; color: #34d399; }
+  .slider-track {
+    height: 6px;
+    background: #1e3a5f;
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+  }
+  .slider-fill { height: 100%; width: 30%; background: linear-gradient(90deg, #0ea5e9, #34d399); border-radius: 3px; }
+
+  .btn-compare {
+    width: 100%;
+    background: linear-gradient(135deg, #0ea5e9 0%, #34d399 100%);
+    color: #022c22;
+    font-weight: 800;
+    font-size: 15px;
+    border: none;
+    border-radius: 12px;
+    padding: 15px;
+    cursor: pointer;
+    letter-spacing: -.2px;
+    box-shadow: 0 4px 20px rgba(52,211,153,.25);
+  }
+
+  /* ── WINNER HERO ── */
+  .winner-hero {
+    margin: 20px 20px 0;
+    background: linear-gradient(135deg, #052e16 0%, #0c2a1a 50%, #0d2525 100%);
+    border: 1px solid #166534;
+    border-radius: 18px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .winner-hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle, rgba(52,211,153,.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .winner-label { font-size: 10px; font-weight: 700; color: #34d399; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .winner-label::after { content: ''; flex: 1; height: 1px; background: #166534; }
+  .winner-main { display: flex; justify-content: space-between; align-items: flex-start; }
+  .winner-platform { display: flex; align-items: center; gap: 10px; }
+  .platform-icon {
+    width: 42px; height: 42px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 900;
+  }
+  .winner-name { font-size: 18px; font-weight: 800; color: #f1f5f9; }
+  .winner-type { font-size: 11px; color: #4ade80; margin-top: 2px; }
+  .winner-price-block { text-align: right; }
+  .winner-price-label { font-size: 10px; color: #6b7280; }
+  .winner-price { font-size: 28px; font-weight: 900; color: #f1f5f9; letter-spacing: -1px; }
+  .winner-metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 16px; padding-top: 14px; border-top: 1px solid #166534; }
+  .wm-item { text-align: center; }
+  .wm-val { font-size: 15px; font-weight: 800; }
+  .wm-val.green { color: #34d399; }
+  .wm-val.red { color: #f87171; }
+  .wm-label { font-size: 10px; color: #4b5563; margin-top: 2px; }
+  .expand-row { margin-top: 12px; text-align: center; }
+  .expand-link { font-size: 11px; color: #34d399; background: none; border: 1px solid #166534; border-radius: 6px; padding: 5px 14px; cursor: pointer; }
+
+  /* ── RANKING LIST ── */
+  .ranking-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 20px 10px;
+  }
+  .ranking-title { font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: .5px; }
+  .ranking-note { font-size: 10px; color: #334155; }
+
+  .rank-item {
+    margin: 0 20px 10px;
+    background: #0d1728;
+    border: 1px solid #1a2744;
+    border-radius: 14px;
+    padding: 14px;
+  }
+  .rank-row { display: flex; align-items: center; gap: 10px; }
+  .rank-num { font-size: 13px; font-weight: 800; color: #334155; width: 18px; text-align: center; flex-shrink: 0; }
+  .platform-icon-sm {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 900; flex-shrink: 0;
+  }
+  .rank-info { flex: 1; }
+  .rank-name { font-size: 13px; font-weight: 700; color: #e2e8f0; }
+  .rank-type { font-size: 10px; color: #475569; }
+  .rank-price { text-align: right; flex-shrink: 0; }
+  .rank-price-val { font-size: 14px; font-weight: 800; color: #f1f5f9; }
+  .rank-price-lbl { font-size: 10px; color: #475569; }
+
+  .rank-bar-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+  .bar-track { flex: 1; height: 5px; background: #1a2744; border-radius: 3px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; }
+  .bar-profit { font-size: 12px; font-weight: 700; color: #34d399; white-space: nowrap; }
+  .bar-pct { font-size: 10px; color: #475569; white-space: nowrap; }
+
+  /* PRO LOCK */
+  .pro-lock {
+    margin: 0 20px;
+    background: linear-gradient(135deg, #1c1020, #0f172a);
+    border: 1px dashed #4c1d95;
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .lock-icon { font-size: 28px; flex-shrink: 0; }
+  .lock-text .lock-title { font-size: 13px; font-weight: 700; color: #a78bfa; }
+  .lock-text .lock-sub { font-size: 11px; color: #6b7280; margin-top: 3px; }
+  .lock-btn { margin-left: auto; background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; font-size: 11px; font-weight: 700; border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="app-header">
+  <div class="header-top">
+    <div>
+      <div class="app-name">Precifica<span>PRO</span></div>
+      <div class="app-sub">Marketplace Seller · 2026</div>
+    </div>
+    <div class="badge-free"><div class="dot"></div> 24 restantes</div>
+  </div>
+  <div class="nav-tabs">
+    <div class="nav-tab active"><span class="icon">⚖️</span>Comparar</div>
+    <div class="nav-tab"><span class="icon">🧮</span>Calcular</div>
+    <div class="nav-tab"><span class="icon">📋</span>Histórico</div>
+  </div>
+</div>
+
+<!-- INPUTS -->
+<div class="section" style="padding-top:18px">
+  <div class="input-grid">
+    <div class="input-group">
+      <label>Custo do produto</label>
+      <div class="input-box"><span class="input-pre">R$</span><div class="input-val">45,00</div></div>
+    </div>
+    <div class="input-group">
+      <label>Outros custos</label>
+      <div class="input-box"><span class="input-pre">R$</span><div class="input-val">3,50</div></div>
+    </div>
+  </div>
+  <div class="input-full">
+    <div class="input-group">
+      <label>Frete</label>
+      <div class="input-box"><span class="input-pre">R$</span><div class="input-val">0,00</div></div>
+    </div>
+  </div>
+  <div class="margin-section">
+    <div class="margin-top-row">
+      <span class="margin-label">Lucro desejado</span>
+      <span class="margin-val">30%</span>
+    </div>
+    <div class="slider-track"><div class="slider-fill"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:#334155;margin-top:4px"><span>0%</span><span>200%</span></div>
+  </div>
+  <button class="btn-compare">⚖️ Comparar todas as plataformas</button>
+</div>
+
+<!-- WINNER HERO -->
+<div class="winner-hero">
+  <div class="winner-label">🏆 Melhor opção para você</div>
+  <div class="winner-main">
+    <div class="winner-platform">
+      <div class="platform-icon" style="background:#fff3c0;color:#b45309">ML</div>
+      <div>
+        <div class="winner-name">Mercado Livre</div>
+        <div class="winner-type">CNPJ · Clássico</div>
+      </div>
+    </div>
+    <div class="winner-price-block">
+      <div class="winner-price-label">preço sugerido</div>
+      <div class="winner-price">R$ 89,90</div>
+    </div>
+  </div>
+  <div class="winner-metrics">
+    <div class="wm-item">
+      <div class="wm-val green">R$ 17,43</div>
+      <div class="wm-label">lucro líquido</div>
+    </div>
+    <div class="wm-item">
+      <div class="wm-val green">19,4%</div>
+      <div class="wm-label">margem real</div>
+    </div>
+    <div class="wm-item">
+      <div class="wm-val red">18,1%</div>
+      <div class="wm-label">% plataforma</div>
+    </div>
+  </div>
+  <div class="expand-row">
+    <button class="expand-link">▼ Ver extrato completo</button>
+  </div>
+</div>
+
+<!-- RANKING -->
+<div class="ranking-header">
+  <span class="ranking-title">Demais plataformas</span>
+  <span class="ranking-note">ordenado por lucro</span>
+</div>
+
+<!-- Shopee -->
+<div class="rank-item">
+  <div class="rank-row">
+    <div class="rank-num">2</div>
+    <div class="platform-icon-sm" style="background:#fff0ee;color:#ee4d2d">S</div>
+    <div class="rank-info">
+      <div class="rank-name">Shopee</div>
+      <div class="rank-type">CNPJ · Padrão</div>
+    </div>
+    <div class="rank-price">
+      <div class="rank-price-val">R$ 93,50</div>
+      <div class="rank-price-lbl">preço sugerido</div>
+    </div>
+  </div>
+  <div class="rank-bar-row">
+    <div class="bar-track"><div class="bar-fill" style="width:87%;background:linear-gradient(90deg,#ee4d2d,#ff8040)"></div></div>
+    <span class="bar-profit">R$ 15,20</span>
+    <span class="bar-pct">22,4% taxa</span>
+  </div>
+</div>
+
+<!-- TikTok -->
+<div class="rank-item">
+  <div class="rank-row">
+    <div class="rank-num">3</div>
+    <div class="platform-icon-sm" style="background:#1a0010;color:#ff2d55">TT</div>
+    <div class="rank-info">
+      <div class="rank-name">TikTok Shop</div>
+      <div class="rank-type">Padrão</div>
+    </div>
+    <div class="rank-price">
+      <div class="rank-price-val">R$ 96,00</div>
+      <div class="rank-price-lbl">preço sugerido</div>
+    </div>
+  </div>
+  <div class="rank-bar-row">
+    <div class="bar-track"><div class="bar-fill" style="width:81%;background:linear-gradient(90deg,#ff2d55,#ff6b35)"></div></div>
+    <span class="bar-profit">R$ 14,10</span>
+    <span class="bar-pct">24,9% taxa</span>
+  </div>
+</div>
+
+<!-- PRO LOCK -->
+<div class="pro-lock" style="margin-top:2px">
+  <div class="lock-icon">🔒</div>
+  <div class="lock-text">
+    <div class="lock-title">Amazon · Shein no plano PRO</div>
+    <div class="lock-sub">+ cálculos ilimitados e taxas sempre atualizadas</div>
+  </div>
+  <button class="lock-btn">Ativar PRO</button>
+</div>
+
+</body>
+</html>

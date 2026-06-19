@@ -1,0 +1,38 @@
+<h2>Design — Arquitetura e Estrutura</h2>
+<p class="subtitle">Organização modular dos arquivos da nova versão</p>
+
+<div class="mockup">
+  <div class="mockup-header">Estrutura de arquivos</div>
+  <div class="mockup-body" style="font-family:monospace;font-size:13px;line-height:1.8">
+    <div style="color:#94a3b8">precificador-marketplace/</div>
+    <div style="color:#e2e8f0">├── <span style="color:#60a5fa">index.html</span>         <span style="color:#475569">← entrada única da SPA</span></div>
+    <div style="color:#e2e8f0">├── <span style="color:#60a5fa">style.css</span>          <span style="color:#475569">← tema dark + componentes</span></div>
+    <div style="color:#e2e8f0">├── <span style="color:#60a5fa">manifest.json</span>      <span style="color:#475569">← PWA instalável</span></div>
+    <div style="color:#e2e8f0">├── <span style="color:#60a5fa">sw.js</span>              <span style="color:#475569">← service worker (offline)</span></div>
+    <div style="color:#e2e8f0">│</div>
+    <div style="color:#e2e8f0">├── <span style="color:#a78bfa">js/</span></div>
+    <div style="color:#e2e8f0">│   ├── <span style="color:#34d399">router.js</span>      <span style="color:#475569">← hash routing (#/comparar, #/calcular/:p, #/historico)</span></div>
+    <div style="color:#e2e8f0">│   ├── <span style="color:#34d399">state.js</span>       <span style="color:#475569">← estado global (inputs, resultados, modo PRO)</span></div>
+    <div style="color:#e2e8f0">│   ├── <span style="color:#34d399">engine.js</span>      <span style="color:#475569">← lógica de cálculo (independente de plataforma)</span></div>
+    <div style="color:#e2e8f0">│   ├── <span style="color:#34d399">auth.js</span>        <span style="color:#475569">← freemium: contador + validação de senha PRO</span></div>
+    <div style="color:#e2e8f0">│   ├── <span style="color:#34d399">history.js</span>     <span style="color:#475569">← salvar/listar/exportar CSV</span></div>
+    <div style="color:#e2e8f0">│   └── <span style="color:#34d399">ui.js</span>          <span style="color:#475569">← renderização das 3 views</span></div>
+    <div style="color:#e2e8f0">│</div>
+    <div style="color:#e2e8f0">└── <span style="color:#a78bfa">platforms/</span></div>
+    <div style="color:#e2e8f0">    ├── <span style="color:#fbbf24">mercadolivre.js</span>  <span style="color:#475569">← taxas ML por categoria/nível</span></div>
+    <div style="color:#e2e8f0">    ├── <span style="color:#fbbf24">shopee.js</span>        <span style="color:#475569">← taxas Shopee CNPJ/CPF/faixas</span></div>
+    <div style="color:#e2e8f0">    ├── <span style="color:#fbbf24">amazon.js</span>        <span style="color:#475569">← taxas Amazon por categoria + FBA/FBM</span></div>
+    <div style="color:#e2e8f0">    ├── <span style="color:#fbbf24">tiktok.js</span>        <span style="color:#475569">← taxas TikTok Shop</span></div>
+    <div style="color:#e2e8f0">    └── <span style="color:#fbbf24">shein.js</span>         <span style="color:#475569">← taxas Shein Marketplace</span></div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:20px">
+  <h3>Princípios da arquitetura</h3>
+  <ul style="line-height:2">
+    <li><strong style="color:#34d399">engine.js</strong> não conhece plataforma nenhuma — recebe taxas como parâmetro e devolve resultado</li>
+    <li><strong style="color:#fbbf24">platforms/*.js</strong> são arquivos de dados puros — atualizar taxas = editar um número em um arquivo</li>
+    <li><strong style="color:#60a5fa">state.js</strong> mantém os inputs preenchidos ao trocar de aba — sem redigitar</li>
+    <li><strong style="color:#a78bfa">router.js</strong> gerencia hash URL — o vendedor pode favoritar <code>#/calcular/shopee</code></li>
+  </ul>
+</div>

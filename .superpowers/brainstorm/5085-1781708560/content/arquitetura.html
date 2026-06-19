@@ -1,0 +1,42 @@
+<h2>Arquitetura da aplicação</h2>
+<p class="subtitle">Como organizar os dois modos (comparação + calculadora individual)</p>
+
+<div class="options">
+
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Abas na mesma página</h3>
+      <p>Um único <code>index.html</code> com três abas: <strong>Comparar</strong> | <strong>Calcular</strong> | <strong>Histórico</strong>. Tudo carrega junto, sem navegação.</p>
+      <div class="pros-cons" style="margin-top:8px">
+        <div class="pros"><h4>Prós</h4><ul><li>Mais simples de implementar</li><li>Mantém estado entre abas</li><li>Ideal para mobile (PWA)</li></ul></div>
+        <div class="cons"><h4>Contras</h4><ul><li>HTML inicial maior</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Múltiplas páginas HTML</h3>
+      <p><code>index.html</code> (comparação) + <code>calculadora.html</code> + <code>historico.html</code> — páginas separadas com links entre si.</p>
+      <div class="pros-cons" style="margin-top:8px">
+        <div class="pros"><h4>Prós</h4><ul><li>Separação clara</li><li>URLs distintas por seção</li></ul></div>
+        <div class="cons"><h4>Contras</h4><ul><li>Perde estado ao navegar</li><li>Mais arquivos para manter</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>SPA com hash routing <span style="font-size:11px;background:#6366f1;color:#fff;padding:2px 6px;border-radius:4px;margin-left:6px">Recomendado</span></h3>
+      <p>Página única com rotas via <code>#/comparar</code>, <code>#/calcular/shopee</code>, <code>#/historico</code>. Mantém estado, URLs compartilháveis e PWA perfeito.</p>
+      <div class="pros-cons" style="margin-top:8px">
+        <div class="pros"><h4>Prós</h4><ul><li>URLs por seção (bookmarkável)</li><li>Estado global preservado</li><li>PWA-friendly</li><li>Mais escalável</li></ul></div>
+        <div class="cons"><h4>Contras</h4><ul><li>Ligeiramente mais complexo</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+</div>

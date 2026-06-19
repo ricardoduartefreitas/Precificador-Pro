@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup — Tela Calcular</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #080f1e; color: #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding-bottom: 40px; }
+
+  /* HEADER */
+  .app-header { background: linear-gradient(180deg, #0d1a35 0%, #080f1e 100%); padding: 20px 20px 0; border-bottom: 1px solid #1a2744; }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .app-name { font-size: 20px; font-weight: 800; letter-spacing: -.5px; }
+  .app-name span { color: #38bdf8; }
+  .app-sub { font-size: 11px; color: #475569; margin-top: 2px; }
+  .badge-free { background: #0f172a; border: 1px solid #334155; border-radius: 20px; padding: 5px 12px; font-size: 11px; color: #94a3b8; display: flex; align-items: center; gap: 5px; }
+  .badge-free .dot { width: 6px; height: 6px; background: #34d399; border-radius: 50%; }
+  .nav-tabs { display: flex; }
+  .nav-tab { flex: 1; text-align: center; padding: 12px 8px 14px; font-size: 12px; font-weight: 500; color: #475569; position: relative; cursor: pointer; }
+  .nav-tab.active { color: #38bdf8; font-weight: 700; }
+  .nav-tab.active::after { content: ''; position: absolute; bottom: 0; left: 20%; right: 20%; height: 2px; background: #38bdf8; border-radius: 2px 2px 0 0; }
+  .nav-tab .icon { font-size: 16px; display: block; margin-bottom: 3px; }
+
+  .section { padding: 18px 20px 0; }
+
+  /* PLATFORM SELECTOR */
+  .platform-selector { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 16px; scrollbar-width: none; }
+  .platform-selector::-webkit-scrollbar { display: none; }
+  .plat-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    background: #0d1728; border: 1.5px solid #1a2744; border-radius: 12px;
+    padding: 10px 14px; cursor: pointer; flex-shrink: 0; transition: all .2s;
+    min-width: 68px;
+  }
+  .plat-btn.active { border-color: var(--c); background: var(--bg); }
+  .plat-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; }
+  .plat-name { font-size: 10px; font-weight: 600; color: #94a3b8; }
+  .plat-btn.active .plat-name { color: var(--c); }
+
+  /* SELLER TYPE */
+  .seller-seg { display: flex; background: #0d1728; border: 1px solid #1a2744; border-radius: 10px; padding: 3px; gap: 2px; margin-bottom: 14px; }
+  .seg-btn { flex: 1; text-align: center; padding: 7px 4px; font-size: 11px; border-radius: 7px; color: #475569; cursor: pointer; font-weight: 600; }
+  .seg-btn.active { background: #1a3a6a; color: #38bdf8; }
+
+  /* INPUTS */
+  .input-group { margin-bottom: 10px; }
+  .input-group label { font-size: 10px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: .5px; display: block; margin-bottom: 5px; }
+  .input-box { display: flex; align-items: center; background: #0d1a35; border: 1px solid #1e3a5f; border-radius: 10px; height: 42px; overflow: hidden; }
+  .input-pre { padding: 0 12px; font-size: 12px; color: #38bdf8; font-weight: 600; border-right: 1px solid #1e3a5f; height: 100%; display: flex; align-items: center; }
+  .input-val { padding: 0 12px; font-size: 14px; color: #f1f5f9; font-weight: 500; }
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .margin-section { background: #0d1a35; border: 1px solid #1e3a5f; border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; }
+  .margin-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .margin-label { font-size: 10px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: .5px; }
+  .margin-val { font-size: 20px; font-weight: 800; color: #34d399; }
+  .slider-track { height: 6px; background: #1e3a5f; border-radius: 3px; }
+  .slider-fill { height: 100%; width: 30%; background: linear-gradient(90deg, #0ea5e9, #34d399); border-radius: 3px; }
+
+  .camp-row { display: flex; align-items: center; justify-content: space-between; background: #0d1a35; border: 1px solid #1e3a5f; border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; }
+  .camp-label { font-size: 12px; color: #94a3b8; }
+  .camp-badge { font-size: 11px; color: #f59e0b; font-weight: 700; }
+  .toggle { width: 38px; height: 22px; background: #1e3a5f; border-radius: 11px; position: relative; }
+  .toggle-dot { width: 16px; height: 16px; background: #475569; border-radius: 50%; position: absolute; top: 3px; left: 3px; }
+
+  .btn-calc { width: 100%; background: linear-gradient(135deg, #0ea5e9, #34d399); color: #022c22; font-weight: 800; font-size: 15px; border: none; border-radius: 12px; padding: 15px; cursor: pointer; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(52,211,153,.2); }
+
+  /* RESULT */
+  .result-hero { margin: 0 20px 16px; background: linear-gradient(135deg, #0c1f3d, #0d2a1a); border-radius: 18px; padding: 20px; border: 1px solid #1e3a5f; position: relative; overflow: hidden; }
+  .result-hero::after { content: ''; position: absolute; bottom: -20px; right: -20px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(52,211,153,.12) 0%, transparent 70%); }
+  .result-platform-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+  .result-platform-icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; background: #fff3c0; color: #b45309; }
+  .result-platform-name { font-size: 12px; font-weight: 700; color: #94a3b8; }
+  .result-price-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px; }
+  .result-price-block .lbl { font-size: 10px; color: #475569; text-transform: uppercase; letter-spacing: .5px; }
+  .result-price-block .val { font-size: 36px; font-weight: 900; color: #f1f5f9; letter-spacing: -1px; line-height: 1; margin-top: 2px; }
+  .result-price-block .sub { font-size: 11px; color: #475569; margin-top: 4px; }
+  .result-min-block { text-align: right; }
+  .result-min-block .lbl { font-size: 10px; color: #475569; }
+  .result-min-block .val { font-size: 16px; font-weight: 700; color: #94a3b8; }
+  .result-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding-top: 14px; border-top: 1px solid #1e3a5f; }
+  .rm-item { background: #080f1e; border-radius: 10px; padding: 10px 12px; }
+  .rm-val { font-size: 16px; font-weight: 800; }
+  .rm-val.green { color: #34d399; }
+  .rm-val.red { color: #f87171; }
+  .rm-label { font-size: 10px; color: #475569; margin-top: 2px; }
+
+  /* EXTRATO */
+  .extrato { margin: 0 20px; background: #0d1728; border: 1px solid #1a2744; border-radius: 16px; overflow: hidden; }
+  .extrato-header { background: #111f3d; padding: 12px 16px; font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: .5px; display: flex; justify-content: space-between; }
+  .extrato-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 16px; border-bottom: 1px solid #1a2744; }
+  .extrato-row:last-child { border-bottom: none; }
+  .extrato-row.section-row { background: #111f3d; }
+  .extrato-row.total-row { background: #0a1e10; }
+  .er-label { font-size: 12px; color: #94a3b8; }
+  .er-label.sub { font-size: 11px; color: #475569; padding-left: 10px; }
+  .er-val { font-size: 13px; font-weight: 700; color: #f1f5f9; }
+  .er-val.neg { color: #f87171; }
+  .er-val.pos { color: #34d399; font-size: 15px; }
+  .er-val.neutral { color: #94a3b8; }
+
+  /* SAVE BTN */
+  .save-row { margin: 14px 20px 0; display: flex; gap: 8px; }
+  .btn-save { flex: 1; background: #0d1728; border: 1px solid #1a2744; color: #94a3b8; font-size: 13px; font-weight: 600; border-radius: 10px; padding: 12px; cursor: pointer; }
+  .btn-save-primary { flex: 2; background: linear-gradient(135deg, #1e3a5f, #1a2744); border: 1px solid #2d4a7a; color: #38bdf8; font-size: 13px; font-weight: 700; border-radius: 10px; padding: 12px; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="app-header">
+  <div class="header-top">
+    <div>
+      <div class="app-name">Precifica<span>PRO</span></div>
+      <div class="app-sub">Marketplace Seller · 2026</div>
+    </div>
+    <div class="badge-free"><div class="dot"></div> 24 restantes</div>
+  </div>
+  <div class="nav-tabs">
+    <div class="nav-tab"><span class="icon">⚖️</span>Comparar</div>
+    <div class="nav-tab active"><span class="icon">🧮</span>Calcular</div>
+    <div class="nav-tab"><span class="icon">📋</span>Histórico</div>
+  </div>
+</div>
+
+<div class="section">
+
+  <!-- PLATFORM SELECTOR -->
+  <div class="platform-selector">
+    <div class="plat-btn active" style="--c:#f59e0b;--bg:#1a1200">
+      <div class="plat-icon" style="background:#fff3c0;color:#b45309">ML</div>
+      <span class="plat-name">Mercado Livre</span>
+    </div>
+    <div class="plat-btn" style="--c:#ee4d2d;--bg:#1a0800">
+      <div class="plat-icon" style="background:#fff0ee;color:#ee4d2d">S</div>
+      <span class="plat-name">Shopee</span>
+    </div>
+    <div class="plat-btn" style="--c:#ff6900;--bg:#1a0d00">
+      <div class="plat-icon" style="background:#fff4ee;color:#ff6900">Az</div>
+      <span class="plat-name">Amazon</span>
+    </div>
+    <div class="plat-btn" style="--c:#ff2d55;--bg:#1a0010">
+      <div class="plat-icon" style="background:#1a0010;color:#ff2d55;border:1px solid #ff2d5533">TT</div>
+      <span class="plat-name">TikTok</span>
+    </div>
+    <div class="plat-btn" style="--c:#e91e8c;--bg:#1a0015">
+      <div class="plat-icon" style="background:#fce4ef;color:#e91e8c">Sh</div>
+      <span class="plat-name">Shein</span>
+    </div>
+  </div>
+
+  <!-- SELLER TYPE -->
+  <div class="seller-seg">
+    <div class="seg-btn active">CNPJ</div>
+    <div class="seg-btn">CPF &lt; 450</div>
+    <div class="seg-btn">CPF &gt; 450</div>
+  </div>
+
+  <!-- INPUTS -->
+  <div class="input-grid" style="margin-bottom:10px">
+    <div class="input-group">
+      <label>Custo do produto</label>
+      <div class="input-box"><span class="input-pre">R$</span><div class="input-val">45,00</div></div>
+    </div>
+    <div class="input-group">
+      <label>Outros custos</label>
+      <div class="input-box"><span class="input-pre">R$</span><div class="input-val">3,50</div></div>
+    </div>
+  </div>
+  <div class="input-group">
+    <label>Frete</label>
+    <div class="input-box"><span class="input-pre">R$</span><div class="input-val">0,00</div></div>
+  </div>
+
+  <div class="margin-section" style="margin-top:10px">
+    <div class="margin-top-row">
+      <span class="margin-label">Lucro desejado</span>
+      <span class="margin-val">30%</span>
+    </div>
+    <div class="slider-track"><div class="slider-fill"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:#334155;margin-top:4px"><span>0%</span><span>200%</span></div>
+  </div>
+
+  <div class="camp-row">
+    <div>
+      <div class="camp-label">Campanha promocional</div>
+      <div class="camp-badge">+2,5% de taxa</div>
+    </div>
+    <div class="toggle"><div class="toggle-dot"></div></div>
+  </div>
+
+  <button class="btn-calc">📊 Calcular Mercado Livre</button>
+</div>
+
+<!-- RESULT HERO -->
+<div class="result-hero">
+  <div class="result-platform-row">
+    <div class="result-platform-icon">ML</div>
+    <div class="result-platform-name">Mercado Livre · CNPJ Clássico · faixa R$80–R$199</div>
+  </div>
+  <div class="result-price-row">
+    <div class="result-price-block">
+      <div class="lbl">Preço sugerido</div>
+      <div class="val">R$ 89,90</div>
+      <div class="sub">mínimo: R$ 72,30</div>
+    </div>
+    <div class="result-min-block">
+      <div class="lbl">lucro líquido</div>
+      <div class="val" style="color:#34d399;font-size:22px;font-weight:800">R$ 17,43</div>
+    </div>
+  </div>
+  <div class="result-metrics">
+    <div class="rm-item">
+      <div class="rm-val green">19,4%</div>
+      <div class="rm-label">Margem real</div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-val red">R$ 16,27</div>
+      <div class="rm-label">Total descontado</div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-val red">18,1%</div>
+      <div class="rm-label">% que a ML leva</div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-val" style="color:#94a3b8">R$ 72,30</div>
+      <div class="rm-label">Preço mínimo</div>
+    </div>
+  </div>
+</div>
+
+<!-- EXTRATO -->
+<div class="extrato">
+  <div class="extrato-header"><span>Painel de deduções</span><span>Mercado Livre</span></div>
+
+  <div class="extrato-row section-row">
+    <span class="er-label">Valor da venda</span>
+    <span class="er-val neutral">R$ 89,90</span>
+  </div>
+  <div class="extrato-row">
+    <span class="er-label sub">(−) Custo do produto</span>
+    <span class="er-val neg">− R$ 45,00</span>
+  </div>
+  <div class="extrato-row">
+    <span class="er-label sub">(−) Outros custos</span>
+    <span class="er-val neg">− R$ 3,50</span>
+  </div>
+  <div class="extrato-row">
+    <span class="er-label sub">(−) Frete</span>
+    <span class="er-val neg">− R$ 0,00</span>
+  </div>
+  <div class="extrato-row">
+    <span class="er-label sub">(−) Comissão ML (14%)</span>
+    <span class="er-val neg">− R$ 12,59</span>
+  </div>
+  <div class="extrato-row">
+    <span class="er-label sub">(−) Taxa fixa por item</span>
+    <span class="er-val neg">− R$ 3,00</span>
+  </div>
+  <div class="extrato-row section-row">
+    <span class="er-label">Total de taxas</span>
+    <span class="er-val neg">− R$ 16,27</span>
+  </div>
+  <div class="extrato-row total-row">
+    <span class="er-label" style="color:#34d399;font-weight:700">Lucro líquido</span>
+    <span class="er-val pos">R$ 17,43</span>
+  </div>
+</div>
+
+<!-- SAVE -->
+<div class="save-row">
+  <button class="btn-save">Limpar</button>
+  <button class="btn-save-primary">💾 Salvar no histórico</button>
+</div>
+
+</body>
+</html>

@@ -1,13 +1,13 @@
 {
-  "name": "Precificador Marketplace 2026 PRO",
-  "short_name": "Precificador PRO",
-  "description": "Calculadora de preco de venda para vendedores Marketplace com fluxo PRO.",
-  "start_url": "./index.html",
+  "name": "PrecificaPRO — Calculadora de Marketplaces",
+  "short_name": "PrecificaPRO",
+  "description": "Calcule o preço ideal de venda em Mercado Livre, Shopee, Amazon, TikTok Shop e Shein.",
+  "start_url": "./index.html#/comparar",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#f0f0f0",
-  "theme_color": "#EE4D2D",
+  "background_color": "#080f1e",
+  "theme_color": "#080f1e",
   "icons": [
     {
       "src": "icons/icon-192.png",
