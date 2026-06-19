@@ -187,6 +187,7 @@ function _updateSellerTypeSelect(select, plat) {
     if (wrapper) wrapper.style.display = 'none';
     if (labelEl) labelEl.textContent = 'Tipo de vendedor';
     setState({ sellerType: Object.keys(plat.faixas)[0] });
+    _updateLogisticaSelect(plat);
     return;
   }
 
@@ -205,7 +206,44 @@ function _updateSellerTypeSelect(select, plat) {
   select.value    = validKey ? state.sellerType : plat.tiposVendedor[0].key;
   setState({ sellerType: select.value });
 
-  select.onchange = () => setState({ sellerType: select.value });
+  select.onchange = () => {
+    setState({ sellerType: select.value });
+    _clearCalcResult();
+  };
+
+  _updateLogisticaSelect(plat);
+}
+
+function _updateLogisticaSelect(plat) {
+  const wrapper = document.getElementById('logistica-wrapper');
+  const select  = document.getElementById('calc-logistica');
+  if (!wrapper || !select) return;
+
+  if (!plat?.tiposLogistica?.length) {
+    wrapper.style.display = 'none';
+    setState({ mlLogistica: null });
+    return;
+  }
+
+  wrapper.style.display = '';
+  select.innerHTML = '';
+
+  plat.tiposLogistica.forEach((t) => {
+    const opt = document.createElement('option');
+    opt.value = t.key;
+    opt.textContent = t.label;
+    select.appendChild(opt);
+  });
+
+  const state    = getState();
+  const validKey = plat.tiposLogistica.find((t) => t.key === state.mlLogistica);
+  select.value   = validKey ? state.mlLogistica : plat.tiposLogistica[0].key;
+  setState({ mlLogistica: select.value });
+
+  select.onchange = () => {
+    setState({ mlLogistica: select.value });
+    _clearCalcResult();
+  };
 }
 
 function _handleCalcular() {
@@ -214,9 +252,20 @@ function _handleCalcular() {
     return;
   }
 
-  const state      = getState();
-  const plat       = _findPlat(state.activePlatform) || _PLATAFORMAS[0];
-  const tipoVend   = state.sellerType || Object.keys(plat.faixas)[0];
+  const state    = getState();
+  const plat     = _findPlat(state.activePlatform) || _PLATAFORMAS[0];
+  const isML     = plat.id === 'mercadolivre';
+
+  // Para ML usa chave combinada tipoAnuncio_logistica; outras plataformas usam sellerType direto
+  let tipoAnuncio, tipoVend;
+  if (isML) {
+    tipoAnuncio = state.sellerType || 'classico';
+    const logistica = state.mlLogistica || 'full';
+    tipoVend = `${tipoAnuncio}_${logistica}`;
+  } else {
+    tipoAnuncio = state.sellerType || Object.keys(plat.faixas)[0];
+    tipoVend    = tipoAnuncio;
+  }
 
   const base = {
     custoProduto:     parseInputValue(document.getElementById('calc-custo')?.value),
@@ -245,13 +294,35 @@ function _handleCalcular() {
     return;
   }
 
-  resultado._faixa         = calcInputs._faixaLabel;
-  resultado._platNome      = plat.nome;
-  resultado._platCor       = plat.cor;
-  resultado._comissaoLabel = `${calcInputs.comissaoPlataforma}%`;
+  resultado._faixa    = calcInputs._faixaLabel;
+  resultado._platNome = plat.nome;
+  resultado._platCor  = plat.cor;
+
+  if (isML) {
+    const isCampanha   = !!state.inputs.campanha;
+    const logistica    = state.mlLogistica || 'full';
+    const comissaoBase = calcInputs.comissaoPlataforma - (isCampanha ? (plat.taxaCampanha || 0) : 0);
+    const tipoLabel    = plat.tiposVendedor?.find((t) => t.key === tipoAnuncio)?.label || '';
+    const logLabel     = plat.tiposLogistica?.find((l) => l.key === logistica)?.label || '';
+
+    resultado._comissaoLabel     = `${tipoLabel} (${comissaoBase}%)`;
+    resultado._showAviso         = true;
+    resultado._campanhaAtiva     = isCampanha;
+    resultado._campanhaLabel     = `Product Ads (estimativa ${plat.taxaCampanha || 2.5}%)`;
+    resultado._campanhaValor     = isCampanha
+      ? Math.round(resultado.precoVenda * (plat.taxaCampanha || 0) / 100 * 100) / 100
+      : 0;
+    resultado._comissaoPuraValor = resultado.breakdown.comissaoValor - resultado._campanhaValor;
+
+    if (resultado.breakdown.taxaAnuncioValor > 0) {
+      resultado._taxaFixaLabel = `Taxa fixa ${logLabel} (abaixo R$79,99)`;
+    }
+  } else {
+    resultado._comissaoLabel = `(${calcInputs.comissaoPlataforma}%)`;
+  }
 
   registerCalculo();
-  setState({ lastResult: resultado, activePlatform: plat.id, sellerType: tipoVend });
+  setState({ lastResult: resultado, activePlatform: plat.id, sellerType: tipoAnuncio });
 
   renderResultHero(resultado);
   renderExtrato(resultado);
@@ -546,6 +617,11 @@ export function renderResultHero(resultado) {
       ${resultado._faixa ? `Faixa: ${_esc(resultado._faixa)} · ` : ''}
       Preço mínimo: ${formatBRL(resultado.precoMinimo)}
     </p>
+    ${resultado._showAviso ? `
+    <p class="ml-aviso">
+      ⚠️ Comissões podem variar por categoria.
+      Valide em mercadolivre.com.br/tarifas antes de precificar.
+    </p>` : ''}
   `;
 
   el.classList.remove('hidden');
@@ -558,22 +634,43 @@ export function renderExtrato(resultado) {
   const table     = document.getElementById('extrato-table');
   if (!container || !table || !resultado) return;
 
-  const bd = resultado.breakdown;
+  const bd    = resultado.breakdown;
+  const isML  = !!resultado._showAviso;
+
+  // Para ML com campanha, separa comissão pura de Product Ads
+  const comissaoExibir = (isML && resultado._campanhaAtiva)
+    ? resultado._comissaoPuraValor
+    : bd.comissaoValor;
 
   const rows = [
-    { label: 'Valor de venda',    valor:  resultado.precoVenda,  classe: '' },
-    { label: 'Custo do produto',  valor: -bd.custosProduto,       classe: 'row-deduction' },
-    { label: 'Frete',             valor: -bd.freteValor,          classe: 'row-deduction' },
-    { label: 'Outros custos',     valor: -bd.custosAdicionais,    classe: 'row-deduction' },
-    { label: `Comissão ${resultado._comissaoLabel ? `(${resultado._comissaoLabel})` : ''}`.trim(), valor: -bd.comissaoValor,    classe: 'row-deduction' },
-    { label: 'Taxa fixa anúncio',                                                                  valor: -bd.taxaAnuncioValor, classe: 'row-deduction' },
-    { label: 'Imposto',           valor: -bd.impostoValor,        classe: 'row-deduction' },
+    { label: 'Valor de venda',   valor:  resultado.precoVenda, classe: '' },
+    { label: 'Custo do produto', valor: -bd.custosProduto,      classe: 'row-deduction' },
+    { label: 'Frete',            valor: -bd.freteValor,         classe: 'row-deduction' },
+    { label: 'Outros custos',    valor: -bd.custosAdicionais,   classe: 'row-deduction' },
+    {
+      label:  `Comissão ${resultado._comissaoLabel || ''}`.trim(),
+      valor:  -comissaoExibir,
+      classe: 'row-deduction',
+    },
+    // Linha de Product Ads separada (apenas ML com campanha ativa)
+    ...(isML && resultado._campanhaAtiva && resultado._campanhaValor > 0 ? [{
+      label:  resultado._campanhaLabel || 'Product Ads (estimativa 2,5%)',
+      valor:  -resultado._campanhaValor,
+      classe: 'row-deduction',
+    }] : []),
+    // Taxa fixa: label customizado para ML; filtro automático remove se valor = 0
+    {
+      label:  resultado._taxaFixaLabel || 'Taxa fixa anúncio',
+      valor:  -bd.taxaAnuncioValor,
+      classe: 'row-deduction',
+    },
+    { label: 'Imposto', valor: -bd.impostoValor, classe: 'row-deduction' },
     ...(resultado.desconto > 0 ? [{
       label:  `Desconto (${resultado.desconto}%)`,
       valor:  -bd.descontoValor,
       classe: 'row-deduction',
     }] : []),
-    { label: 'Lucro líquido',     valor:  resultado.lucroLiquido, classe: 'row-total' },
+    { label: 'Lucro líquido', valor: resultado.lucroLiquido, classe: 'row-total' },
   ];
 
   table.innerHTML = rows

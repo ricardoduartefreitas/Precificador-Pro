@@ -979,3 +979,15 @@ input[type="range"] {
     flex-wrap: wrap;
   }
 }
+
+/* ── ML aviso de variação por categoria ─────────────────────────────────── */
+.ml-aviso {
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(245, 158, 11, 0.10);
+  border: 1px solid rgba(245, 158, 11, 0.30);
+  border-radius: 6px;
+  color: var(--accent-yellow);
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
