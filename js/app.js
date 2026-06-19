@@ -1,24 +1,37 @@
 // app.js — PrecificaPRO
-// Responsabilidade: entry point da aplicação
-// Inicializa módulos, registra service worker e dispara o roteamento inicial
+// Entry point: importa plataformas, inicializa módulos e define rota padrão
 
-import { initRouter } from './router.js';
-import { initFreemium } from './freemium.js';
-import { initUI } from './ui.js';
+import { initRouter }           from './router.js';
+import { initFreemium }         from './freemium.js';
+import { initUI }               from './ui.js';
+import { getInputs, setState }  from './state.js';
+
+import ML     from '../platforms/mercadolivre.js';
+import Shopee from '../platforms/shopee.js';
+import Amazon from '../platforms/amazon.js';
+import TikTok from '../platforms/tiktok.js';
+import Shein  from '../platforms/shein.js';
+
+export const PLATAFORMAS = [ML, Shopee, Amazon, TikTok, Shein];
 
 async function boot() {
-  // Registra o service worker para PWA/offline
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   }
 
-  // Inicializa UI (listeners de tabs, modais, toast)
-  initUI();
+  // Garante que imposto e desconto existam no estado
+  const inputs = getInputs();
+  if (inputs.imposto === undefined) {
+    setState({ inputs: { ...inputs, imposto: 0, desconto: 0 } });
+  }
 
-  // Inicializa controle freemium (lê contador do localStorage)
+  // Define rota padrão (calcular) antes de iniciar o router
+  if (!window.location.hash || window.location.hash === '#') {
+    window.location.hash = '/calcular';
+  }
+
+  initUI(PLATAFORMAS);
   initFreemium();
-
-  // Inicia o roteador (lê hash atual e renderiza a view correta)
   initRouter();
 }
 

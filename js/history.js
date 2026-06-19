@@ -95,7 +95,7 @@ export function groupByDate(entries) {
 // ---------- EXPORTAÇÃO CSV ----------
 
 export function exportCSV(entries) {
-  const header = ['Data', 'Produto', 'Plataforma', 'Tipo Vendedor', 'Custo', 'Margem Desejada', 'Preço Sugerido', 'Lucro Líquido', 'Margem Real', '% Plataforma'];
+  const header = ['Data', 'Produto', 'Plataforma', 'Tipo Vendedor', 'Custo', 'Margem Desejada', 'Preço Venda', 'Lucro Líquido', 'Margem Real %', 'Preço Mínimo'];
 
   const rows = [];
   entries.forEach((e) => {
@@ -107,10 +107,10 @@ export function exportCSV(entries) {
         e.tipoVendedor || '',
         e.inputs?.custo ?? '',
         e.inputs?.margem ?? '',
-        e.resultado?.precoSugerido ?? '',
+        e.resultado?.precoVenda ?? '',
         e.resultado?.lucroLiquido ?? '',
-        e.resultado?.margemReal ?? '',
-        e.resultado?.pctPlataforma ?? '',
+        e.resultado?.lucroPercentual ?? '',
+        e.resultado?.precoMinimo ?? '',
       ]);
     } else if (e.tipo === 'comparacao') {
       (e.resultados || []).forEach((r) => {
@@ -121,10 +121,10 @@ export function exportCSV(entries) {
           '',
           e.inputs?.custo ?? '',
           e.inputs?.margem ?? '',
-          r.precoSugerido ?? '',
+          r.precoVenda ?? '',
           r.lucroLiquido ?? '',
-          r.margemReal ?? '',
-          r.pctPlataforma ?? '',
+          r.lucroPercentual ?? '',
+          r.precoMinimo ?? '',
         ]);
       });
     }

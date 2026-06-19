@@ -10,95 +10,74 @@
 </head>
 <body>
 
-  <!-- ===================== HEADER ===================== -->
+  <!-- ═══════════════════════════════════════════ HEADER -->
   <header class="app-header">
     <div class="header-inner">
       <span class="logo">PrecificaPRO</span>
       <span class="plan-badge" id="plan-badge">FREE</span>
     </div>
     <nav class="tab-nav" role="tablist">
-      <button class="tab-btn active" data-route="comparar" role="tab">Comparar</button>
-      <button class="tab-btn" data-route="calcular" role="tab">Calcular</button>
-      <button class="tab-btn" data-route="historico" role="tab">Histórico</button>
+      <button class="tab-btn active" data-route="calcular"  role="tab">Calcular</button>
+      <button class="tab-btn"        data-route="comparar"  role="tab">Comparar</button>
+      <button class="tab-btn"        data-route="historico" role="tab">Histórico</button>
     </nav>
   </header>
 
-  <!-- ===================== MAIN ===================== -->
+  <!-- ═══════════════════════════════════════════ MAIN -->
   <main class="app-main">
 
-    <!-- TELA 1: COMPARAR (#/comparar) -->
-    <section id="view-comparar" class="view" aria-label="Comparar plataformas">
+    <!-- ─────────────────── TELA 1: CALCULAR (#/calcular) -->
+    <section id="view-calcular" class="view" aria-label="Calculadora individual">
       <div class="view-inner">
 
-        <div class="card inputs-card">
-          <h2 class="card-title">Dados do produto</h2>
+        <!-- Plataforma + Tipo de vendedor -->
+        <div class="card">
+          <h2 class="card-title">Plataforma</h2>
           <div class="form-grid">
             <div class="form-field">
-              <label for="cmp-custo">Custo do produto</label>
-              <input type="number" id="cmp-custo" placeholder="0,00" min="0" step="0.01" />
+              <label for="calc-plataforma">Marketplace</label>
+              <select id="calc-plataforma" class="form-select"></select>
             </div>
-            <div class="form-field">
-              <label for="cmp-extras">Outros custos</label>
-              <input type="number" id="cmp-extras" placeholder="0,00" min="0" step="0.01" />
-            </div>
-            <div class="form-field">
-              <label for="cmp-frete">Frete</label>
-              <input type="number" id="cmp-frete" placeholder="0,00" min="0" step="0.01" />
-            </div>
-            <div class="form-field form-field--full">
-              <label for="cmp-margem">Lucro desejado: <span id="cmp-margem-label">30%</span></label>
-              <input type="range" id="cmp-margem" min="0" max="200" value="30" />
+            <div class="form-field" id="seller-type-wrapper">
+              <label for="calc-tipo-vendedor">Tipo de vendedor</label>
+              <select id="calc-tipo-vendedor" class="form-select"></select>
             </div>
           </div>
-          <button class="btn btn--primary" id="btn-comparar">Comparar plataformas</button>
         </div>
 
-        <!-- Winner Hero -->
-        <div id="cmp-winner" class="card winner-card hidden"></div>
-
-        <!-- Ranking das demais plataformas -->
-        <div id="cmp-ranking" class="ranking-list hidden"></div>
-
-      </div>
-    </section>
-
-    <!-- TELA 2: CALCULAR (#/calcular/:platform) -->
-    <section id="view-calcular" class="view hidden" aria-label="Calculadora individual">
-      <div class="view-inner">
-
-        <!-- Carrossel de plataformas -->
-        <div class="platform-selector" id="platform-selector" role="tablist"></div>
-
-        <!-- Segmented control de tipo de vendedor -->
-        <div class="card" id="seller-type-card">
-          <h2 class="card-title">Tipo de vendedor</h2>
-          <div class="segmented-control" id="seller-type-control"></div>
-        </div>
-
+        <!-- Inputs do produto -->
         <div class="card inputs-card">
           <h2 class="card-title">Dados do produto</h2>
           <div class="form-grid">
             <div class="form-field">
-              <label for="calc-custo">Custo do produto</label>
+              <label for="calc-custo">Custo do produto (R$)</label>
               <input type="number" id="calc-custo" placeholder="0,00" min="0" step="0.01" />
             </div>
             <div class="form-field">
-              <label for="calc-extras">Outros custos</label>
-              <input type="number" id="calc-extras" placeholder="0,00" min="0" step="0.01" />
-            </div>
-            <div class="form-field">
-              <label for="calc-frete">Frete</label>
+              <label for="calc-frete">Custo do frete (R$)</label>
               <input type="number" id="calc-frete" placeholder="0,00" min="0" step="0.01" />
             </div>
+            <div class="form-field">
+              <label for="calc-extras">Custos adicionais (R$)</label>
+              <input type="number" id="calc-extras" placeholder="embalagem, etc." min="0" step="0.01" />
+            </div>
+            <div class="form-field">
+              <label for="calc-imposto">Imposto (%)</label>
+              <input type="number" id="calc-imposto" placeholder="ex: 6" min="0" max="99" step="0.1" value="0" />
+            </div>
             <div class="form-field form-field--full">
-              <label for="calc-margem">Lucro desejado: <span id="calc-margem-label">30%</span></label>
-              <input type="range" id="calc-margem" min="0" max="200" value="30" />
+              <label for="calc-margem">Margem desejada (%)</label>
+              <input type="number" id="calc-margem" placeholder="ex: 30" min="0" max="200" step="1" value="30" />
             </div>
             <div class="form-field form-field--full">
               <label class="toggle-label">
                 <input type="checkbox" id="calc-campanha" />
-                <span>Campanha promocional ativa (+taxa)</span>
+                <span>Campanha promocional (aplica desconto no preço final)</span>
               </label>
+            </div>
+            <div class="form-field form-field--full" id="desconto-wrapper" style="display:none">
+              <label for="calc-desconto">Desconto da campanha (%)</label>
+              <input type="number" id="calc-desconto" placeholder="ex: 10" min="0" max="99" step="0.1" value="10" />
             </div>
           </div>
           <button class="btn btn--primary" id="btn-calcular">Calcular</button>
@@ -113,16 +92,56 @@
           <table class="extrato-table" id="extrato-table"></table>
         </div>
 
-        <!-- Botões pós-cálculo -->
+        <!-- Ações pós-cálculo -->
         <div id="calc-actions" class="action-row hidden">
           <button class="btn btn--secondary" id="btn-salvar">Salvar no histórico</button>
-          <button class="btn btn--ghost" id="btn-limpar">Limpar</button>
+          <button class="btn btn--ghost"     id="btn-limpar">Limpar</button>
         </div>
 
       </div>
     </section>
 
-    <!-- TELA 3: HISTÓRICO (#/historico) -->
+    <!-- ─────────────────── TELA 2: COMPARAR (#/comparar) -->
+    <section id="view-comparar" class="view hidden" aria-label="Comparar plataformas">
+      <div class="view-inner">
+
+        <div class="card inputs-card">
+          <h2 class="card-title">Dados do produto</h2>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="cmp-custo">Custo do produto (R$)</label>
+              <input type="number" id="cmp-custo" placeholder="0,00" min="0" step="0.01" />
+            </div>
+            <div class="form-field">
+              <label for="cmp-frete">Custo do frete (R$)</label>
+              <input type="number" id="cmp-frete" placeholder="0,00" min="0" step="0.01" />
+            </div>
+            <div class="form-field">
+              <label for="cmp-extras">Custos adicionais (R$)</label>
+              <input type="number" id="cmp-extras" placeholder="embalagem, etc." min="0" step="0.01" />
+            </div>
+            <div class="form-field">
+              <label for="cmp-imposto">Imposto (%)</label>
+              <input type="number" id="cmp-imposto" placeholder="ex: 6" min="0" max="99" step="0.1" value="0" />
+            </div>
+            <div class="form-field form-field--full">
+              <label for="cmp-margem">Margem desejada (%)</label>
+              <input type="number" id="cmp-margem" placeholder="ex: 30" min="0" max="200" step="1" value="30" />
+            </div>
+          </div>
+          <button class="btn btn--primary" id="btn-comparar">Comparar todas as plataformas</button>
+        </div>
+
+        <!-- Winner Hero -->
+        <div id="cmp-winner" class="card winner-card hidden"></div>
+
+        <!-- Ranking -->
+        <div id="cmp-ranking" class="ranking-list hidden"></div>
+
+      </div>
+    </section>
+
+    <!-- ─────────────────── TELA 3: HISTÓRICO (#/historico) -->
     <section id="view-historico" class="view hidden" aria-label="Histórico de cálculos">
       <div class="view-inner">
 
@@ -134,7 +153,7 @@
         <div class="stats-bar" id="stats-bar">
           <div class="stat">
             <span class="stat-value" id="stat-total">0</span>
-            <span class="stat-label">cálculos</span>
+            <span class="stat-label">salvos</span>
           </div>
           <div class="stat">
             <span class="stat-value" id="stat-max-lucro">—</span>
@@ -146,10 +165,8 @@
           </div>
         </div>
 
-        <!-- Chips de filtro por plataforma -->
         <div class="filter-chips" id="filter-chips" role="group" aria-label="Filtrar por plataforma"></div>
 
-        <!-- Lista agrupada por data -->
         <div id="history-list" class="history-list"></div>
 
         <div class="danger-zone">
@@ -161,16 +178,17 @@
 
   </main>
 
-  <!-- ===================== MODAIS ===================== -->
+  <!-- ═══════════════════════════════════════════ MODAIS -->
 
   <!-- Modal: nomear produto ao salvar -->
   <div id="modal-salvar" class="modal-overlay hidden" role="dialog" aria-modal="true">
     <div class="modal">
       <h3>Salvar no histórico</h3>
-      <input type="text" id="modal-produto-nome" placeholder="Nome do produto" maxlength="80" />
+      <p>Dê um nome para identificar este produto depois.</p>
+      <input type="text" id="modal-produto-nome" placeholder="Ex: Câmera JBL 360" maxlength="80" />
       <div class="modal-actions">
         <button class="btn btn--primary" id="btn-modal-confirmar">Salvar</button>
-        <button class="btn btn--ghost" id="btn-modal-cancelar">Cancelar</button>
+        <button class="btn btn--ghost"   id="btn-modal-cancelar">Cancelar</button>
       </div>
     </div>
   </div>
@@ -179,16 +197,16 @@
   <div id="overlay-pro" class="modal-overlay hidden" role="dialog" aria-modal="true">
     <div class="modal modal--pro">
       <h3>Limite gratuito atingido</h3>
-      <p>30 cálculos utilizados. Desbloqueie o PRO para cálculos ilimitados e histórico.</p>
+      <p>Você usou todos os seus cálculos gratuitos. Desbloqueie o PRO para continuar.</p>
       <ul class="pro-benefits">
         <li>Cálculos ilimitados</li>
-        <li>Histórico com busca e filtros</li>
+        <li>Histórico completo (sem limite)</li>
         <li>Exportação CSV</li>
       </ul>
       <input type="password" id="pro-senha" placeholder="Senha PRO" />
       <div class="modal-actions">
         <button class="btn btn--primary" id="btn-ativar-pro">Desbloquear PRO</button>
-        <button class="btn btn--ghost" id="btn-fechar-overlay">Fechar</button>
+        <button class="btn btn--ghost"   id="btn-fechar-overlay">Fechar</button>
       </div>
     </div>
   </div>
@@ -196,8 +214,6 @@
   <!-- Toast de feedback -->
   <div id="toast" class="toast hidden" role="alert" aria-live="polite"></div>
 
-  <!-- Entry point — type="module" para suporte a imports/exports -->
   <script type="module" src="js/app.js"></script>
-
 </body>
 </html>
