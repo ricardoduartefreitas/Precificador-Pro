@@ -33,6 +33,19 @@ async function boot() {
   initUI(PLATAFORMAS);
   initFreemium();
   initRouter();
+
+  // Atualiza document.title conforme a view ativa
+  const VIEW_TITLES = {
+    calcular:  'Calcular — PrecificaPRO',
+    comparar:  'Comparar — PrecificaPRO',
+    historico: 'Histórico — PrecificaPRO',
+  };
+  function syncTitle() {
+    const route = (window.location.hash || '').replace(/^#\//, '').split('/')[0] || 'calcular';
+    document.title = VIEW_TITLES[route] || 'PrecificaPRO';
+  }
+  window.addEventListener('hashchange', syncTitle);
+  syncTitle();
 }
 
 boot();

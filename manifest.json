@@ -2,7 +2,7 @@
   "name": "PrecificaPRO — Calculadora de Marketplaces",
   "short_name": "PrecificaPRO",
   "description": "Calcule o preço ideal de venda em Mercado Livre, Shopee, Amazon, TikTok Shop e Shein.",
-  "start_url": "./index.html#/comparar",
+  "start_url": "./index.html#/calcular",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",

@@ -2,7 +2,7 @@
 // Responsabilidade: cache offline dos assets estáticos (Cache First)
 // Atualizar APP_SHELL ao adicionar novos arquivos ao projeto
 
-const CACHE_NAME = 'precificapro-v1';
+const CACHE_NAME = 'psp-v2';
 
 const APP_SHELL = [
   './',
@@ -16,6 +16,7 @@ const APP_SHELL = [
   './js/ui.js',
   './js/formatter.js',
   './js/freemium.js',
+  './js/history.js',
   './platforms/mercadolivre.js',
   './platforms/shopee.js',
   './platforms/amazon.js',
@@ -23,7 +24,7 @@ const APP_SHELL = [
   './platforms/shein.js',
   './manifest.json',
   './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icons/icon-512.png',
 ];
 
 self.addEventListener('install', (event) => {

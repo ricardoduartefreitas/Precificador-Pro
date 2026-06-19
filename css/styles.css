@@ -928,13 +928,54 @@ input[type="range"] {
 }
 
 /* --------------------------------------------------------------------------
-   23. RESPONSIVIDADE
+   23. TRANSIÇÕES DE VIEW
    -------------------------------------------------------------------------- */
+.view:not(.hidden) {
+  animation: viewFadeIn 180ms ease both;
+}
+
+@keyframes viewFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   24. RESPONSIVIDADE MOBILE
+   -------------------------------------------------------------------------- */
+
+/* 375px: comprime o result-grid de 3 para 2 colunas */
+@media (max-width: 400px) {
+  .result-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* último item fica em linha própria */
+  .result-grid > div:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .result-preco-valor {
+    font-size: var(--text-3xl);
+  }
+}
+
+/* 360px: força 1 coluna em formulários */
 @media (max-width: 360px) {
   .form-grid {
     grid-template-columns: 1fr;
   }
+
   .form-field--full {
     grid-column: 1;
+  }
+
+  .ranking-card {
+    flex-wrap: wrap;
   }
 }
