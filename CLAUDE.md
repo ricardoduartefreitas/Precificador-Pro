@@ -1,14 +1,21 @@
 # Precificador Marketplace 2026
 
 ## Status atual
-- Spec de design criada: docs/superpowers/specs/2026-06-17-precificador-multiplatforma-design.md
-- Mockups HTML criados em .superpowers/brainstorm/content/
-- Nenhum código de implementação escrito ainda
-- Repositório original intacto
-
-## Próximo passo
-Criar o plano de implementação (pedir em partes, máximo 20 linhas por vez)
+- App SPA completo: 3 views (Calcular, Comparar, Histórico)
+- Motor de cálculo validado (smoke-test 5/5 plataformas)
+- PWA com service worker (cache psp-v2, offline-first)
+- Deploy automático via GitHub Actions → precificador.ruahtecnologia.com.br
 
 ## Escopo
 Precificador cobrindo 5 plataformas: ML, Shopee, Amazon, TikTok, Shein
 Funcionalidades: modo comparação, calculadora individual, histórico CSV
+
+## Regra de deploy
+
+Após qualquer alteração de código, sempre rodar:
+
+```bash
+git add . && git commit -m 'descrição da alteração' && git push origin main
+```
+
+O deploy é automático via GitHub Actions após o push.
