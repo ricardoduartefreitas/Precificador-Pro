@@ -980,8 +980,8 @@ input[type="range"] {
   }
 }
 
-/* ── ML aviso de variação por categoria ─────────────────────────────────── */
-.ml-aviso {
+/* ── Avisos de plataforma (warning=amarelo, error=vermelho) ──────────────── */
+.plat-aviso {
   margin-top: 0.75rem;
   padding: 0.5rem 0.75rem;
   background: rgba(245, 158, 11, 0.10);
@@ -990,4 +990,9 @@ input[type="range"] {
   color: var(--accent-yellow);
   font-size: 0.72rem;
   line-height: 1.5;
+}
+.plat-aviso--error {
+  background: rgba(239, 68, 68, 0.10);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #ef4444;
 }

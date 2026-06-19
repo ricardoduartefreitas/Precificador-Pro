@@ -18,6 +18,9 @@ export default {
   campanha:    true,
   taxaCampanha: 2.0,
 
+  aviso:     '⚠️ Taxa em fase de expansão. Confirme em seller-br.tiktok.com → Central de Ajuda → Taxas.',
+  avisoTipo: 'warning',
+
   // ⚠️  Taxa promocional vigente no lançamento do TikTok Shop BR
   // Plataforma em fase de incentivo — pode ter taxa 0% ou reduzida temporariamente
   faixas: {

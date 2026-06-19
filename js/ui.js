@@ -297,6 +297,7 @@ function _handleCalcular() {
   resultado._faixa    = calcInputs._faixaLabel;
   resultado._platNome = plat.nome;
   resultado._platCor  = plat.cor;
+  resultado._platId   = plat.id;
 
   if (isML) {
     const isCampanha   = !!state.inputs.campanha;
@@ -307,6 +308,8 @@ function _handleCalcular() {
 
     resultado._comissaoLabel     = `${tipoLabel} (${comissaoBase}%)`;
     resultado._showAviso         = true;
+    resultado._avisoTexto        = '⚠️ Comissões podem variar por categoria. Valide em mercadolivre.com.br/tarifas antes de precificar.';
+    resultado._avisoTipo         = 'warning';
     resultado._campanhaAtiva     = isCampanha;
     resultado._campanhaLabel     = `Product Ads (estimativa ${plat.taxaCampanha || 2.5}%)`;
     resultado._campanhaValor     = isCampanha
@@ -318,7 +321,27 @@ function _handleCalcular() {
       resultado._taxaFixaLabel = `Taxa fixa ${logLabel} (abaixo R$79,99)`;
     }
   } else {
-    resultado._comissaoLabel = `(${calcInputs.comissaoPlataforma}%)`;
+    // % de comissão (null quando for 0, ex: Shopee CPF iniciante usa só taxa fixa)
+    resultado._comissaoLabel = calcInputs.comissaoPlataforma > 0
+      ? `(${calcInputs.comissaoPlataforma}%)`
+      : null;
+
+    // Aviso genérico definido na configuração da plataforma
+    if (plat.aviso) {
+      resultado._showAviso  = true;
+      resultado._avisoTexto = plat.aviso;
+      resultado._avisoTipo  = plat.avisoTipo || 'warning';
+    }
+
+    // Shopee CPF iniciante: sem comissão %, taxa é fixa em R$ — label customizado
+    if (plat.id === 'shopee' && tipoVend === 'cpf_iniciante') {
+      resultado._taxaFixaLabel = `Taxa fixa Shopee CPF (${calcInputs._faixaLabel || ''})`;
+    }
+
+    // Shopee CPF experiente: adicional R$3/item — label customizado
+    if (plat.id === 'shopee' && tipoVend === 'cpf_experiente') {
+      resultado._taxaFixaLabel = 'Adicional CPF (R$3,00/item)';
+    }
   }
 
   registerCalculo();
@@ -618,9 +641,8 @@ export function renderResultHero(resultado) {
       Preço mínimo: ${formatBRL(resultado.precoMinimo)}
     </p>
     ${resultado._showAviso ? `
-    <p class="ml-aviso">
-      ⚠️ Comissões podem variar por categoria.
-      Valide em mercadolivre.com.br/tarifas antes de precificar.
+    <p class="plat-aviso${resultado._avisoTipo === 'error' ? ' plat-aviso--error' : ''}">
+      ${_esc(resultado._avisoTexto || '')}
     </p>` : ''}
   `;
 
@@ -635,7 +657,7 @@ export function renderExtrato(resultado) {
   if (!container || !table || !resultado) return;
 
   const bd    = resultado.breakdown;
-  const isML  = !!resultado._showAviso;
+  const isML  = resultado._platId === 'mercadolivre';
 
   // Para ML com campanha, separa comissão pura de Product Ads
   const comissaoExibir = (isML && resultado._campanhaAtiva)
@@ -648,7 +670,9 @@ export function renderExtrato(resultado) {
     { label: 'Frete',            valor: -bd.freteValor,         classe: 'row-deduction' },
     { label: 'Outros custos',    valor: -bd.custosAdicionais,   classe: 'row-deduction' },
     {
-      label:  `Comissão ${resultado._comissaoLabel || ''}`.trim(),
+      label:  resultado._comissaoLabel
+        ? `Comissão ${resultado._comissaoLabel}`
+        : 'Comissão',
       valor:  -comissaoExibir,
       classe: 'row-deduction',
     },

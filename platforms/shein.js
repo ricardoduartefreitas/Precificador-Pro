@@ -18,6 +18,9 @@ export default {
   campanha:    false,
   taxaCampanha: 0,
 
+  aviso:     '⚠️ Taxa estimada. Portal do seller não está disponível publicamente. Contate o suporte Shein Marketplace BR.',
+  avisoTipo: 'error',
+
   // ⚠️  Taxas estimadas — Shein marketplace BR tem modelo por categoria
   // Comissão varia de 10% a 20% dependendo da categoria
   // Validar no painel de seller antes de usar em produção

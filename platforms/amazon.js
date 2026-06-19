@@ -20,6 +20,9 @@ export default {
   campanha:    false,
   taxaCampanha: 0,
 
+  aviso:     '⚠️ Taxa de fulfillment FBA varia por peso e dimensão do produto. Consulte Seller Central BR → Configurações → Tarifas de referência.',
+  avisoTipo: 'warning',
+
   // ⚠️  Taxas aproximadas para referência — variam por categoria
   // FBA inclui taxa de fulfillment estimada (~R$10–30 por item médio)
   faixas: {
