@@ -13,8 +13,9 @@ const WARN_AT    = 25;
 // Hashes SHA-256 válidos para ativação PRO (adicionar senhas via config)
 // Para gerar: crypto.subtle.digest('SHA-256', encoder.encode(senha))
 const PRO_HASHES = [
-  // Exemplo: hash de 'precifica2026pro' — substituir pelas senhas reais em produção
-  // '...'
+  '8b3246735f015e4beb553e388f0ae1b4fb54b8bbd546cc40b448835445afb079',
+  'd4a1c7ee5d0d83ff62c579c4c8b643b2cc7b467a38503c79aeedee27f53f0d3e',
+  'd6f8d408171fdae20d9f8f66972ba3a1e9d8bfe0b4d6c77b1c8881b801962b3f',
 ];
 
 // ---------- INICIALIZAÇÃO ----------

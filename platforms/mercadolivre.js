@@ -1,16 +1,18 @@
 // platforms/mercadolivre.js — PrecificaPRO
-// Fonte: mercadolivre.com.br/ajuda/custos-de-vender_1338
-// Atualizado: Jun/2026
+// Fonte: vendedores.mercadolivre.com.br/nota/como-funcionam-as-taxas-do-mercado-livre
+// Última verificação: 31/07/2026
 //
-// Comissões ML Brasil 2026:
-//   Clássico (gold_special): 11%  |  Premium (gold_pro): 19%
+// Comissões ML Brasil 2026 (variam por categoria):
+//   Clássico: 10% a 14%  |  Premium: 15% a 19%
+//   Padrão geral usado aqui: Clássico 11% | Premium 16%
+//   Moda/Calçados pode chegar a 14%/19% — use aviso e valide na fonte.
 //
-// Taxa fixa (fixed_fee) — varia por logística + faixa de preço:
-//   Full / Drop Off → sem taxa fixa em nenhuma faixa
-//   Normal (ME1) / Flex → R$4 abaixo de R$79,99 | sem taxa fixa acima
+// Taxa fixa (custo por unidade) — vigente desde 02/03/2026:
+//   Full, Drop Off (Agência), Normal (ME1) → custo VARIÁVEL por peso/dimensão
+//     → não há valor fixo tabelado; consultar simulador ML ou API /listing_prices
+//   Flex → R$4 abaixo de R$79,98 | sem taxa fixa acima
 //
-// Lógica: ativa desde 02/03/2026 (breaking change na API /listing_prices)
-// ⚠️ Comissões podem variar por categoria — valide em mercadolivre.com.br/tarifas
+// ⚠️ Comissões variam por categoria — valide em mercadolivre.com.br/tarifas
 
 export default {
   id:    'mercadolivre',
@@ -20,30 +22,27 @@ export default {
   corFundo:   '#fff3c0',
   corTexto:   '#b45309',
 
-  // Label do primeiro select (exibido no lugar de "Tipo de vendedor")
   labelTipoVendedor: 'Tipo de anúncio',
 
-  // Primeiro select: tipo de anúncio (determina a comissão %)
   tiposVendedor: [
-    { key: 'classico', label: 'Clássico' },
-    { key: 'premium',  label: 'Premium'  },
+    { key: 'classico', label: 'Clássico (11% padrão)' },
+    { key: 'premium',  label: 'Premium (16% padrão)'  },
   ],
 
-  // Segundo select: tipo de logística (determina a taxa fixa)
   tiposLogistica: [
     { key: 'full',    label: 'Full (Fulfillment)' },
-    { key: 'dropoff', label: 'Drop Off (ME)'      },
-    { key: 'normal',  label: 'Normal (ME1)'       },
-    { key: 'flex',    label: 'Flex'               },
+    { key: 'dropoff', label: 'Drop Off (Agência)'  },
+    { key: 'normal',  label: 'Normal (ME1)'        },
+    { key: 'flex',    label: 'Flex'                },
   ],
 
-  // Campanha = Product Ads (estimativa de custo como % da venda)
   campanha:     true,
   taxaCampanha: 2.5,
 
   // Faixas combinadas: chave = `${tipoAnuncio}_${logistica}`
-  // Full / Drop Off — sem taxa fixa (fixo: 0) em qualquer preço
-  // Normal / Flex   — R$4 abaixo de R$79,99; sem taxa fixa acima
+  // Full / Drop Off / Normal → custo por unidade VARIÁVEL por peso (desde 02/03/2026)
+  //   → fixo: 0 aqui; adicione manualmente no campo "Custos adicionais"
+  // Flex → R$4 abaixo de R$79,98 | sem taxa fixa acima
   faixas: {
     classico_full: [
       { max: Infinity, comissao: 11, fixo: 0, variavel: 0, label: 'Clássico 11% · Full' },
@@ -52,26 +51,24 @@ export default {
       { max: Infinity, comissao: 11, fixo: 0, variavel: 0, label: 'Clássico 11% · Drop Off' },
     ],
     classico_normal: [
-      { max: 79.98,    comissao: 11, fixo: 4, variavel: 0, label: 'Clássico 11% · Normal (abaixo R$79,99)' },
-      { max: Infinity, comissao: 11, fixo: 0, variavel: 0, label: 'Clássico 11% · Normal' },
+      { max: Infinity, comissao: 11, fixo: 0, variavel: 0, label: 'Clássico 11% · Normal (ME1)' },
     ],
     classico_flex: [
       { max: 79.98,    comissao: 11, fixo: 4, variavel: 0, label: 'Clássico 11% · Flex (abaixo R$79,99)' },
-      { max: Infinity, comissao: 11, fixo: 0, variavel: 0, label: 'Clássico 11% · Flex' },
+      { max: Infinity, comissao: 11, fixo: 0, variavel: 0, label: 'Clássico 11% · Flex'                  },
     ],
     premium_full: [
-      { max: Infinity, comissao: 19, fixo: 0, variavel: 0, label: 'Premium 19% · Full' },
+      { max: Infinity, comissao: 16, fixo: 0, variavel: 0, label: 'Premium 16% · Full' },
     ],
     premium_dropoff: [
-      { max: Infinity, comissao: 19, fixo: 0, variavel: 0, label: 'Premium 19% · Drop Off' },
+      { max: Infinity, comissao: 16, fixo: 0, variavel: 0, label: 'Premium 16% · Drop Off' },
     ],
     premium_normal: [
-      { max: 79.98,    comissao: 19, fixo: 4, variavel: 0, label: 'Premium 19% · Normal (abaixo R$79,99)' },
-      { max: Infinity, comissao: 19, fixo: 0, variavel: 0, label: 'Premium 19% · Normal' },
+      { max: Infinity, comissao: 16, fixo: 0, variavel: 0, label: 'Premium 16% · Normal (ME1)' },
     ],
     premium_flex: [
-      { max: 79.98,    comissao: 19, fixo: 4, variavel: 0, label: 'Premium 19% · Flex (abaixo R$79,99)' },
-      { max: Infinity, comissao: 19, fixo: 0, variavel: 0, label: 'Premium 19% · Flex' },
+      { max: 79.98,    comissao: 16, fixo: 4, variavel: 0, label: 'Premium 16% · Flex (abaixo R$79,99)' },
+      { max: Infinity, comissao: 16, fixo: 0, variavel: 0, label: 'Premium 16% · Flex'                  },
     ],
   },
 };

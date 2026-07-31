@@ -228,16 +228,17 @@ export function mapPlataformaToInputs(baseInputs, plataforma, tipoVendedor, camp
  * Calcula e compara todas as plataformas com os mesmos inputs base.
  * Retorna array ordenado por lucroLiquido decrescente.
  *
- * @param {Object} baseInputs  - { custoProduto, custoFrete, custosAdicionais, margemLucro, imposto }
- * @param {Array}  plataformas - array de objetos de plataforma (platforms/*.js)
- * @param {string} tipoVendedor - chave de tipo padrão (ex: 'cnpj')
- * @param {boolean} campanha   - se campanha está ativa
+ * @param {Object} baseInputs   - { custoProduto, custoFrete, custosAdicionais, margemLucro, imposto }
+ * @param {Array}  plataformas  - array de objetos de plataforma (platforms/*.js)
+ * @param {string} tipoVendedor - chave de tipo padrão (fallback quando tipoMap não define a plataforma)
+ * @param {boolean} campanha    - se campanha está ativa
+ * @param {Object} tipoMap      - mapa { [plataformaId]: tipoKey } para tipo por plataforma
  * @returns {Array} resultados com metadados da plataforma, ordenados por lucroLiquido
  */
-export function comparar(baseInputs, plataformas, tipoVendedor = null, campanha = false) {
+export function comparar(baseInputs, plataformas, tipoVendedor = null, campanha = false, tipoMap = {}) {
   return plataformas
     .map((plataforma) => {
-      const tipo = tipoVendedor || Object.keys(plataforma.faixas)[0];
+      const tipo = tipoMap[plataforma.id] || tipoVendedor || Object.keys(plataforma.faixas)[0];
       const inputs = mapPlataformaToInputs(baseInputs, plataforma, tipo, campanha);
       if (!inputs) return null;
 

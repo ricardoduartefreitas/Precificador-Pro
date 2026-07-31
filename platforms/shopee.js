@@ -1,11 +1,18 @@
 // platforms/shopee.js — PrecificaPRO
-// Fonte: seller.shopee.com.br/edu/article/26839 (atualizado 04-02-2026)
-// Vigente desde 01/03/2026 — validar trimestralmente
+// Fonte: seller.br.shopee.cn/edu/article/26839 (atualizado 21/07/2026)
+// Vigente desde 01/03/2026 — última verificação: 31/07/2026
 //
-// CNPJ: comissão % variável por faixa de preço do item
-// CPF iniciante (<450 pedidos/90d): taxa FIXA em R$ por faixa (sem % de comissão)
-// CPF experiente (>450 pedidos/90d): mesma % do CNPJ + R$3 adicional por item
-// ⚠️ Taxa de transação já está incluída na comissão (não cobrada separadamente)
+// CNPJ e CPF iniciante (<450 pedidos/90d): mesma tabela — % + taxa fixa por faixa
+// CPF experiente (>450 pedidos/90d): mesmos % + R$3 adicional por item em cada faixa
+//
+// Faixas vigentes desde 01/03/2026:
+//   R$0–7,99    → 50% + R$0
+//   R$8–79,99   → 20% + R$4
+//   R$80–99,99  → 14% + R$16
+//   R$100–199,99 → 14% + R$20
+//   R$200+      → 14% + R$26
+//
+// ⚠️ Não há variação por categoria na tabela-base; varia por preço do item.
 
 export default {
   id:    'shopee',
@@ -18,40 +25,33 @@ export default {
   labelTipoVendedor: 'Tipo de vendedor',
 
   tiposVendedor: [
-    { key: 'cnpj',           label: 'CNPJ'              },
-    { key: 'cpf_iniciante',  label: 'CPF (iniciante)'   },
-    { key: 'cpf_experiente', label: 'CPF (experiente)'  },
+    { key: 'cnpj',           label: 'CNPJ / CPF Iniciante (<450 pedidos/90d)' },
+    { key: 'cpf_experiente', label: 'CPF Experiente (>450 pedidos/90d)'       },
   ],
 
   campanha:     true,
   taxaCampanha: 2.0,
 
-  aviso:     '⚠️ Tabela por faixa vigente desde 01/03/2026. Valide em seller.shopee.com.br',
+  aviso:     '⚠️ Tabela vigente desde 01/03/2026. Produtos abaixo de R$7,99 têm 50% de comissão. Valide em seller.shopee.com.br',
   avisoTipo: 'warning',
 
   faixas: {
-    // CNPJ — comissão % por faixa de preço de venda
+    // CNPJ e CPF iniciante (<450 pedidos/90d) — mesma tabela
     cnpj: [
-      { max: 29.99,    comissao: 16, fixo: 0, variavel: 0, label: 'até R$29,99'      },
-      { max: 79.99,    comissao: 15, fixo: 0, variavel: 0, label: 'R$30–R$79,99'     },
-      { max: 199.99,   comissao: 13, fixo: 0, variavel: 0, label: 'R$80–R$199,99'    },
-      { max: Infinity, comissao: 12, fixo: 0, variavel: 0, label: 'acima de R$200'   },
+      { max: 7.99,     comissao: 50, fixo: 0,  variavel: 0, label: 'até R$7,99 (50%)'          },
+      { max: 79.99,    comissao: 20, fixo: 4,  variavel: 0, label: 'R$8–R$79,99 (20% + R$4)'   },
+      { max: 99.99,    comissao: 14, fixo: 16, variavel: 0, label: 'R$80–R$99,99 (14% + R$16)' },
+      { max: 199.99,   comissao: 14, fixo: 20, variavel: 0, label: 'R$100–R$199,99 (14% + R$20)' },
+      { max: Infinity, comissao: 14, fixo: 26, variavel: 0, label: 'acima de R$200 (14% + R$26)' },
     ],
 
-    // CPF iniciante — taxa FIXA por item em R$ (comissao: 0 = sem percentual)
-    cpf_iniciante: [
-      { max: 29.99,    comissao: 0, fixo: 4,  variavel: 0, label: 'até R$29,99'    },
-      { max: 79.99,    comissao: 0, fixo: 16, variavel: 0, label: 'R$30–R$79,99'   },
-      { max: 199.99,   comissao: 0, fixo: 20, variavel: 0, label: 'R$80–R$199,99'  },
-      { max: Infinity, comissao: 0, fixo: 26, variavel: 0, label: 'acima de R$200' },
-    ],
-
-    // CPF experiente — mesma % do CNPJ + R$3 fixo por item
+    // CPF experiente (>450 pedidos/90d) — mesmos % + R$3 adicional por item
     cpf_experiente: [
-      { max: 29.99,    comissao: 16, fixo: 3, variavel: 0, label: 'até R$29,99 (16% + R$3)'   },
-      { max: 79.99,    comissao: 15, fixo: 3, variavel: 0, label: 'R$30–R$79,99 (15% + R$3)'  },
-      { max: 199.99,   comissao: 13, fixo: 3, variavel: 0, label: 'R$80–R$199,99 (13% + R$3)' },
-      { max: Infinity, comissao: 12, fixo: 3, variavel: 0, label: 'acima de R$200 (12% + R$3)' },
+      { max: 7.99,     comissao: 50, fixo: 3,  variavel: 0, label: 'até R$7,99 (50% + R$3)'          },
+      { max: 79.99,    comissao: 20, fixo: 7,  variavel: 0, label: 'R$8–R$79,99 (20% + R$7)'         },
+      { max: 99.99,    comissao: 14, fixo: 19, variavel: 0, label: 'R$80–R$99,99 (14% + R$19)'       },
+      { max: 199.99,   comissao: 14, fixo: 23, variavel: 0, label: 'R$100–R$199,99 (14% + R$23)'     },
+      { max: Infinity, comissao: 14, fixo: 29, variavel: 0, label: 'acima de R$200 (14% + R$29)'     },
     ],
   },
 };

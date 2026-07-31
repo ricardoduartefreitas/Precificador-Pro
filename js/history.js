@@ -64,7 +64,7 @@ export function getStats() {
   const entries = getHistory();
 
   if (!entries.length) {
-    return { total: 0, maxLucro: null, mediasMargem: null };
+    return { total: 0, maxLucro: null, mediaMargem: null };
   }
 
   const individuais = entries.filter((e) => e.tipo === 'individual');
@@ -74,7 +74,7 @@ export function getStats() {
     : null;
 
   const mediaMargem = individuais.length
-    ? individuais.reduce((acc, e) => acc + (e.resultado?.margemReal ?? 0), 0) / individuais.length
+    ? individuais.reduce((acc, e) => acc + (e.resultado?.lucroPercentual ?? 0), 0) / individuais.length
     : null;
 
   return { total: entries.length, maxLucro, mediaMargem };

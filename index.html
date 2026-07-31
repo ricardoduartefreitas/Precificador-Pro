@@ -133,6 +133,23 @@
               <input type="number" id="cmp-margem" placeholder="ex: 30" min="0" max="200" step="1" value="30" />
             </div>
           </div>
+          <div class="form-grid" style="margin-top:0.5rem">
+            <div class="form-field">
+              <label for="cmp-shopee-tipo">Shopee — perfil do vendedor</label>
+              <select id="cmp-shopee-tipo" class="form-select">
+                <option value="cnpj">CNPJ</option>
+                <option value="cpf_iniciante">CPF Iniciante (&lt;450 pedidos/90d)</option>
+                <option value="cpf_experiente">CPF Experiente (&gt;450 pedidos/90d)</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="cmp-amazon-tipo">Amazon — modalidade</label>
+              <select id="cmp-amazon-tipo" class="form-select">
+                <option value="fba">FBA (Amazon entrega)</option>
+                <option value="fbm">FBM (Eu entrego)</option>
+              </select>
+            </div>
+          </div>
           <button class="btn btn--primary" id="btn-comparar">Comparar todas as plataformas</button>
         </div>
 

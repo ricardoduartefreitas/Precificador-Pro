@@ -375,6 +375,14 @@ function _initComparView() {
   _fillComparFields();
   _bindComparInputChange();
 
+  document.getElementById('cmp-shopee-tipo')?.addEventListener('change', (e) => {
+    setState({ cmpShopeeTipo: e.target.value });
+  });
+
+  document.getElementById('cmp-amazon-tipo')?.addEventListener('change', (e) => {
+    setState({ cmpAmazonTipo: e.target.value });
+  });
+
   document.getElementById('btn-comparar')?.addEventListener('click', _handleComparar);
 }
 
@@ -416,7 +424,12 @@ function _handleComparar() {
     imposto:          parseInputValue(document.getElementById('cmp-imposto')?.value),
   };
 
-  const resultados = comparar(base, _PLATAFORMAS, null, false);
+  const state2 = getState();
+  const tipoMap = {
+    shopee: state2.cmpShopeeTipo || 'cnpj',
+    amazon: state2.cmpAmazonTipo || 'fba',
+  };
+  const resultados = comparar(base, _PLATAFORMAS, null, false, tipoMap);
 
   if (!resultados?.length) {
     showToast('Nenhum resultado — verifique os valores', 'error');

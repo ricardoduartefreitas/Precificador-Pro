@@ -1,8 +1,13 @@
 // platforms/shein.js — PrecificaPRO
-// Responsabilidade: tabela de taxas da Shein (Marketplace terceiros Brasil)
-// Fonte: https://seller.shein.com/br
-// ⚠️  ATENÇÃO: Shein marketplace para terceiros é recente no BR — validar na plataforma
-// Atualizado: Jun/2026 — verificar trimestralmente
+// Fonte: seller-br.shein.com (atualizado 07/07/2026) — última verificação: 31/07/2026
+//
+// Taxas vigentes:
+//   Categorias gerais:   18% (vigente desde 01/03/2026, antes era 16%)
+//   Moda feminina:       20% (vigente desde 22/10/2025)
+//
+// Sem taxa fixa por item.
+// Comissão calculada sobre preço final após descontos/cupons do vendedor.
+// Portal BR: seller-br.shein.com (não seller.shein.com/br)
 
 export default {
   id:    'shein',
@@ -12,21 +17,25 @@ export default {
   corFundo:   '#fce4ec',
   corTexto:   '#880e4f',
 
-  // Shein não diferencia tipo de vendedor no modelo marketplace BR
-  tiposVendedor: null,
+  labelTipoVendedor: 'Categoria do produto',
+
+  tiposVendedor: [
+    { key: 'geral',          label: 'Categorias gerais (18%)'   },
+    { key: 'moda_feminina',  label: 'Moda feminina (20%)'       },
+  ],
 
   campanha:    false,
   taxaCampanha: 0,
 
-  aviso:     '⚠️ Taxa estimada. Portal do seller não está disponível publicamente. Contate o suporte Shein Marketplace BR.',
-  avisoTipo: 'error',
+  aviso:     '⚠️ Taxa de 18% (geral) ou 20% (moda feminina). Novos vendedores têm 30 dias de comissão zero. Cadastro em seller-br.shein.com.',
+  avisoTipo: 'warning',
 
-  // ⚠️  Taxas estimadas — Shein marketplace BR tem modelo por categoria
-  // Comissão varia de 10% a 20% dependendo da categoria
-  // Validar no painel de seller antes de usar em produção
   faixas: {
-    padrao: [
-      { max: Infinity, comissao: 15, fixo: 0, variavel: 0, label: 'Taxa padrão Shein' },
+    geral: [
+      { max: Infinity, comissao: 18, fixo: 0, variavel: 0, label: 'Taxa Shein (categorias gerais)' },
+    ],
+    moda_feminina: [
+      { max: Infinity, comissao: 20, fixo: 0, variavel: 0, label: 'Taxa Shein (moda feminina)' },
     ],
   },
 };

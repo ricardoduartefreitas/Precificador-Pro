@@ -1,8 +1,13 @@
 // platforms/tiktok.js — PrecificaPRO
-// Responsabilidade: tabela de taxas do TikTok Shop Brasil
-// Fonte: https://seller-br.tiktok.com/university/essay
-// ⚠️  ATENÇÃO: TikTok Shop BR tem taxas em período promocional — validar no Seller Center
-// Atualizado: Jun/2026 — verificar mensalmente (plataforma em expansão no BR)
+// Fonte: seller-br.tiktok.com/university (atualizado 30/07/2026)
+// Vigente desde 15/07/2026 — verificar mensalmente (plataforma em expansão no BR)
+//
+// Tabela vigente desde 15/07/2026:
+//   Produto abaixo de R$50  → 10% + R$4 por item
+//   Produto R$50 ou acima   → 6%  + R$6 por item
+//
+// Benefício temporário: novos vendedores podem ter 0% por 60 dias (até R$17k)
+// ⚠️ Esse benefício é temporário — não usar como taxa permanente no precificador.
 
 export default {
   id:    'tiktok',
@@ -12,20 +17,18 @@ export default {
   corFundo:   '#e0fffe',
   corTexto:   '#00796b',
 
-  // TikTok Shop não diferencia tipo de vendedor no BR atualmente
   tiposVendedor: null,
 
   campanha:    true,
   taxaCampanha: 2.0,
 
-  aviso:     '⚠️ Taxa em fase de expansão. Confirme em seller-br.tiktok.com → Central de Ajuda → Taxas.',
+  aviso:     '⚠️ Tabela vigente desde 15/07/2026. Novos vendedores podem ter 0% por 60 dias (benefício temporário). Confirme em seller-br.tiktok.com.',
   avisoTipo: 'warning',
 
-  // ⚠️  Taxa promocional vigente no lançamento do TikTok Shop BR
-  // Plataforma em fase de incentivo — pode ter taxa 0% ou reduzida temporariamente
   faixas: {
     padrao: [
-      { max: Infinity, comissao: 5, fixo: 0, variavel: 0, label: 'Taxa padrão TikTok Shop' },
+      { max: 49.99,    comissao: 10, fixo: 4, variavel: 0, label: 'abaixo de R$50 (10% + R$4)'  },
+      { max: Infinity, comissao: 6,  fixo: 6, variavel: 0, label: 'R$50 ou mais (6% + R$6)'     },
     ],
   },
 };

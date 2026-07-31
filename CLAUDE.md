@@ -42,14 +42,23 @@ O deploy é automático via GitHub Actions após o push.
 - Amazon/TikTok: aviso amarelo (estimativa)
 - Shein: aviso vermelho (não confirmado — portal inacessível)
 
+## Taxas verificadas em 31/07/2026
+
+| Plataforma | Fonte | Próxima revisão |
+|---|---|---|
+| Mercado Livre | vendedores.mercadolivre.com.br/tarifas | Trimestral |
+| Shopee | seller.br.shopee.cn/edu/article/26839 | Trimestral |
+| TikTok Shop | seller-br.tiktok.com/university | Mensal (plataforma em expansão) |
+| Shein | seller-br.shein.com | Trimestral |
+| Amazon | venda.amazon.com.br/precos | Semestral |
+
 ## O que falta / pendências
 
-| Plataforma | Pendência |
+| Pendência | Detalhe |
 |---|---|
-| Amazon | Taxas reais por categoria — validar no Seller Central BR (requer login) |
-| TikTok | Confirmar taxa atual em seller-br.tiktok.com (requer login) |
-| Shein | Portal do seller não acessível — contatar suporte Shein BR |
-| Comparador | View #/comparar não reflete taxa fixa em R$ (CPF iniciante Shopee) |
+| ML Full/Drop Off/Normal | Custo por unidade agora é variável por peso. Orientar usuário a incluir em "Custos adicionais" |
+| Amazon FBA | Taxa de fulfillment estimada em R$13 — varia por peso real do produto |
+| Shein moda feminina | Adicionar select de categoria na view Calcular (já está no comparador) |
 
 ## Arquitetura resumida
 
