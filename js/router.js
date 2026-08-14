@@ -38,13 +38,9 @@ function showView(routeName) {
   // Mostrar/ocultar cards dentro da view-login (login vs aceitar-convite)
   if (routeName === 'login' || routeName === 'aceitar-convite') {
     const loginFormCard = document.getElementById('login-form-card');
-    const signupFormCard = document.getElementById('signup-form-card');
-    const signupConfirmCard = document.getElementById('signup-confirmation-card');
     const inviteAcceptCard = document.getElementById('invite-accept-card');
 
     if (loginFormCard) loginFormCard.style.display = routeName === 'login' ? 'block' : 'none';
-    if (signupFormCard) signupFormCard.style.display = 'none';
-    if (signupConfirmCard) signupConfirmCard.style.display = 'none';
     if (inviteAcceptCard) inviteAcceptCard.style.display = routeName === 'aceitar-convite' ? 'block' : 'none';
   }
 
