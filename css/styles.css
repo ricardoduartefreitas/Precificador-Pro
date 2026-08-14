@@ -1197,29 +1197,3 @@ input[type="range"] {
 @media (prefers-color-scheme: dark) {
   /* Já está em dark por padrão */
 }
-
-/* ═══ LAYOUT LADO A LADO (o pedido do Ricardo — 14/08) ═══ */
-#view-calcular .view-inner {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-areas:
-    "seletor seletor"
-    "regras  result"
-    "form    extrato"
-    "actions actions";
-  gap: 1.5rem;
-  align-items: start;
-}
-#view-calcular .view-inner > .card:first-of-type { grid-area: seletor; }
-#plat-regras-card  { grid-area: regras; }
-#calc-result       { grid-area: result; }
-.inputs-card       { grid-area: form; }
-#calc-extrato      { grid-area: extrato; }
-#calc-actions      { grid-area: actions; }
-
-@media (max-width: 900px) {
-  #view-calcular .view-inner {
-    grid-template-columns: 1fr;
-    grid-template-areas: "seletor" "regras" "result" "form" "extrato" "actions";
-  }
-}
