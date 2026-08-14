@@ -257,7 +257,10 @@ function _updateLogisticaSelect(plat) {
 }
 
 function _handleCalcular() {
+  console.log('[CALC] Handler iniciado');
+
   if (!canCalculate()) {
+    console.log('[CALC] Bloqueado: não pode calcular (limite free atingido)');
     showUpgradeOverlay();
     return;
   }
@@ -265,6 +268,7 @@ function _handleCalcular() {
   const state    = getState();
   const plat     = _findPlat(state.activePlatform) || _PLATAFORMAS[0];
   const isML     = plat.id === 'mercadolivre';
+  console.log('[CALC] Plataforma:', plat.nome, '| isML:', isML);
 
   // Para ML usa chave combinada tipoAnuncio_logistica; outras plataformas usam sellerType direto
   let tipoAnuncio, tipoVend;
@@ -286,7 +290,9 @@ function _handleCalcular() {
   };
 
   const calcInputs = mapPlataformaToInputs(base, plat, tipoVend, !!state.inputs.campanha);
+  console.log('[CALC] calcInputs mapeado:', calcInputs ? 'OK' : 'NULL');
   if (!calcInputs) {
+    console.log('[CALC] Erro: calcInputs é null');
     showToast('Verifique os valores inseridos', 'error');
     return;
   }
@@ -300,15 +306,20 @@ function _handleCalcular() {
     : calcular(calcInputs);
 
   if (!resultado) {
+    console.log('[CALC] Erro: resultado é null');
     showToast('Taxas somadas excedem 100% — revise os percentuais', 'error');
     return;
   }
+
+  console.log('[CALC] Resultado calculado:', resultado.precoVenda);
 
   resultado._faixa           = calcInputs._faixaLabel;
   resultado._freteDescricao  = calcInputs._freteDescricao || '';
   resultado._platNome        = plat.nome;
   resultado._platCor         = plat.cor;
   resultado._platId          = plat.id;
+
+  console.log('[CALC] Dados enriquecidos: faixa=' + resultado._faixa);
 
   if (isML) {
     const isCampanha   = !!state.inputs.campanha;
@@ -356,11 +367,23 @@ function _handleCalcular() {
   }
 
   registerCalculo();
-  setState({ lastResult: resultado, activePlatform: plat.id, sellerType: tipoAnuncio });
+  console.log('[CALC] Cálculo registrado no freemium');
 
+  setState({ lastResult: resultado, activePlatform: plat.id, sellerType: tipoAnuncio });
+  console.log('[CALC] Estado atualizado');
+
+  console.log('[CALC] Chamando renderResultHero...');
   renderResultHero(resultado);
+  console.log('[CALC] renderResultHero completou');
+
+  console.log('[CALC] Chamando renderExtrato...');
   renderExtrato(resultado);
-  document.getElementById('calc-actions')?.classList.remove('hidden');
+  console.log('[CALC] renderExtrato completou');
+
+  const actionsEl = document.getElementById('calc-actions');
+  console.log('[CALC] Element calc-actions encontrado?', !!actionsEl);
+  actionsEl?.classList.remove('hidden');
+  console.log('[CALC] Renderização concluída');
 
   setTimeout(() => {
     document.getElementById('calc-result')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -634,12 +657,18 @@ function _renderEntry(entry) {
 
 export function renderResultHero(resultado) {
   const el = document.getElementById('calc-result');
-  if (!el || !resultado) return;
+  console.log('[RENDER] renderResultHero: elemento encontrado?', !!el);
+  console.log('[RENDER] renderResultHero: resultado válido?', !!resultado);
+  if (!el || !resultado) {
+    console.log('[RENDER] renderResultHero: retornando sem renderizar');
+    return;
+  }
 
   const pctPlat = resultado.precoVenda > 0
     ? (resultado.breakdown.totalDeducoes / resultado.precoVenda) * 100
     : 0;
 
+  console.log('[RENDER] renderResultHero: antes de setInnerHTML');
   el.innerHTML = `
     <p class="result-preco-label">
       ${resultado._platNome ? `${_esc(resultado._platNome)} · ` : ''}Preço sugerido
@@ -670,7 +699,9 @@ export function renderResultHero(resultado) {
     </p>` : ''}
   `;
 
+  console.log('[RENDER] renderResultHero: removendo classe hidden');
   el.classList.remove('hidden');
+  console.log('[RENDER] renderResultHero: classList agora =', Array.from(el.classList));
 }
 
 // ─── RENDER: EXTRATO ─────────────────────────────────────────────────────────
@@ -678,7 +709,13 @@ export function renderResultHero(resultado) {
 export function renderExtrato(resultado) {
   const container = document.getElementById('calc-extrato');
   const table     = document.getElementById('extrato-table');
-  if (!container || !table || !resultado) return;
+  console.log('[RENDER] renderExtrato: container encontrado?', !!container);
+  console.log('[RENDER] renderExtrato: table encontrado?', !!table);
+  console.log('[RENDER] renderExtrato: resultado válido?', !!resultado);
+  if (!container || !table || !resultado) {
+    console.log('[RENDER] renderExtrato: retornando sem renderizar');
+    return;
+  }
 
   const bd    = resultado.breakdown;
   const isML  = resultado._platId === 'mercadolivre';
@@ -734,7 +771,9 @@ export function renderExtrato(resultado) {
       </tr>`)
     .join('');
 
+  console.log('[RENDER] renderExtrato: removendo classe hidden');
   container.classList.remove('hidden');
+  console.log('[RENDER] renderExtrato: classList agora =', Array.from(container.classList));
 }
 
 // ─── RENDER: COMPARAÇÃO ──────────────────────────────────────────────────────
