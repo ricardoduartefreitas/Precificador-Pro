@@ -667,39 +667,57 @@ export function renderResultHero(resultado) {
     return;
   }
 
-  const pctPlat = resultado.precoVenda > 0
-    ? (resultado.breakdown.custoDaPlataforma / resultado.precoVenda) * 100
+  // Calcular comissão % (baseado no breakdown ou rateio)
+  const comissaoPct = resultado.precoVenda > 0
+    ? (resultado.breakdown.comissaoValor / resultado.precoVenda) * 100
     : 0;
+
+  // Frete em R$
+  const freteValor = resultado.breakdown.freteValor || 0;
+
+  // Imposto em R$
+  const impostoValor = resultado.breakdown.impostoValor || 0;
+
+  // Margem em %
+  const margemPct = resultado.lucroPercentual;
 
   console.log('[RENDER] renderResultHero: antes de setInnerHTML');
   el.innerHTML = `
-    <p class="result-preco-label">
-      ${resultado._platNome ? `${_esc(resultado._platNome)} · ` : ''}Preço sugerido
-    </p>
-    ${resultado.desconto > 0 ? `<p class="result-preco-sem-desconto">${formatBRL(resultado.precoSemDesconto)}</p>` : ''}
-    <p class="result-preco-valor">${formatBRL(resultado.precoVenda)}</p>
-    <div class="result-grid">
-      <div>
-        <p class="result-item-label">Lucro líquido</p>
-        <p class="result-item-value text-green">${formatBRL(resultado.lucroLiquido)}</p>
-      </div>
-      <div>
-        <p class="result-item-label">Margem real</p>
-        <p class="result-item-value">${formatPct(resultado.lucroPercentual)}</p>
-      </div>
-      <div>
-        <p class="result-item-label">% plataforma</p>
-        <p class="result-item-value text-red">${formatPct(pctPlat)}</p>
-      </div>
+    <div class="result-hero__price-block">
+      <p class="result-preco-label">
+        ${resultado._platNome ? `${_esc(resultado._platNome)} · ` : ''}Preço sugerido
+      </p>
+      ${resultado.desconto > 0 ? `<p class="result-preco-sem-desconto">${formatBRL(resultado.precoSemDesconto)}</p>` : ''}
+      <p class="result-preco-valor">${formatBRL(resultado.precoVenda)}</p>
     </div>
-    <p class="result-faixa">
-      ${resultado._faixa ? `Faixa: ${_esc(resultado._faixa)} · ` : ''}
-      Preço mínimo: ${formatBRL(resultado.precoMinimo)}
-    </p>
-    ${resultado._showAviso ? `
-    <p class="plat-aviso${resultado._avisoTipo === 'error' ? ' plat-aviso--error' : ''}">
-      ${_esc(resultado._avisoTexto || '')}
-    </p>` : ''}
+
+    <div class="result-grid">
+      <div class="result-item-badge">
+        <p class="result-item-label">Comissão</p>
+        <p class="result-item-value ${comissaoPct > 15 ? 'warning' : ''}">${formatPct(comissaoPct)}</p>
+      </div>
+      <div class="result-item-badge">
+        <p class="result-item-label">Frete</p>
+        <p class="result-item-value">${formatBRL(freteValor)}</p>
+      </div>
+      <div class="result-item-badge">
+        <p class="result-item-label">Imposto</p>
+        <p class="result-item-value">${formatBRL(impostoValor)}</p>
+      </div>
+      <div class="result-item-badge">
+        <p class="result-item-label">Margem real</p>
+        <p class="result-item-value ${margemPct >= 30 ? 'positive' : margemPct >= 15 ? '' : 'negative'}">${formatPct(margemPct)}</p>
+      </div>
+
+      <p class="result-faixa">
+        ${resultado._faixa ? `Faixa: ${_esc(resultado._faixa)} · ` : ''}
+        Preço mínimo: ${formatBRL(resultado.precoMinimo)}
+      </p>
+      ${resultado._showAviso ? `
+      <div class="plat-aviso${resultado._avisoTipo === 'error' ? ' plat-aviso--error' : ''}" style="grid-column: 1 / -1;">
+        ${_esc(resultado._avisoTexto || '')}
+      </div>` : ''}
+    </div>
   `;
 
   console.log('[RENDER] renderResultHero: removendo classe hidden');

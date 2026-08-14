@@ -235,29 +235,53 @@ img { display: block; max-width: 100%; }
   padding-bottom: var(--space-12);
 }
 
-/* LAYOUT 2-COLUNAS para view-calcular em desktop */
+/* LAYOUT REDESIGN 2 para view-calcular em desktop */
+/* Estrutura: TOPO (plataforma enxuto) → MEIO (hero destaque) → EMBAIXO (2-col formulário+extrato) */
 @media (min-width: 900px) {
   #view-calcular .view-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: var(--space-8);
-    align-items: start;
   }
 
-  #view-calcular .card:nth-child(1),  /* Plataforma */
-  #view-calcular .card:nth-child(2),  /* Regras */
-  #view-calcular .inputs-card,       /* Inputs */
-  #view-calcular #btn-calcular {     /* Botão */
-    grid-column: 1;
+  /* SEÇÃO 1: TOPO — Plataforma + Tipo de vendedor (pequeno) */
+  #view-calcular .card:nth-child(1) {
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
   }
 
-  #view-calcular #calc-result,       /* Hero */
-  #view-calcular #calc-extrato {     /* Extrato */
-    grid-column: 2;
+  /* SEÇÃO 2: DESTAQUE — Hero do preço (fullwidth, destaque visual) */
+  #view-calcular #calc-result {
+    grid-column: unset;
+    width: 100%;
+    max-width: none;
+  }
+
+  /* SEÇÃO 3: EMBAIXO — 2-col (Formulário esquerda, Extrato direita) */
+  #view-calcular .inputs-card,
+  #view-calcular #calc-extrato {
+    display: inline-block;
+    width: calc(50% - var(--space-4));
+    vertical-align: top;
+  }
+
+  #view-calcular .inputs-card {
+    margin-right: var(--space-8);
+  }
+
+  #view-calcular #btn-calcular {
+    display: none;  /* Botão integrado no formulário */
   }
 
   #view-calcular #calc-actions {
-    grid-column: 1 / -1;
+    width: 100%;
+    margin-top: var(--space-4);
+  }
+
+  /* Esconder cards desnecessários na tela (plataforma + regras + calculador) */
+  #view-calcular .card:nth-child(2) {  /* Regras */
+    order: -1;  /* Deixar no topo mas após plataforma */
   }
 }
 
@@ -464,15 +488,26 @@ input[type="range"] {
 }
 
 /* --------------------------------------------------------------------------
-   9. RESULT HERO — Signature Element (Monospace Numbers)
+   9. RESULT HERO — Signature Element (Gigantic Price + 4 Badges)
    -------------------------------------------------------------------------- */
 .result-hero {
-  text-align: center;
-  background: linear-gradient(135deg, rgba(212, 165, 116, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
-  border: 2px solid var(--border);
+  background: linear-gradient(135deg, rgba(212, 165, 116, 0.08) 0%, rgba(255, 215, 0, 0.03) 100%);
+  border: 1px solid rgba(212, 165, 116, 0.2);
   border-radius: var(--radius-lg);
-  padding: var(--space-8);
+  padding: var(--space-12) var(--space-8);
   animation: heroSlideIn 500ms var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+
+@media (max-width: 1024px) {
+  .result-hero {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
 }
 
 @keyframes heroSlideIn {
@@ -486,58 +521,106 @@ input[type="range"] {
   }
 }
 
+/* Lado esquerdo: PREÇO GIGANTE */
+.result-hero__price-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .result-preco-label {
   font-size: var(--text-xs);
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
   font-weight: var(--font-semi);
 }
 
 .result-preco-valor {
   font-family: var(--font-mono);  /* MONOSPACE — O HERÓI */
-  font-size: var(--text-5xl);
+  font-size: 80px;  /* 5rem = 80px → GIGANTE */
   font-weight: var(--font-bold);
   color: var(--gold-bright);
-  letter-spacing: -0.02em;
-  margin-bottom: var(--space-6);
-  line-height: 1.1;
-  text-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+  letter-spacing: -0.04em;
+  line-height: 1.0;
+  text-shadow: 0 0 40px rgba(255, 215, 0, 0.25);
+  margin-bottom: var(--space-4);
 }
 
+.result-preco-sem-desconto {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-decoration: line-through;
+  margin-bottom: var(--space-2);
+}
+
+/* Lado direito: 4 BADGES INDICADORES */
 .result-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
+  flex: 0 0 auto;
+  width: fit-content;
+}
+
+@media (max-width: 1024px) {
+  .result-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-3);
+    width: 100%;
+  }
+}
+
+.result-item-badge {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-2);
+  background-color: var(--bg-card-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  min-height: 100px;
   text-align: center;
-  padding-top: var(--space-6);
-  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 1024px) {
+  .result-item-badge {
+    min-height: 80px;
+    padding: var(--space-3);
+  }
 }
 
 .result-item-label {
   font-size: var(--text-xs);
   color: var(--text-muted);
-  margin-bottom: var(--space-2);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  font-weight: var(--font-medium);
 }
 
 .result-item-value {
   font-family: var(--font-mono);
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);  /* 18px — destaque dentro do badge */
   font-weight: var(--font-bold);
   color: var(--text-primary);
 }
 
 .result-item-value.positive { color: var(--green); }
 .result-item-value.negative { color: var(--red); }
+.result-item-value.warning { color: var(--ml-color); }
 
 .result-faixa {
+  grid-column: 1 / -1;
   margin-top: var(--space-4);
   font-size: var(--text-xs);
   color: var(--text-muted);
   font-style: italic;
+  text-align: center;
 }
 
 /* --------------------------------------------------------------------------

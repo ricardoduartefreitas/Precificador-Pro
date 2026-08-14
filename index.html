@@ -122,8 +122,11 @@
           </div>
         </div>
 
-        <!-- Painel: Regras e Faixas da Plataforma -->
-        <div id="plat-regras-card" class="card regras-card hidden">
+        <!-- Result Hero — DESTAQUE CENTRAL (após plataforma) -->
+        <div id="calc-result" class="card result-hero hidden"></div>
+
+        <!-- Painel: Regras e Faixas da Plataforma (mostrado apenas quando necessário) -->
+        <div id="plat-regras-card" class="card regras-card hidden" style="display: none;">
           <h2 class="card-title">Regras de comissão</h2>
           <table id="plat-faixas-table" class="faixas-table">
             <thead>
@@ -139,7 +142,7 @@
           <div id="plat-aviso-box" class="plat-aviso hidden"></div>
         </div>
 
-        <!-- Inputs do produto -->
+        <!-- Inputs do produto — FORMULÁRIO ENXUTO (embaixo) -->
         <div class="card inputs-card">
           <h2 class="card-title">Dados do produto</h2>
           <div class="form-grid">
@@ -189,10 +192,7 @@
           <button class="btn btn--primary" id="btn-calcular">Calcular</button>
         </div>
 
-        <!-- Result Hero -->
-        <div id="calc-result" class="card result-hero hidden"></div>
-
-        <!-- Extrato linha a linha -->
+        <!-- Extrato linha a linha — DETALHE DISCRETO (ao lado do formulário) -->
         <div id="calc-extrato" class="card extrato-card hidden">
           <h2 class="card-title">Extrato detalhado</h2>
           <table class="extrato-table" id="extrato-table"></table>
