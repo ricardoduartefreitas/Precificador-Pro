@@ -52,6 +52,14 @@ export async function signOut() {
   if (error) throw error;
 }
 
+export async function resetPasswordForEmail(email) {
+  const { data, error } = await getSupabase().auth.resetPasswordForEmail(email, {
+    redirectTo: 'https://precificador.ruahtecnologia.com.br/#/login',
+  });
+  if (error) throw error;
+  return data;
+}
+
 export async function getSession() {
   const { data } = await getSupabase().auth.getSession();
   return data.session;

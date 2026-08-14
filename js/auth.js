@@ -129,7 +129,7 @@ export async function logout() {
   }
 }
 
-// Signup (criar conta nova)
+// Signup (criar conta nova) — DESABILITADO: somente por convite
 export async function signup(email, password) {
   try {
     const { signUp } = await import('./supabase.js');
@@ -140,6 +140,18 @@ export async function signup(email, password) {
     return { success: true, user: result.user };
   } catch (error) {
     console.error('❌ Erro ao fazer signup:', error.message);
+    return { success: false, error: error.message };
+  }
+}
+
+// Reset de senha por email
+export async function resetPassword(email) {
+  try {
+    const { resetPasswordForEmail } = await import('./supabase.js');
+    await resetPasswordForEmail(email);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Erro ao enviar link de reset:', error.message);
     return { success: false, error: error.message };
   }
 }

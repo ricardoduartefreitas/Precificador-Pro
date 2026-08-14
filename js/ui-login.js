@@ -1,7 +1,7 @@
 // ui-login.js — PrecificaPRO
-// Responsabilidade: gerenciar interface de login e signup
+// Responsabilidade: gerenciar interface de login e reset de senha (sem signup — somente por convite)
 
-import { login, signup } from './auth.js';
+import { login, resetPassword } from './auth.js';
 
 export function initLoginUI() {
   const emailInput = document.getElementById('login-email');
@@ -46,80 +46,75 @@ export function initLoginUI() {
     }
   });
 
-  // Mostrar tela de signup
-  linkSignup.addEventListener('click', (e) => {
-    e.preventDefault();
-    showSignupForm();
-  });
-
-  // Elementos da tela de signup
-  const signupFormCard = document.getElementById('signup-form-card');
-  const signupEmail = document.getElementById('signup-email');
-  const signupPassword = document.getElementById('signup-password');
-  const signupPasswordConfirm = document.getElementById('signup-password-confirm');
-  const btnSignup = document.getElementById('btn-signup');
-  const signupError = document.getElementById('signup-error');
-  const linkBackLogin = document.getElementById('link-back-login');
-
-  if (signupFormCard && btnSignup) {
-    // Criar conta
-    btnSignup.addEventListener('click', async () => {
-      const email = signupEmail.value.trim();
-      const password = signupPassword.value.trim();
-      const passwordConfirm = signupPasswordConfirm.value.trim();
-
-      // Validações
-      if (!email || !password || !passwordConfirm) {
-        showSignupError('Preencha todos os campos');
-        return;
-      }
-
-      if (password.length < 6) {
-        showSignupError('Senha deve ter no mínimo 6 caracteres');
-        return;
-      }
-
-      if (password !== passwordConfirm) {
-        showSignupError('As senhas não correspondem');
-        return;
-      }
-
-      btnSignup.disabled = true;
-      btnSignup.textContent = 'Criando conta...';
-
-      const result = await signup(email, password);
-
-      if (result.success) {
-        showSignupError(''); // Limpar erro
-        signupEmail.value = '';
-        signupPassword.value = '';
-        signupPasswordConfirm.value = '';
-        showSignupConfirmation();
-      } else {
-        showSignupError(result.error || 'Erro ao criar conta');
-        btnSignup.disabled = false;
-        btnSignup.textContent = 'Criar conta';
-      }
-    });
-
-    // Permitir Enter para signup
-    signupPasswordConfirm.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        btnSignup.click();
-      }
-    });
-
-    // Voltar ao login desde a tela de signup
-    linkBackLogin.addEventListener('click', (e) => {
+  // Link "Esqueci minha senha?"
+  const linkForgotPassword = document.getElementById('link-forgot-password');
+  if (linkForgotPassword) {
+    linkForgotPassword.addEventListener('click', (e) => {
       e.preventDefault();
-      showLoginForm();
+      showForgotPasswordForm();
     });
   }
 
-  // Botão "Voltar ao login" da tela de confirmação
-  const btnBackToLogin = document.getElementById('btn-back-to-login');
-  if (btnBackToLogin) {
-    btnBackToLogin.addEventListener('click', (e) => {
+  // Elementos da tela de reset de senha (inicialmente escondida)
+  const forgotPasswordCard = document.getElementById('forgot-password-card');
+  const forgotPasswordEmail = document.getElementById('forgot-password-email');
+  const btnSendReset = document.getElementById('btn-send-reset');
+  const forgotPasswordError = document.getElementById('forgot-password-error');
+  const linkBackLoginFromReset = document.getElementById('link-back-login-reset');
+
+  // Se não existir ainda, criar os elementos dinamicamente (retrocompatibilidade)
+  if (!forgotPasswordCard) {
+    // Nós vamos criar depois se necessário
+  }
+
+  if (forgotPasswordCard && btnSendReset) {
+    // Enviar link de reset
+    btnSendReset.addEventListener('click', async () => {
+      const email = forgotPasswordEmail.value.trim();
+
+      if (!email) {
+        showForgotPasswordError('Preencha seu e-mail');
+        return;
+      }
+
+      btnSendReset.disabled = true;
+      btnSendReset.textContent = 'Enviando...';
+
+      const result = await resetPassword(email);
+
+      if (result.success) {
+        showForgotPasswordError(''); // Limpar erro
+        forgotPasswordEmail.value = '';
+        showForgotPasswordConfirmation();
+      } else {
+        showForgotPasswordError(result.error || 'Erro ao enviar link de reset');
+        btnSendReset.disabled = false;
+        btnSendReset.textContent = 'Enviar link de redefinição';
+      }
+    });
+
+    // Permitir Enter para enviar reset
+    if (forgotPasswordEmail) {
+      forgotPasswordEmail.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          btnSendReset.click();
+        }
+      });
+    }
+
+    // Voltar ao login desde a tela de reset
+    if (linkBackLoginFromReset) {
+      linkBackLoginFromReset.addEventListener('click', (e) => {
+        e.preventDefault();
+        showLoginForm();
+      });
+    }
+  }
+
+  // Botão "Voltar ao login" da tela de confirmação de reset
+  const btnBackToLoginFromConfirm = document.getElementById('btn-back-to-login-reset-confirm');
+  if (btnBackToLoginFromConfirm) {
+    btnBackToLoginFromConfirm.addEventListener('click', (e) => {
       e.preventDefault();
       showLoginForm();
     });
@@ -128,12 +123,12 @@ export function initLoginUI() {
 
 function showLoginForm() {
   const loginFormCard = document.getElementById('login-form-card');
-  const signupFormCard = document.getElementById('signup-form-card');
-  const signupConfirmationCard = document.getElementById('signup-confirmation-card');
+  const forgotPasswordCard = document.getElementById('forgot-password-card');
+  const forgotPasswordConfirmCard = document.getElementById('forgot-password-confirm-card');
 
   loginFormCard.style.display = 'block';
-  signupFormCard.style.display = 'none';
-  signupConfirmationCard.style.display = 'none';
+  if (forgotPasswordCard) forgotPasswordCard.style.display = 'none';
+  if (forgotPasswordConfirmCard) forgotPasswordConfirmCard.style.display = 'none';
 
   // Limpar campos
   document.getElementById('login-email').value = '';
@@ -141,43 +136,141 @@ function showLoginForm() {
   showError(''); // Limpar erros
 }
 
-function showSignupForm() {
+function showForgotPasswordForm() {
   const loginFormCard = document.getElementById('login-form-card');
-  const signupFormCard = document.getElementById('signup-form-card');
-  const signupConfirmationCard = document.getElementById('signup-confirmation-card');
+  let forgotPasswordCard = document.getElementById('forgot-password-card');
+  let forgotPasswordConfirmCard = document.getElementById('forgot-password-confirm-card');
+
+  // Se não existir, criar dinamicamente
+  if (!forgotPasswordCard) {
+    const viewLogin = document.getElementById('view-login');
+    const newCardHTML = `
+      <div class="card" id="forgot-password-card">
+        <h2 class="card-title" style="text-align: center;">Redefinir senha</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 2rem;">Insira seu e-mail para receber um link de redefinição</p>
+
+        <div class="form-grid">
+          <div class="form-field form-field--full">
+            <label for="forgot-password-email">E-mail</label>
+            <input type="email" id="forgot-password-email" placeholder="seu@email.com" autocomplete="email" />
+          </div>
+        </div>
+
+        <button class="btn btn--primary" id="btn-send-reset" style="width: 100%; margin-bottom: 1rem;">Enviar link de redefinição</button>
+
+        <div id="forgot-password-error" class="login-error" style="display: none; color: #d32f2f; padding: 1rem; background: #ffebee; border-radius: 4px; margin-bottom: 1rem;"></div>
+
+        <div style="text-align: center; font-size: 0.875rem; color: #666;">
+          <p><a href="#" id="link-back-login-reset" style="color: #FFD700; cursor: pointer;">Voltar ao login</a></p>
+        </div>
+      </div>
+
+      <div class="card" id="forgot-password-confirm-card" style="display: none;">
+        <h2 class="card-title" style="text-align: center;">Verifique seu e-mail</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 2rem;">Enviamos um link de redefinição de senha para seu e-mail.</p>
+        <div style="text-align: center; padding: 2rem; background: #e8f5e9; border-radius: 4px; margin-bottom: 2rem;">
+          <p style="font-size: 0.875rem; color: #2e7d32;">✅ Link enviado com sucesso!</p>
+          <p style="font-size: 0.875rem; color: #555; margin-top: 0.5rem;">Procure o e-mail na sua caixa de entrada ou na pasta de spam.</p>
+        </div>
+        <button class="btn btn--primary" id="btn-back-to-login-reset-confirm" style="width: 100%;">Voltar ao login</button>
+      </div>
+    `;
+    const viewLoginInner = viewLogin.querySelector('.view-inner');
+    viewLoginInner.insertAdjacentHTML('beforeend', newCardHTML);
+
+    // Re-fetch após criar
+    forgotPasswordCard = document.getElementById('forgot-password-card');
+    forgotPasswordConfirmCard = document.getElementById('forgot-password-confirm-card');
+
+    // Re-bind event listeners
+    const forgotPasswordEmail = document.getElementById('forgot-password-email');
+    const btnSendReset = document.getElementById('btn-send-reset');
+    const forgotPasswordError = document.getElementById('forgot-password-error');
+    const linkBackLoginFromReset = document.getElementById('link-back-login-reset');
+    const btnBackToLoginFromConfirm = document.getElementById('btn-back-to-login-reset-confirm');
+
+    if (btnSendReset) {
+      btnSendReset.addEventListener('click', async () => {
+        const email = forgotPasswordEmail.value.trim();
+
+        if (!email) {
+          showForgotPasswordError('Preencha seu e-mail');
+          return;
+        }
+
+        btnSendReset.disabled = true;
+        btnSendReset.textContent = 'Enviando...';
+
+        const result = await resetPassword(email);
+
+        if (result.success) {
+          showForgotPasswordError(''); // Limpar erro
+          forgotPasswordEmail.value = '';
+          showForgotPasswordConfirmation();
+        } else {
+          showForgotPasswordError(result.error || 'Erro ao enviar link de reset');
+          btnSendReset.disabled = false;
+          btnSendReset.textContent = 'Enviar link de redefinição';
+        }
+      });
+
+      if (forgotPasswordEmail) {
+        forgotPasswordEmail.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            btnSendReset.click();
+          }
+        });
+      }
+    }
+
+    if (linkBackLoginFromReset) {
+      linkBackLoginFromReset.addEventListener('click', (e) => {
+        e.preventDefault();
+        showLoginForm();
+      });
+    }
+
+    if (btnBackToLoginFromConfirm) {
+      btnBackToLoginFromConfirm.addEventListener('click', (e) => {
+        e.preventDefault();
+        showLoginForm();
+      });
+    }
+  }
 
   loginFormCard.style.display = 'none';
-  signupFormCard.style.display = 'block';
-  signupConfirmationCard.style.display = 'none';
+  if (forgotPasswordCard) forgotPasswordCard.style.display = 'block';
+  if (forgotPasswordConfirmCard) forgotPasswordConfirmCard.style.display = 'none';
 
   // Limpar campos e erros
-  document.getElementById('signup-email').value = '';
-  document.getElementById('signup-password').value = '';
-  document.getElementById('signup-password-confirm').value = '';
-  showSignupError('');
-
-  // Focar no email
-  document.getElementById('signup-email').focus();
+  const forgotPasswordEmail = document.getElementById('forgot-password-email');
+  if (forgotPasswordEmail) {
+    forgotPasswordEmail.value = '';
+    forgotPasswordEmail.focus();
+  }
+  showForgotPasswordError('');
 }
 
-function showSignupConfirmation() {
+function showForgotPasswordConfirmation() {
   const loginFormCard = document.getElementById('login-form-card');
-  const signupFormCard = document.getElementById('signup-form-card');
-  const signupConfirmationCard = document.getElementById('signup-confirmation-card');
+  const forgotPasswordCard = document.getElementById('forgot-password-card');
+  const forgotPasswordConfirmCard = document.getElementById('forgot-password-confirm-card');
 
   loginFormCard.style.display = 'none';
-  signupFormCard.style.display = 'none';
-  signupConfirmationCard.style.display = 'block';
+  if (forgotPasswordCard) forgotPasswordCard.style.display = 'none';
+  if (forgotPasswordConfirmCard) forgotPasswordConfirmCard.style.display = 'block';
 }
 
-function showSignupError(message) {
-  const signupError = document.getElementById('signup-error');
+function showForgotPasswordError(message) {
+  const forgotPasswordError = document.getElementById('forgot-password-error');
+  if (!forgotPasswordError) return; // Elemento ainda não foi criado
+
   if (message) {
-    signupError.textContent = message;
-    signupError.style.display = 'block';
+    forgotPasswordError.textContent = message;
+    forgotPasswordError.style.display = 'block';
   } else {
-    signupError.style.display = 'none';
-    signupError.textContent = '';
+    forgotPasswordError.style.display = 'none';
+    forgotPasswordError.textContent = '';
   }
 }
 
