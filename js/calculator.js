@@ -256,3 +256,74 @@ export function comparar(baseInputs, plataformas, tipoVendedor = null, campanha 
     .filter(Boolean)
     .sort((a, b) => b.lucroLiquido - a.lucroLiquido);
 }
+
+/**
+ * Identifica qual faixa se aplica a um preço específico.
+ * Usado para renderizar aviso de faixa no painel de marketplace.
+ *
+ * @param {number} preco       - preço para verificar qual faixa se aplica
+ * @param {Array}  faixas      - array de faixas { max, comissao, fixo, label, ... }
+ * @returns {Object|null} { faixa, proxima, aviso } ou null se inválido
+ *
+ * Retorna:
+ *   - faixa: faixa atual { max, comissao, fixo, label }
+ *   - proxima: próxima faixa (se existir) ou null
+ *   - limiteProxima: preço limite pra próxima faixa (ex: "R$50")
+ *   - aviso: mensagem de aviso (ex: "se vender a R$50+, cai para 6% + R$6")
+ */
+export function identificarFaixa(preco, faixas) {
+  if (!faixas || !Array.isArray(faixas) || faixas.length === 0) return null;
+  if (typeof preco !== 'number' || !isFinite(preco)) return null;
+
+  const faixa = faixas.find((f) => preco <= f.max) || faixas[faixas.length - 1];
+  if (!faixa) return null;
+
+  // Encontra a próxima faixa diferente
+  const faixaIndex = faixas.indexOf(faixa);
+  const proxima = faixaIndex < faixas.length - 1 ? faixas[faixaIndex + 1] : null;
+
+  let aviso = null;
+  let limiteProxima = null;
+
+  if (proxima && isFinite(faixa.max) && faixa.max < Infinity) {
+    // Se a próxima faixa tem max < Infinity, pode calcular o limite
+    limiteProxima = _r2(faixa.max + 0.01);
+    // Extrai comissão e taxa da label da próxima faixa ou constrói manualmente
+    const proxComissao = proxima.comissao > 0 ? `${proxima.comissao}%` : '—';
+    const proxFixo     = proxima.fixo > 0 ? `R$ ${proxima.fixo.toFixed(2)}` : '—';
+    aviso = `Se vender a R$ ${limiteProxima.toFixed(2)}+, a faixa muda: ${proxComissao} + ${proxFixo}`;
+  }
+
+  return {
+    faixa,
+    proxima,
+    limiteProxima,
+    aviso,
+  };
+}
+
+/**
+ * Retorna todas as faixas de uma plataforma, formatadas para exibição.
+ * Usado para renderizar a tabela de regras no painel.
+ *
+ * @param {Object} plataforma    - objeto de plataforma (platforms/*.js)
+ * @param {string} tipoVendedor  - chave de tipo de vendedor
+ * @returns {Array} array de faixas com metadados
+ */
+export function obterFaixasFormatadas(plataforma, tipoVendedor) {
+  if (!plataforma || !plataforma.faixas) return [];
+
+  const faixas = plataforma.faixas[tipoVendedor]
+    || plataforma.faixas[Object.keys(plataforma.faixas)[0]];
+
+  if (!faixas?.length) return [];
+
+  return faixas.map((f) => ({
+    max:       f.max,
+    maxLabel:  isFinite(f.max) ? `até R$${f.max.toFixed(2)}` : 'acima',
+    comissao:  f.comissao,
+    fixo:      f.fixo,
+    variavel:  f.variavel || 0,
+    label:     f.label,
+  }));
+}

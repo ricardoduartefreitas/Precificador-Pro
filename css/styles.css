@@ -996,3 +996,77 @@ input[type="range"] {
   border-color: rgba(239, 68, 68, 0.35);
   color: #ef4444;
 }
+
+/* ── Painel de Regras e Faixas ──────────────────────────────────────────────── */
+.regras-card {
+  margin-top: 1rem;
+}
+
+.faixas-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.faixas-table thead {
+  background-color: var(--bg-card-alt);
+}
+
+.faixas-table thead th {
+  color: var(--text-secondary);
+  font-weight: var(--font-semi);
+  text-align: left;
+  padding: var(--space-3) var(--space-2);
+  border-bottom: 2px solid var(--border);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.faixas-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background-color var(--transition);
+}
+
+.faixas-table tbody tr:hover {
+  background-color: rgba(245, 158, 11, 0.05);
+}
+
+.faixas-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.faixas-table tbody td {
+  color: var(--text-secondary);
+  padding: var(--space-3) var(--space-2);
+}
+
+.faixas-table tbody td:first-child {
+  color: var(--text-primary);
+  font-weight: var(--font-medium);
+}
+
+.faixas-table tbody td:last-child {
+  text-align: right;
+  color: var(--accent-green);
+  font-weight: var(--font-semi);
+}
+
+.plat-aviso-box {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  background-color: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  border-radius: var(--radius-md);
+}
+
+.plat-aviso-box.hidden {
+  display: none;
+}
+
+.plat-aviso-text {
+  color: var(--accent-blue);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  margin: 0;
+}

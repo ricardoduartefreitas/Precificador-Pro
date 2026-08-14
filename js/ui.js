@@ -3,7 +3,7 @@
 
 import { getState, setState, setInput, getInputs } from './state.js';
 import { formatBRL, formatPct, formatDate, parseInputValue } from './formatter.js';
-import { calcular, calcularComDesconto, comparar, mapPlataformaToInputs } from './calculator.js';
+import { calcular, calcularComDesconto, comparar, mapPlataformaToInputs, identificarFaixa, obterFaixasFormatadas } from './calculator.js';
 import { saveEntry, getHistoryFiltered, clearHistory, groupByDate, getStats, exportCSV } from './history.js';
 import { canCalculate, registerCalculo, isPro, showUpgradeOverlay } from './freemium.js';
 
@@ -129,6 +129,7 @@ function _initCalcView() {
     const plat = _findPlat(platSelect.value);
     setState({ activePlatform: platSelect.value });
     _updateSellerTypeSelect(tipoSelect, plat);
+    _renderPlatformaRegras();
     _clearCalcResult();
   });
 
@@ -143,6 +144,7 @@ function _initCalcView() {
   // Pré-preenche com estado salvo
   _fillCalcFields();
   _bindCalcInputChange();
+  _renderPlatformaRegras();
 
   document.getElementById('btn-calcular')?.addEventListener('click', _handleCalcular);
   document.getElementById('btn-salvar')?.addEventListener('click', openModalSalvar);
@@ -172,6 +174,10 @@ function _bindCalcInputChange() {
   Object.entries(map).forEach(([id, key]) => {
     document.getElementById(id)?.addEventListener('input', (e) => {
       setInput(key, parseInputValue(e.target.value));
+      // Atualiza o aviso de faixa em tempo real para custo, margem, frete, extras e imposto
+      if (['calc-custo', 'calc-margem', 'calc-frete', 'calc-extras', 'calc-imposto'].includes(id)) {
+        _updatePlatformaAvisoFaixa();
+      }
     });
   });
 }
@@ -208,6 +214,8 @@ function _updateSellerTypeSelect(select, plat) {
 
   select.onchange = () => {
     setState({ sellerType: select.value });
+    _renderPlatformaRegras();
+    _updatePlatformaAvisoFaixa();
     _clearCalcResult();
   };
 
@@ -242,6 +250,8 @@ function _updateLogisticaSelect(plat) {
 
   select.onchange = () => {
     setState({ mlLogistica: select.value });
+    _renderPlatformaRegras();
+    _updatePlatformaAvisoFaixa();
     _clearCalcResult();
   };
 }
@@ -777,6 +787,123 @@ export function renderComparacao(resultados) {
   }).join('');
 
   rankingEl.classList.remove('hidden');
+}
+
+// ─── RENDER: PAINEL DE REGRAS E FAIXAS ───────────────────────────────────────
+
+function _renderPlatformaRegras() {
+  const cardEl   = document.getElementById('plat-regras-card');
+  const tbodyEl  = document.getElementById('plat-faixas-tbody');
+  const avisoBox = document.getElementById('plat-aviso-box');
+
+  if (!cardEl || !tbodyEl) return;
+
+  const state     = getState();
+  const plat      = _findPlat(state.activePlatform);
+  if (!plat) {
+    cardEl.classList.add('hidden');
+    return;
+  }
+
+  // Determina qual tipo de vendedor usar
+  let tipoVend = state.sellerType;
+  if (plat.id === 'mercadolivre') {
+    // ML usa chave combinada tipoAnuncio_logistica
+    const tipoAnuncio = state.sellerType || 'classico';
+    const logistica   = state.mlLogistica || 'full';
+    tipoVend          = `${tipoAnuncio}_${logistica}`;
+  }
+
+  const faixas = obterFaixasFormatadas(plat, tipoVend);
+  if (!faixas?.length) {
+    cardEl.classList.add('hidden');
+    return;
+  }
+
+  // Renderiza as faixas na tabela
+  tbodyEl.innerHTML = faixas.map((f) => {
+    const comissaoLabel = f.comissao > 0 ? `${f.comissao}%` : '—';
+    const taxaLabel     = f.fixo > 0 ? `R$ ${f.fixo.toFixed(2)}` : '—';
+    return `
+      <tr>
+        <td>${f.label}</td>
+        <td>${comissaoLabel}</td>
+        <td>${taxaLabel}</td>
+      </tr>
+    `;
+  }).join('');
+
+  cardEl.classList.remove('hidden');
+}
+
+function _updatePlatformaAvisoFaixa() {
+  const avisoBox = document.getElementById('plat-aviso-box');
+  if (!avisoBox) return;
+
+  const state = getState();
+  const plat  = _findPlat(state.activePlatform);
+  if (!plat) {
+    avisoBox.classList.add('hidden');
+    return;
+  }
+
+  // Obtém os inputs (se usuário já digitou custo + margem)
+  const custo  = parseInputValue(document.getElementById('calc-custo')?.value);
+  const margem = parseInputValue(document.getElementById('calc-margem')?.value);
+
+  if (!custo || !margem) {
+    avisoBox.classList.add('hidden');
+    return;
+  }
+
+  // Determina qual tipo de vendedor usar
+  let tipoVend = state.sellerType;
+  if (plat.id === 'mercadolivre') {
+    const tipoAnuncio = state.sellerType || 'classico';
+    const logistica   = state.mlLogistica || 'full';
+    tipoVend          = `${tipoAnuncio}_${logistica}`;
+  }
+
+  const faixas = plat.faixas[tipoVend] || plat.faixas[Object.keys(plat.faixas)[0]];
+  if (!faixas?.length) {
+    avisoBox.classList.add('hidden');
+    return;
+  }
+
+  // Monta os inputs base para calcular o preço estimado
+  const baseInputs = {
+    custoProduto:     custo,
+    custoFrete:       parseInputValue(document.getElementById('calc-frete')?.value) || 0,
+    custosAdicionais: parseInputValue(document.getElementById('calc-extras')?.value) || 0,
+    margemLucro:      margem,
+    imposto:          parseInputValue(document.getElementById('calc-imposto')?.value) || 0,
+  };
+
+  // Mapeia para inputs de cálculo (encontra a faixa correta)
+  const calcInputs = mapPlataformaToInputs(baseInputs, plat, tipoVend, !!state.inputs.campanha);
+  if (!calcInputs) {
+    avisoBox.classList.add('hidden');
+    return;
+  }
+
+  // Calcula o preço de venda estimado
+  const resultado = calcular(calcInputs);
+  if (!resultado) {
+    avisoBox.classList.add('hidden');
+    return;
+  }
+
+  const precoVenda = resultado.precoVenda;
+
+  // Identifica a faixa atual e próxima
+  const faixaInfo = identificarFaixa(precoVenda, faixas);
+  if (!faixaInfo || !faixaInfo.aviso) {
+    avisoBox.classList.add('hidden');
+    return;
+  }
+
+  avisoBox.innerHTML = `<p class="plat-aviso-text">💡 ${_esc(faixaInfo.aviso)}</p>`;
+  avisoBox.classList.remove('hidden');
 }
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
