@@ -121,3 +121,17 @@ export async function deleteCalculation(calculationId) {
 
   if (error) throw error;
 }
+
+
+// Atualizar nome do usuário em profiles
+export async function updateUserProfile(userId, updates) {
+  const { data, error } = await getSupabase()
+    .from('profiles')
+    .update(updates)
+    .eq('id', userId)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+}

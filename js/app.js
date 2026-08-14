@@ -9,6 +9,7 @@ import { getInputs, setState }  from './state.js';
 import { initSupabase }         from './supabase.js';
 import { initAuth, onAuthChange, isAdmin } from './auth.js';
 import { initLoginUI, addLogoutButton } from './ui-login.js';
+import { checkInviteLink, initInviteAcceptUI } from './ui-invite-accept.js';
 
 import ML     from '../platforms/mercadolivre.js';
 import Shopee from '../platforms/shopee.js';
@@ -31,6 +32,9 @@ async function boot() {
 
   // 1️⃣ Inicializar Supabase
   await initSupabase();
+
+  // 1.5️⃣ Verificar se há link de convite na URL e redirecionar
+  checkInviteLink();
 
   // 2️⃣ Inicializar autenticação (verifica sessão existente)
   await initAuth();
@@ -61,6 +65,7 @@ async function boot() {
     } else {
       // Usuário fez logout: inicializar login UI e redirecionar
       initLoginUI();
+      initInviteAcceptUI();
       window.location.hash = '#/login';
     }
   });

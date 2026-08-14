@@ -7,17 +7,18 @@ import { setState } from './state.js';
 import { isLoggedIn, isAdmin } from './auth.js';
 
 const VIEWS = {
-  login:       document.getElementById('view-login'),
-  comparar:    document.getElementById('view-comparar'),
-  calcular:    document.getElementById('view-calcular'),
-  'admin-panel': document.getElementById('view-admin-panel'),
-  historico:   document.getElementById('view-historico'),
+  login:              document.getElementById('view-login'),
+  'aceitar-convite':  document.getElementById('view-login'), // Mesma view, diferente card
+  comparar:           document.getElementById('view-comparar'),
+  calcular:           document.getElementById('view-calcular'),
+  'admin-panel':      document.getElementById('view-admin-panel'),
+  historico:          document.getElementById('view-historico'),
 };
 
 const TABS = document.querySelectorAll('.tab-btn');
 
 // Rotas que NÃO requerem autenticação
-const PUBLIC_ROUTES = ['login'];
+const PUBLIC_ROUTES = ['login', 'aceitar-convite'];
 
 // Rotas que REQUEREM autenticação
 const PROTECTED_ROUTES = ['comparar', 'calcular', 'historico'];
@@ -34,8 +35,21 @@ function showView(routeName) {
     el.classList.toggle('hidden', name !== routeName);
   });
 
+  // Mostrar/ocultar cards dentro da view-login (login vs aceitar-convite)
+  if (routeName === 'login' || routeName === 'aceitar-convite') {
+    const loginFormCard = document.getElementById('login-form-card');
+    const signupFormCard = document.getElementById('signup-form-card');
+    const signupConfirmCard = document.getElementById('signup-confirmation-card');
+    const inviteAcceptCard = document.getElementById('invite-accept-card');
+
+    if (loginFormCard) loginFormCard.style.display = routeName === 'login' ? 'block' : 'none';
+    if (signupFormCard) signupFormCard.style.display = 'none';
+    if (signupConfirmCard) signupConfirmCard.style.display = 'none';
+    if (inviteAcceptCard) inviteAcceptCard.style.display = routeName === 'aceitar-convite' ? 'block' : 'none';
+  }
+
   // Mostrar/ocultar tabs apenas quando não está em login
-  const isLoginView = routeName === 'login';
+  const isLoginView = routeName === 'login' || routeName === 'aceitar-convite';
   const header = document.querySelector('.app-header');
   if (header) {
     header.style.display = isLoginView ? 'none' : 'flex';
@@ -62,8 +76,8 @@ function navigate(hash) {
     return;
   }
 
-  // Se é login e usuário JÁ está logado, redireciona para calcular
-  if (route === 'login' && isLoggedIn()) {
+  // Se é login ou aceitar-convite e usuário JÁ está logado, redireciona para calcular
+  if ((route === 'login' || route === 'aceitar-convite') && isLoggedIn()) {
     window.location.hash = '#/calcular';
     return;
   }

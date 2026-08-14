@@ -99,6 +99,35 @@
           </div>
           <button class="btn btn--primary" id="btn-back-to-login" style="width: 100%;">Voltar ao login</button>
         </div>
+
+        <!-- TELA: ACEITAR CONVITE (#/aceitar-convite) - inicialmente escondida -->
+        <div class="card" id="invite-accept-card" style="display: none;">
+          <h2 class="card-title" style="text-align: center;">Bem-vindo ao PrecificaPRO! 🎉</h2>
+          <p style="text-align: center; color: #666; margin-bottom: 2rem;">Confirme seus dados e crie sua senha para começar.</p>
+
+          <div class="form-grid">
+            <div class="form-field form-field--full">
+              <label style="color: #999; font-size: 0.875rem;">Nome (confirmação)</label>
+              <div style="padding: 0.75rem; background: #f5f5f5; border-radius: 4px; border: 1px solid #ddd; color: #333; font-weight: 500;" id="invite-nome-display">—</div>
+            </div>
+            <div class="form-field form-field--full">
+              <label for="invite-password">Crie sua senha</label>
+              <input type="password" id="invite-password" placeholder="pelo menos 6 caracteres" autocomplete="new-password" />
+            </div>
+            <div class="form-field form-field--full">
+              <label for="invite-password-confirm">Confirme sua senha</label>
+              <input type="password" id="invite-password-confirm" placeholder="repita sua senha" autocomplete="new-password" />
+            </div>
+          </div>
+
+          <button class="btn btn--primary" id="btn-aceitar-convite" style="width: 100%; margin-bottom: 1rem; background-color: #FFD700; color: #000; font-weight: 600;">Aceitar convite</button>
+
+          <div id="invite-accept-error" class="login-error" style="display: none; color: #d32f2f; padding: 1rem; background: #ffebee; border-radius: 4px; margin-bottom: 1rem;"></div>
+
+          <div style="text-align: center; font-size: 0.875rem; color: #666;">
+            <p>Link expirou? <a href="#" id="link-solicitar-novo-convite" style="color: #FFD700; cursor: pointer;">Solicitar novo convite</a></p>
+          </div>
+        </div>
       </div>
     </section>
 
