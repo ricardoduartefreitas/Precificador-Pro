@@ -1088,3 +1088,42 @@ input[type="range"] {
   line-height: 1.5;
   margin: 0;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LOGIN — Tela de autenticação
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+#view-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+#view-login .view-inner {
+  width: 100%;
+  max-width: 400px;
+  padding: 1rem;
+}
+
+#login-error {
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.login-error {
+  display: none !important;
+}
+
+#btn-logout {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--text-sm);
+}
+
+/* Ajuste do header quando em login */
+.app-header[style*="display: none"] + .app-main #view-login {
+  padding-top: 0;
+}

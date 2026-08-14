@@ -5,6 +5,9 @@ import { initRouter }           from './router.js';
 import { initFreemium }         from './freemium.js';
 import { initUI }               from './ui.js';
 import { getInputs, setState }  from './state.js';
+import { initSupabase }         from './supabase.js';
+import { initAuth, onAuthChange } from './auth.js';
+import { initLoginUI, addLogoutButton } from './ui-login.js';
 
 import ML     from '../platforms/mercadolivre.js';
 import Shopee from '../platforms/shopee.js';
@@ -25,14 +28,38 @@ async function boot() {
     setState({ inputs: { ...inputs, imposto: 0, desconto: 0 } });
   }
 
-  // Define rota padrão (calcular) antes de iniciar o router
-  if (!window.location.hash || window.location.hash === '#') {
-    window.location.hash = '/calcular';
-  }
+  // 1️⃣ Inicializar Supabase
+  await initSupabase();
 
-  initUI(PLATAFORMAS);
-  initFreemium();
-  initRouter();
+  // 2️⃣ Inicializar autenticação (verifica sessão existente)
+  await initAuth();
+
+  // 3️⃣ Escutar mudanças de autenticação
+  let isUIInitialized = false;
+  onAuthChange((auth) => {
+    if (auth.session) {
+      // Usuário logou: inicializar UI e router
+      if (!isUIInitialized) {
+        initUI(PLATAFORMAS);
+        initFreemium();
+        initRouter();
+        addLogoutButton();
+        isUIInitialized = true;
+      }
+    } else {
+      // Usuário fez logout: inicializar login UI e redirecionar
+      initLoginUI();
+      window.location.hash = '#/login';
+    }
+  });
+
+  // 4️⃣ Se há sessão, redirecionar para rota padrão (não redirecionar se já em login)
+  const currentHash = window.location.hash || '';
+  if (currentHash !== '#/login' && currentHash !== '') {
+    if (!window.location.hash || window.location.hash === '#') {
+      window.location.hash = '#/calcular';
+    }
+  }
 
   // Atualiza document.title conforme a view ativa
   const VIEW_TITLES = {

@@ -7,6 +7,8 @@
   <title>PrecificaPRO — Calculadora de Marketplaces</title>
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="manifest" href="manifest.json" />
+  <!-- Supabase SDK via CDN -->
+  <script async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -25,6 +27,42 @@
 
   <!-- ═══════════════════════════════════════════ MAIN -->
   <main class="app-main">
+
+    <!-- ─────────────────── TELA 0: LOGIN (#/login) -->
+    <section id="view-login" class="view" aria-label="Autenticação">
+      <div class="view-inner" style="max-width: 400px; margin: 4rem auto;">
+        <div class="card">
+          <h2 class="card-title" style="text-align: center;">Acessar PrecificaPRO</h2>
+          <p style="text-align: center; color: #666; margin-bottom: 2rem;">Faça login para continuar</p>
+
+          <div class="form-grid">
+            <div class="form-field form-field--full">
+              <label for="login-email">E-mail</label>
+              <input type="email" id="login-email" placeholder="seu@email.com" autocomplete="email" />
+            </div>
+            <div class="form-field form-field--full">
+              <label for="login-password">Senha</label>
+              <input type="password" id="login-password" placeholder="sua senha" autocomplete="current-password" />
+            </div>
+          </div>
+
+          <button class="btn btn--primary" id="btn-login" style="width: 100%; margin-bottom: 1rem;">Entrar</button>
+
+          <div id="login-error" class="login-error" style="display: none; color: #d32f2f; padding: 1rem; background: #ffebee; border-radius: 4px; margin-bottom: 1rem;"></div>
+
+          <div style="text-align: center; font-size: 0.875rem; color: #666;">
+            <p>Não tem conta? <a href="#" id="link-signup" style="color: #0066cc; cursor: pointer;">Criar conta</a></p>
+          </div>
+        </div>
+
+        <!-- Demo notice -->
+        <div style="margin-top: 2rem; padding: 1rem; background: #fffde7; border-radius: 4px; border-left: 4px solid #fbc02d; font-size: 0.875rem; color: #444;">
+          <strong>👤 Contas demo:</strong><br/>
+          Admin: admin@ruah.com.br / 123456<br/>
+          Cliente: client@ruah.com.br / 123456
+        </div>
+      </div>
+    </section>
 
     <!-- ─────────────────── TELA 1: CALCULAR (#/calcular) -->
     <section id="view-calcular" class="view" aria-label="Calculadora individual">
