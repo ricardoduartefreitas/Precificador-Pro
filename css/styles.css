@@ -1127,3 +1127,35 @@ input[type="range"] {
 .app-header[style*="display: none"] + .app-main #view-login {
   padding-top: 0;
 }
+
+/* ═══ FIX 14/08: painel admin visível + caixas lado a lado (SÓ a disposição — sem mudar cores) ═══ */
+/* O botão do Painel Admin — visível para o admin */
+.tab-btn.admin-only {
+  display: none;
+}
+/* A view do painel admin */
+#view-admin-panel { padding: 1.5rem; }
+
+/* As caixas LADO A LADO (a disposição — o pedido do Ricardo) */
+#view-calcular .view-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "seletor seletor"
+    "regras  result"
+    "form    extrato";
+  gap: 1.5rem;
+  align-items: start;
+}
+#view-calcular .view-inner > .card:first-of-type { grid-area: seletor; }
+#plat-regras-card  { grid-area: regras; }
+#calc-result       { grid-area: result; }
+.inputs-card       { grid-area: form; }
+#calc-extrato      { grid-area: extrato; }
+
+@media (max-width: 900px) {
+  #view-calcular .view-inner {
+    grid-template-columns: 1fr;
+    grid-template-areas: "seletor" "regras" "result" "form" "extrato";
+  }
+}
