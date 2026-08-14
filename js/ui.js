@@ -668,7 +668,7 @@ export function renderResultHero(resultado) {
   }
 
   const pctPlat = resultado.precoVenda > 0
-    ? (resultado.breakdown.deducoesDaPlataforma / resultado.precoVenda) * 100
+    ? (resultado.breakdown.custoDaPlataforma / resultado.precoVenda) * 100
     : 0;
 
   console.log('[RENDER] renderResultHero: antes de setInnerHTML');
@@ -838,7 +838,7 @@ export function renderComparacao(resultados) {
   const [winner, ...rest] = resultados;
   const maxLucro  = winner.lucroLiquido;
   const pctWinner = winner.precoVenda > 0
-    ? (winner.breakdown.deducoesDaPlataforma / winner.precoVenda) * 100
+    ? (winner.breakdown.custoDaPlataforma / winner.precoVenda) * 100
     : 0;
 
   winnerEl.innerHTML = `
