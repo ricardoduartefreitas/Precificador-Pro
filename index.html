@@ -72,35 +72,35 @@
           <div class="form-grid">
             <div class="form-field">
               <label for="calc-custo">Custo do produto (R$)</label>
-              <input type="number" id="calc-custo" placeholder="0,00" min="0" step="0.01" />
+              <input type="number" id="calc-custo" placeholder="0,00" min="0" step="0.01" autocomplete="off" />
             </div>
             <div class="form-field">
               <label for="calc-peso">Peso do produto (kg)</label>
-              <input type="number" id="calc-peso" placeholder="0,00" min="0" step="0.01" />
+              <input type="number" id="calc-peso" placeholder="0,00" min="0" step="0.01" autocomplete="off" />
             </div>
             <div class="form-field">
               <label for="calc-extras">Custos adicionais (R$)</label>
-              <input type="number" id="calc-extras" placeholder="embalagem, etc." min="0" step="0.01" />
+              <input type="number" id="calc-extras" placeholder="embalagem, etc." min="0" step="0.01" autocomplete="off" />
             </div>
             <div class="form-field">
               <label for="calc-imposto">Imposto (%)</label>
-              <input type="number" id="calc-imposto" placeholder="ex: 6" min="0" max="99" step="0.1" value="0" />
+              <input type="number" id="calc-imposto" placeholder="ex: 6" min="0" max="99" step="0.1" value="0" autocomplete="off" />
             </div>
             <div class="form-field">
               <label for="calc-afiliados">Afiliados (%)</label>
-              <input type="number" id="calc-afiliados" placeholder="ex: 10" min="0" max="99" step="0.1" value="0" />
+              <input type="number" id="calc-afiliados" placeholder="ex: 10" min="0" max="99" step="0.1" value="0" autocomplete="off" />
             </div>
             <div class="form-field">
               <label for="calc-ads-pct">Ads (%)</label>
-              <input type="number" id="calc-ads-pct" placeholder="ex: 5" min="0" max="99" step="0.1" value="0" />
+              <input type="number" id="calc-ads-pct" placeholder="ex: 5" min="0" max="99" step="0.1" value="0" autocomplete="off" />
             </div>
             <div class="form-field">
               <label for="calc-ads-fixo">Ads (R$ fixo)</label>
-              <input type="number" id="calc-ads-fixo" placeholder="opcional" min="0" step="0.01" value="0" />
+              <input type="number" id="calc-ads-fixo" placeholder="opcional" min="0" step="0.01" value="0" autocomplete="off" />
             </div>
             <div class="form-field form-field--full">
               <label for="calc-margem">Margem desejada (%)</label>
-              <input type="number" id="calc-margem" placeholder="ex: 30" min="0" max="200" step="1" value="30" />
+              <input type="number" id="calc-margem" placeholder="ex: 30" min="0" max="200" step="1" value="30" autocomplete="off" />
             </div>
             <div class="form-field form-field--full">
               <label class="toggle-label">
@@ -110,7 +110,7 @@
             </div>
             <div class="form-field form-field--full" id="desconto-wrapper" style="display:none">
               <label for="calc-desconto">Desconto da campanha (%)</label>
-              <input type="number" id="calc-desconto" placeholder="ex: 10" min="0" max="99" step="0.1" value="10" />
+              <input type="number" id="calc-desconto" placeholder="ex: 10" min="0" max="99" step="0.1" value="10" autocomplete="off" />
             </div>
           </div>
           <button class="btn btn--primary" id="btn-calcular">Calcular</button>
@@ -143,23 +143,23 @@
           <div class="form-grid">
             <div class="form-field">
               <label for="cmp-custo">Custo do produto (R$)</label>
-              <input type="number" id="cmp-custo" placeholder="0,00" min="0" step="0.01" />
+              <input type="number" id="cmp-custo" placeholder="0,00" min="0" step="0.01" autocomplete="off" />
             </div>
             <div class="form-field">
               <label for="cmp-peso">Peso do produto (kg)</label>
-              <input type="number" id="cmp-peso" placeholder="0,00" min="0" step="0.01" />
+              <input type="number" id="cmp-peso" placeholder="0,00" min="0" step="0.01" autocomplete="off" />
             </div>
             <div class="form-field">
               <label for="cmp-extras">Custos adicionais (R$)</label>
-              <input type="number" id="cmp-extras" placeholder="embalagem, etc." min="0" step="0.01" />
+              <input type="number" id="cmp-extras" placeholder="embalagem, etc." min="0" step="0.01" autocomplete="off" />
             </div>
             <div class="form-field">
               <label for="cmp-imposto">Imposto (%)</label>
-              <input type="number" id="cmp-imposto" placeholder="ex: 6" min="0" max="99" step="0.1" value="0" />
+              <input type="number" id="cmp-imposto" placeholder="ex: 6" min="0" max="99" step="0.1" value="0" autocomplete="off" />
             </div>
             <div class="form-field form-field--full">
               <label for="cmp-margem">Margem desejada (%)</label>
-              <input type="number" id="cmp-margem" placeholder="ex: 30" min="0" max="200" step="1" value="30" />
+              <input type="number" id="cmp-margem" placeholder="ex: 30" min="0" max="200" step="1" value="30" autocomplete="off" />
             </div>
           </div>
           <div class="form-grid" style="margin-top:0.5rem">
@@ -196,7 +196,7 @@
       <div class="view-inner">
 
         <div class="history-toolbar">
-          <input type="search" id="history-search" placeholder="Buscar produto..." />
+          <input type="search" id="history-search" placeholder="Buscar produto..." autocomplete="off" />
           <button class="btn btn--secondary btn--icon" id="btn-export-csv">⬇ CSV</button>
         </div>
 
@@ -235,7 +235,7 @@
     <div class="modal">
       <h3>Salvar no histórico</h3>
       <p>Dê um nome para identificar este produto depois.</p>
-      <input type="text" id="modal-produto-nome" placeholder="Ex: Câmera JBL 360" maxlength="80" />
+      <input type="text" id="modal-produto-nome" placeholder="Ex: Câmera JBL 360" maxlength="80" autocomplete="off" />
       <div class="modal-actions">
         <button class="btn btn--primary" id="btn-modal-confirmar">Salvar</button>
         <button class="btn btn--ghost"   id="btn-modal-cancelar">Cancelar</button>
@@ -253,7 +253,7 @@
         <li>Histórico completo (sem limite)</li>
         <li>Exportação CSV</li>
       </ul>
-      <input type="password" id="pro-senha" placeholder="Senha PRO" />
+      <input type="password" id="pro-senha" placeholder="Senha PRO" autocomplete="off" />
       <div class="modal-actions">
         <button class="btn btn--primary" id="btn-ativar-pro">Desbloquear PRO</button>
         <button class="btn btn--ghost"   id="btn-fechar-overlay">Fechar</button>
