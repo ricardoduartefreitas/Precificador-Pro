@@ -77,35 +77,10 @@ export async function initAuth() {
 }
 
 // Login com email/senha
+// PRIORIDADE: Supabase REAL → Demo apenas como fallback se Supabase falhar
 export async function login(email, password) {
   try {
-    // Modo demo: contas hardcoded para testes (sem Supabase)
-    const DEMO_ACCOUNTS = {
-      'admin@ruah.com.br': { password: '123456', role: 'admin' },
-      'client@ruah.com.br': { password: '123456', role: 'client' },
-    };
-
-    if (DEMO_ACCOUNTS[email]) {
-      if (DEMO_ACCOUNTS[email].password !== password) {
-        return { success: false, error: 'Senha incorreta' };
-      }
-
-      // Simular sessão demo
-      const demoUser = {
-        id: email.split('@')[0],
-        email,
-        user_metadata: { role: DEMO_ACCOUNTS[email].role },
-      };
-
-      _auth.session = { user: demoUser }; // Session fake
-      _auth.user = demoUser;
-      _auth.role = DEMO_ACCOUNTS[email].role;
-
-      notifyListeners();
-      return { success: true, user: demoUser, role: _auth.role };
-    }
-
-    // Tentar com Supabase se não for demo
+    // 1️⃣ TENTAR SUPABASE PRIMEIRO (principal)
     try {
       const { signIn } = await import('./supabase.js');
       const { session, user } = await signIn(email, password);
@@ -113,14 +88,44 @@ export async function login(email, password) {
       _auth.session = session;
       _auth.user = user;
 
-      // Buscar role
+      // Buscar role do usuário no banco
       const role = await getUserRole(user.id);
       _auth.role = role;
 
       notifyListeners();
+      console.log(`✅ Login bem-sucedido com Supabase: ${email} (${role})`);
       return { success: true, user, role };
     } catch (supabaseError) {
-      console.warn('⚠️ Supabase não disponível, modo demo desativado:', supabaseError.message);
+      console.warn('⚠️ Supabase indisponível, tentando modo demo...', supabaseError.message);
+
+      // 2️⃣ FALLBACK: Modo demo apenas se Supabase falhar
+      const DEMO_ACCOUNTS = {
+        'admin@ruah.com.br': { password: '123456', role: 'admin' },
+        'client@ruah.com.br': { password: '123456', role: 'client' },
+      };
+
+      if (DEMO_ACCOUNTS[email]) {
+        if (DEMO_ACCOUNTS[email].password !== password) {
+          return { success: false, error: 'Senha incorreta' };
+        }
+
+        // Simular sessão demo
+        const demoUser = {
+          id: email.split('@')[0],
+          email,
+          user_metadata: { role: DEMO_ACCOUNTS[email].role },
+        };
+
+        _auth.session = { user: demoUser }; // Session fake
+        _auth.user = demoUser;
+        _auth.role = DEMO_ACCOUNTS[email].role;
+
+        notifyListeners();
+        console.log(`⚠️ Login em MODO DEMO (Supabase offline): ${email} (${_auth.role})`);
+        return { success: true, user: demoUser, role: _auth.role };
+      }
+
+      // Nenhuma conta demo encontrada, e Supabase falhou
       return { success: false, error: 'Usuário ou senha incorretos' };
     }
   } catch (error) {

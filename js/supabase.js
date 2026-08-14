@@ -1,6 +1,7 @@
 // supabase.js — PrecificaPRO
 // Inicializa cliente Supabase via CDN
-// Nota: credentials são públicas (ANON_KEY) — segurança via RLS no banco
+// ⚠️ Nota: ANON_KEY é pública (exposta no frontend) — segurança via RLS no banco
+// Projeto: ztzbqmbnlqafsazvwjyw (precificador-pro-2026)
 
 let supabaseClient = null;
 
@@ -11,12 +12,15 @@ export async function initSupabase() {
     return null;
   }
 
-  // URL e chave pública (podem ser públicas, segurança via RLS)
-  const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://your-project.supabase.co';
-  const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-anon-key';
+  // Credenciais REAIS do projeto Supabase dedicado (produção)
+  // URL e chave pública — segurança via RLS (Row-Level Security) no banco
+  const SUPABASE_URL = 'https://ztzbqmbnlqafsazvwjyw.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_CDePFED29CEUJSJnbkmeSw_UFPq3Hdt';
 
-  if (!SUPABASE_URL || SUPABASE_URL.includes('your-project')) {
-    console.warn('⚠️ Env vars SUPABASE_URL/ANON_KEY não configuradas. Usando placeholder.');
+  // Validação mínima (apenas para avisar se falhar)
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    console.error('❌ Credenciais Supabase não configuradas.');
+    return null;
   }
 
   supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
