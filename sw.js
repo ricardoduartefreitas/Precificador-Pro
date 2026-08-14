@@ -2,7 +2,7 @@
 // Responsabilidade: cache offline dos assets estáticos (Cache First)
 // Atualizar APP_SHELL ao adicionar novos arquivos ao projeto
 
-const CACHE_NAME = 'psp-v3';
+const CACHE_NAME = 'psp-v4';
 
 const APP_SHELL = [
   './',
