@@ -22,8 +22,9 @@
   /* Acentos */
   --accent-green:  #22c55e;
   --accent-red:    #ef4444;
-  --accent-blue:   #FFD700;
+  --accent-blue:   #D4AF37;
   --accent-yellow: #f59e0b;
+  --accent-gold:   #D4AF37;
 
   /* Bordas */
   --border:        #1e2d47;
@@ -157,6 +158,28 @@ img { display: block; max-width: 100%; }
   padding: var(--space-3) var(--space-4);
   max-width: var(--max-width);
   margin: 0 auto;
+}
+
+.header-logo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: flex-start;
+}
+
+.logo-brand {
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  color: var(--accent-gold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.logo-product {
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
 }
 
 .logo {
@@ -1197,4 +1220,76 @@ input[type="range"] {
   background: rgba(239, 68, 68, 0.12);
   border: 1px solid rgba(239, 68, 68, 0.45);
   color: #fecaca;
+}
+
+/* --------------------------------------------------------------------------
+   25. FOOTER
+   -------------------------------------------------------------------------- */
+.app-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--bg-card);
+  border-top: 1px solid var(--border);
+  z-index: 50;
+}
+
+.footer-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-xs);
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.footer-brand p {
+  margin: 0;
+  color: var(--text-primary);
+  font-weight: var(--font-semi);
+}
+
+.footer-tagline {
+  color: var(--text-secondary) !important;
+  font-weight: var(--font-normal) !important;
+  font-style: italic;
+}
+
+.footer-links {
+  flex: 1;
+  text-align: center;
+}
+
+.footer-links a {
+  color: var(--accent-gold);
+  text-decoration: none;
+  font-weight: var(--font-medium);
+  transition: opacity var(--transition);
+}
+
+.footer-links a:hover {
+  opacity: 0.8;
+}
+
+.footer-copyright {
+  text-align: right;
+  color: var(--text-secondary);
+}
+
+.footer-copyright p {
+  margin: 0;
+}
+
+/* Ajustar padding do app-main para não sobrepor o footer */
+.app-main {
+  padding-bottom: calc(var(--header-height) / 2);
 }
