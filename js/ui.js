@@ -279,7 +279,7 @@ function _handleCalcular() {
 
   const base = {
     custoProduto:     parseInputValue(document.getElementById('calc-custo')?.value),
-    custoFrete:       parseInputValue(document.getElementById('calc-frete')?.value),
+    pesoKg:           parseInputValue(document.getElementById('calc-peso')?.value),
     custosAdicionais: parseInputValue(document.getElementById('calc-extras')?.value),
     margemLucro:      parseInputValue(document.getElementById('calc-margem')?.value),
     imposto:          parseInputValue(document.getElementById('calc-imposto')?.value),
@@ -304,10 +304,11 @@ function _handleCalcular() {
     return;
   }
 
-  resultado._faixa    = calcInputs._faixaLabel;
-  resultado._platNome = plat.nome;
-  resultado._platCor  = plat.cor;
-  resultado._platId   = plat.id;
+  resultado._faixa           = calcInputs._faixaLabel;
+  resultado._freteDescricao  = calcInputs._freteDescricao || '';
+  resultado._platNome        = plat.nome;
+  resultado._platCor         = plat.cor;
+  resultado._platId          = plat.id;
 
   if (isML) {
     const isCampanha   = !!state.inputs.campanha;
@@ -399,7 +400,7 @@ function _initComparView() {
 function _fillComparFields() {
   const s = getInputs();
   _setVal('cmp-custo',   s.custo);
-  _setVal('cmp-frete',   s.frete);
+  _setVal('cmp-peso',    s.peso);
   _setVal('cmp-extras',  s.extras);
   _setVal('cmp-margem',  s.margem);
   _setVal('cmp-imposto', s.imposto ?? 0);
@@ -408,7 +409,7 @@ function _fillComparFields() {
 function _bindComparInputChange() {
   const map = {
     'cmp-custo':   'custo',
-    'cmp-frete':   'frete',
+    'cmp-peso':    'peso',
     'cmp-extras':  'extras',
     'cmp-margem':  'margem',
     'cmp-imposto': 'imposto',
@@ -428,7 +429,7 @@ function _handleComparar() {
 
   const base = {
     custoProduto:     parseInputValue(document.getElementById('cmp-custo')?.value),
-    custoFrete:       parseInputValue(document.getElementById('cmp-frete')?.value),
+    pesoKg:           parseInputValue(document.getElementById('cmp-peso')?.value),
     custosAdicionais: parseInputValue(document.getElementById('cmp-extras')?.value),
     margemLucro:      parseInputValue(document.getElementById('cmp-margem')?.value),
     imposto:          parseInputValue(document.getElementById('cmp-imposto')?.value),
@@ -687,10 +688,14 @@ export function renderExtrato(resultado) {
     ? resultado._comissaoPuraValor
     : bd.comissaoValor;
 
+  const freteLabel = resultado._freteDescricao
+    ? `Frete (${resultado._freteDescricao})`
+    : 'Frete';
+
   const rows = [
     { label: 'Valor de venda',   valor:  resultado.precoVenda, classe: '' },
     { label: 'Custo do produto', valor: -bd.custosProduto,      classe: 'row-deduction' },
-    { label: 'Frete',            valor: -bd.freteValor,         classe: 'row-deduction' },
+    { label: freteLabel,         valor: -bd.freteValor,         classe: 'row-deduction' },
     { label: 'Outros custos',    valor: -bd.custosAdicionais,   classe: 'row-deduction' },
     {
       label:  resultado._comissaoLabel

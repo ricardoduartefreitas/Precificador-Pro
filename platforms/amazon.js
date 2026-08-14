@@ -33,7 +33,7 @@ export default {
   campanha:    false,
   taxaCampanha: 0,
 
-  aviso:     '⚠️ Comissão varia por categoria (11–15%). FBA: custo por unidade varia por peso e dimensão — use o simulador em sellercentral.amazon.com.br para seu produto.',
+  aviso:     '⚠️ Comissão varia por categoria (11–15%). FBA: custo por unidade varia por peso e dimensão — use o simulador em sellercentral.amazon.com.br e inclua o valor de fulfillment em "Custos adicionais".',
   avisoTipo: 'warning',
 
   faixas: {
@@ -46,4 +46,8 @@ export default {
       { max: Infinity, comissao: 15, fixo: 0, variavel: 0, label: 'FBM — sem taxa de fulfillment' },
     ],
   },
+
+  // Frete não implementado — Amazon FBA tem fulfillment fixo na taxa acima
+  // Amazon FBM: frete depende do sistema logístico escolhido (não tabelado)
+  freteRegra: null,
 };

@@ -31,4 +31,12 @@ export default {
       { max: Infinity, comissao: 6,  fixo: 6, variavel: 0, label: 'R$50 ou mais (6% + R$6)'     },
     ],
   },
+
+  // Frete automático via programa SFP (Seller Fulfillment Program)
+  // 6% do GMV do produto com cap de R$50 por item
+  freteRegra: {
+    tipo: 'percentualGMV',
+    percentual: 6,
+    cap: 50,
+  },
 };

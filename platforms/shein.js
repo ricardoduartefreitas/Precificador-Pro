@@ -27,7 +27,7 @@ export default {
   campanha:    false,
   taxaCampanha: 0,
 
-  aviso:     '⚠️ Taxa de 18% (geral) ou 20% (moda feminina). Novos vendedores têm 30 dias de comissão zero. Cadastro em seller-br.shein.com.',
+  aviso:     '⚠️ Taxa de 18% (geral) ou 20% (moda feminina). Frete não é calculado automaticamente — inclua o valor estimado em "Custos adicionais". Novos vendedores têm 30 dias de comissão zero. Cadastro em seller-br.shein.com.',
   avisoTipo: 'warning',
 
   faixas: {
@@ -38,4 +38,8 @@ export default {
       { max: Infinity, comissao: 20, fixo: 0, variavel: 0, label: 'Taxa Shein (moda feminina)' },
     ],
   },
+
+  // Frete não implementado — portal Shein inacessível para verificação
+  // Incluir estimativa manual em "Custos adicionais"
+  freteRegra: null,
 };

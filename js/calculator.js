@@ -188,9 +188,9 @@ export function calcularComDesconto(inputs, desconto) {
  * Mapeia o objeto de plataforma (platforms/*.js) para o formato de inputs
  * esperado por calcular(), aplicando a faixa de taxa correta para o preço estimado.
  *
- * Usado internamente por comparar().
+ * Suporta cálculo automático de frete se pesoKg for fornecido.
  *
- * @param {Object} baseInputs       - { custoProduto, custoFrete, custosAdicionais, margemLucro, imposto }
+ * @param {Object} baseInputs       - { custoProduto, custosAdicionais, margemLucro, imposto, pesoKg? }
  * @param {Object} plataforma       - objeto de plataforma (ver platforms/*.js)
  * @param {string} tipoVendedor     - chave de tipo (ex: 'cnpj', 'fba')
  * @param {boolean} campanha        - se campanha está ativa
@@ -202,25 +202,50 @@ export function mapPlataformaToInputs(baseInputs, plataforma, tipoVendedor, camp
 
   if (!faixas?.length) return null;
 
+  const custoProduto = baseInputs.custoProduto || 0;
+  const custosAdicionais = baseInputs.custosAdicionais || 0;
+  const pesoKg = baseInputs.pesoKg || 0;
+
   // Estimativa de preço com primeira faixa para encontrar a faixa correta
-  const custoTotal   = (baseInputs.custoProduto || 0) + (baseInputs.custoFrete || 0) + (baseInputs.custosAdicionais || 0);
+  let custoTotal   = custoProduto + custosAdicionais;
+
+  // Iteração 1: estimar preço sem frete (ou com frete manual se fornecido)
+  const custoFreteManual = baseInputs.custoFrete || 0;
+  custoTotal += custoFreteManual;
+
   const pctExtra     = campanha && plataforma.campanha ? (plataforma.taxaCampanha || 0) : 0;
   const pct0         = (faixas[0].comissao + faixas[0].variavel + pctExtra) / 100;
   const divisor0     = 1 - pct0 - (baseInputs.margemLucro || 0) / 100 - (baseInputs.imposto || 0) / 100;
-  const precoEst     = divisor0 > 0 ? (custoTotal + faixas[0].fixo) / divisor0 : 0;
+  const precoEst1    = divisor0 > 0 ? (custoTotal + faixas[0].fixo) / divisor0 : 0;
+
+  // Calcular frete automático se pesoKg foi fornecido
+  let freteAutomatico = 0;
+  let freteDescricao = '';
+  if (pesoKg > 0) {
+    const freteInfo = calcularFretePorRegra(plataforma, precoEst1, pesoKg);
+    freteAutomatico = freteInfo.frete;
+    freteDescricao = freteInfo.descricao;
+  }
+
+  // Iteração 2: recalcular preço com frete automático
+  custoTotal = custoProduto + custosAdicionais + freteAutomatico;
+  const pct1 = (faixas[0].comissao + faixas[0].variavel + pctExtra) / 100;
+  const divisor1 = 1 - pct1 - (baseInputs.margemLucro || 0) / 100 - (baseInputs.imposto || 0) / 100;
+  const precoEst2 = divisor1 > 0 ? (custoTotal + faixas[0].fixo) / divisor1 : 0;
 
   // Faixa final (uma iteração resolve 99% dos casos de mudança de faixa)
-  const faixa = faixas.find((f) => precoEst <= f.max) || faixas[faixas.length - 1];
+  const faixa = faixas.find((f) => precoEst2 <= f.max) || faixas[faixas.length - 1];
 
   return {
-    custoProduto:      baseInputs.custoProduto     || 0,
-    custoFrete:        baseInputs.custoFrete        || 0,
-    custosAdicionais:  baseInputs.custosAdicionais  || 0,
+    custoProduto,
+    custoFrete:        freteAutomatico,  // Frete automático calculado
+    custosAdicionais,
     comissaoPlataforma: faixa.comissao + (faixa.variavel || 0) + pctExtra,
     taxaAnuncio:       faixa.fixo,
     imposto:           baseInputs.imposto           || 0,
     margemLucro:       baseInputs.margemLucro       || 0,
     _faixaLabel:       faixa.label,
+    _freteDescricao:   freteDescricao,  // Metadado para exibição
   };
 }
 
@@ -255,6 +280,81 @@ export function comparar(baseInputs, plataformas, tipoVendedor = null, campanha 
     })
     .filter(Boolean)
     .sort((a, b) => b.lucroLiquido - a.lucroLiquido);
+}
+
+/**
+ * Calcula o frete automático baseado nas regras da plataforma.
+ *
+ * @param {Object} plataforma  - objeto de plataforma (platforms/*.js)
+ * @param {number} precoVenda  - preço de venda sugerido (R$)
+ * @param {number} pesoKg      - peso do produto em kg
+ * @returns {Object} { frete: number, descricao: string, aviso?: string }
+ *
+ * Regras:
+ *   - Mercado Livre: tabela de peso, frete grátis se preço >= R$79
+ *   - Shopee: subsídio por faixa de preço (frete grátis obrigatório)
+ *   - TikTok: 6% do GMV do preço de venda (cap R$50)
+ *   - Amazon/Shein: não implementado (retorna 0)
+ */
+export function calcularFretePorRegra(plataforma, precoVenda, pesoKg) {
+  if (!plataforma || typeof precoVenda !== 'number' || typeof pesoKg !== 'number') {
+    return { frete: 0, descricao: 'sem frete', aviso: null };
+  }
+
+  const freteRegra = plataforma.freteRegra;
+  if (!freteRegra) {
+    return { frete: 0, descricao: 'sem frete', aviso: null };
+  }
+
+  // ─── MERCADO LIVRE: tabela por peso, frete grátis se preço >= R$79 ───
+  if (freteRegra.tipo === 'tabelaPeso') {
+    if (precoVenda >= freteRegra.freteGratisMinimo) {
+      // Frete grátis obrigatório
+      return {
+        frete: 0,
+        descricao: `ML ≥R$${freteRegra.freteGratisMinimo}: frete grátis obrigatório`,
+      };
+    }
+
+    // Abaixo do mínimo: tabela de peso
+    const tabelaItem = freteRegra.tabela.find((t) => pesoKg <= t.max);
+    if (!tabelaItem) {
+      return { frete: 0, descricao: 'Peso acima de 30kg — consulte simulador ML', aviso: freteRegra.avisoFrete };
+    }
+
+    if (tabelaItem.valor === null) {
+      return { frete: 0, descricao: tabelaItem.label, aviso: freteRegra.avisoFrete };
+    }
+
+    return {
+      frete: tabelaItem.valor,
+      descricao: `ML tabela ${tabelaItem.label}: R$ ${tabelaItem.valor.toFixed(2)}`,
+      aviso: freteRegra.avisoFrete,
+    };
+  }
+
+  // ─── SHOPEE: subsídio por faixa de preço ───
+  if (freteRegra.tipo === 'subsidioFaixa') {
+    const faixa = freteRegra.faixas.find((f) => precoVenda <= f.max) || freteRegra.faixas[freteRegra.faixas.length - 1];
+    // Frete grátis obrigatório — subsídio cobre, custo do vendedor = 0 (default)
+    return {
+      frete: 0,
+      descricao: `Shopee frete grátis obrigatório — subsídio de R$ ${faixa.subsidio.toFixed(2)} (costo do vendedor ≈ R$0)`,
+    };
+  }
+
+  // ─── TIKTOK SHOP: 6% do GMV (preço de venda) com cap de R$50 ───
+  if (freteRegra.tipo === 'percentualGMV') {
+    const freteSFP = _r2(precoVenda * (freteRegra.percentual / 100));
+    const freteCapado = Math.min(freteSFP, freteRegra.cap);
+    return {
+      frete: freteCapado,
+      descricao: `TikTok SFP 6% do GMV (cap R$50): R$ ${freteCapado.toFixed(2)}`,
+    };
+  }
+
+  // Nenhuma regra conhecida
+  return { frete: 0, descricao: 'sem frete', aviso: null };
 }
 
 /**

@@ -54,4 +54,16 @@ export default {
       { max: Infinity, comissao: 14, fixo: 29, variavel: 0, label: 'acima de R$200 (14% + R$29)'     },
     ],
   },
+
+  // Frete automático com subsídio Shopee (vigente desde 01/03/2026)
+  // Frete grátis obrigatório — subsídio da plataforma cobre até: R$20 / R$30 / R$40
+  // Custo do vendedor = max(0, freteReal - subsídio); default freteReal = subsídio (custo 0)
+  freteRegra: {
+    tipo: 'subsidioFaixa',
+    faixas: [
+      { max: 79.99,    subsidio: 20 },
+      { max: 199.99,   subsidio: 30 },
+      { max: Infinity, subsidio: 40 },
+    ],
+  },
 };

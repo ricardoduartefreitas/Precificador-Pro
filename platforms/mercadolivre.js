@@ -71,4 +71,24 @@ export default {
       { max: Infinity, comissao: 16, fixo: 0, variavel: 0, label: 'Premium 16% · Flex'                  },
     ],
   },
+
+  // Frete automático por peso (vigente desde 02/03/2026)
+  // Frete grátis obrigatório para preço ≥ R$79
+  // Tabela de referência: tabelaço do ML com 29 faixas de peso × 8 de preço
+  // Pontos confirmados: 300g→R$7,35 | 1-2kg→R$13,50
+  // Demais estimativa — validar no simulador vendedores.mercadolivre.com.br
+  freteRegra: {
+    tipo: 'tabelaPeso',
+    freteGratisMinimo: 79.00,
+    tabela: [
+      { max: 0.3,      valor: 7.35,  label: 'até 300g' },
+      { max: 1.0,      valor: 9.90,  label: '300g–1kg (estimativa)' },
+      { max: 2.0,      valor: 13.50, label: '1kg–2kg' },
+      { max: 5.0,      valor: 18.50, label: '2kg–5kg (estimativa)' },
+      { max: 9.0,      valor: 21.00, label: '5kg–9kg (estimativa)' },
+      { max: 30.0,     valor: 29.00, label: '9kg–30kg (estimativa)' },
+      { max: Infinity, valor: null,  label: 'acima de 30kg — consulte simulador ML' },
+    ],
+    avisoFrete: '⚠️ Tabela de frete por peso parcialmente estimada — confirme valores exatos no simulador vendedores.mercadolivre.com.br. Peso volumétrico não é considerado nesta versão.',
+  },
 };
