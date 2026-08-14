@@ -13,6 +13,9 @@ npm-debug.log*
 # superpowers (ferramentas de desenvolvimento)
 .superpowers/
 
+# worktrees isoladas (desenvolvimento)
+.worktrees/
+
 # sistema
 .DS_Store
 Thumbs.db
