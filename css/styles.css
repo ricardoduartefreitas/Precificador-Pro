@@ -1164,3 +1164,38 @@ input[type="range"] {
 #view-calcular .view-inner {
   max-width: 1400px;
 }
+
+/* ═══ A DIRETRIZ DO FRETE (restaurada — 14/08) ═══ */
+.frete-diretriz {
+  margin-top: 1rem;
+  padding: 0.9rem 1.1rem;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  border-radius: 10px;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: #dbeafe;
+}
+.frete-diretriz strong { color: #ffffff; }
+.frete-diretriz .fr-destaque {
+  color: #ffd700;
+  font-weight: 600;
+}
+/* Os avisos da plataforma */
+.plat-aviso {
+  margin-top: 0.8rem;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+.plat-aviso--warning {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fde68a;
+}
+.plat-aviso--error {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  color: #fecaca;
+}
