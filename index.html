@@ -22,6 +22,7 @@
       <button class="tab-btn active" data-route="calcular"  role="tab">Calcular</button>
       <button class="tab-btn"        data-route="comparar"  role="tab">Comparar</button>
       <button class="tab-btn"        data-route="historico" role="tab">Histórico</button>
+      <button class="tab-btn admin-only" data-route="admin-panel" role="tab" style="display:none;">Painel Admin</button>
     </nav>
   </header>
 
@@ -263,7 +264,37 @@
       </div>
     </section>
 
-    <!-- ─────────────────── TELA 3: HISTÓRICO (#/historico) -->
+    <!-- ─────────────────── TELA 3: PAINEL ADMIN (#/admin-panel) -->
+    <section id="view-admin-panel" class="view hidden" aria-label="Painel administrativo">
+      <div class="view-inner">
+
+        <div class="card">
+          <h2 class="card-title">Enviar convite de acesso</h2>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="invite-nome">Nome completo</label>
+              <input type="text" id="invite-nome" placeholder="ex: João Silva" autocomplete="name" />
+            </div>
+            <div class="form-field">
+              <label for="invite-email">E-mail</label>
+              <input type="email" id="invite-email" placeholder="ex: joao@exemplo.com" autocomplete="email" />
+            </div>
+          </div>
+          <button class="btn btn--primary" id="btn-enviar-convite" style="width: 100%;">Enviar convite</button>
+          <div id="invite-feedback" class="login-error" style="display: none; margin-top: 1rem; padding: 1rem; background: #ffebee; border-radius: 4px;"></div>
+        </div>
+
+        <div class="card">
+          <h2 class="card-title">Usuários convidados</h2>
+          <div id="convidados-list" class="convidados-list">
+            <p style="color: #999; text-align: center; padding: 2rem;">Nenhum convite enviado ainda</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─────────────────── TELA 4: HISTÓRICO (#/historico) -->
     <section id="view-historico" class="view hidden" aria-label="Histórico de cálculos">
       <div class="view-inner">
 

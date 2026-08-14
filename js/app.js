@@ -4,9 +4,10 @@
 import { initRouter }           from './router.js';
 import { initFreemium }         from './freemium.js';
 import { initUI }               from './ui.js';
+import { initAdminPanel }       from './admin.js';
 import { getInputs, setState }  from './state.js';
 import { initSupabase }         from './supabase.js';
-import { initAuth, onAuthChange } from './auth.js';
+import { initAuth, onAuthChange, isAdmin } from './auth.js';
 import { initLoginUI, addLogoutButton } from './ui-login.js';
 
 import ML     from '../platforms/mercadolivre.js';
@@ -43,8 +44,19 @@ async function boot() {
         initUI(PLATAFORMAS);
         initFreemium();
         initRouter();
+        initAdminPanel();
         addLogoutButton();
         isUIInitialized = true;
+      }
+
+      // Mostrar/ocultar tab de admin baseado na role
+      const adminTabBtn = document.querySelector('.tab-btn.admin-only');
+      if (adminTabBtn) {
+        if (isAdmin()) {
+          adminTabBtn.style.display = 'block';
+        } else {
+          adminTabBtn.style.display = 'none';
+        }
       }
     } else {
       // Usuário fez logout: inicializar login UI e redirecionar

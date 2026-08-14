@@ -4,13 +4,14 @@
 // Rotas protegidas: #/comparar | #/calcular/:platform | #/historico
 
 import { setState } from './state.js';
-import { isLoggedIn } from './auth.js';
+import { isLoggedIn, isAdmin } from './auth.js';
 
 const VIEWS = {
-  login:     document.getElementById('view-login'),
-  comparar:  document.getElementById('view-comparar'),
-  calcular:  document.getElementById('view-calcular'),
-  historico: document.getElementById('view-historico'),
+  login:       document.getElementById('view-login'),
+  comparar:    document.getElementById('view-comparar'),
+  calcular:    document.getElementById('view-calcular'),
+  'admin-panel': document.getElementById('view-admin-panel'),
+  historico:   document.getElementById('view-historico'),
 };
 
 const TABS = document.querySelectorAll('.tab-btn');
@@ -52,6 +53,12 @@ function navigate(hash) {
   // Proteção de rotas: se a rota é protegida e usuário não está logado, redireciona para login
   if (PROTECTED_ROUTES.includes(route) && !isLoggedIn()) {
     window.location.hash = '#/login';
+    return;
+  }
+
+  // Se é admin-panel e usuário não é admin, redireciona para calcular
+  if (route === 'admin-panel' && !isAdmin()) {
+    window.location.hash = '#/calcular';
     return;
   }
 
