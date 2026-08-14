@@ -1159,3 +1159,8 @@ input[type="range"] {
     grid-template-areas: "seletor" "regras" "result" "form" "extrato";
   }
 }
+
+/* Largura total da calculadora (o grid lado a lado precisa do espaço) */
+#view-calcular .view-inner {
+  max-width: 1400px;
+}
