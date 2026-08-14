@@ -285,8 +285,11 @@ function _handleCalcular() {
     custoProduto:     parseInputValue(document.getElementById('calc-custo')?.value),
     pesoKg:           parseInputValue(document.getElementById('calc-peso')?.value),
     custosAdicionais: parseInputValue(document.getElementById('calc-extras')?.value),
-    margemLucro:      parseInputValue(document.getElementById('calc-margem')?.value),
     imposto:          parseInputValue(document.getElementById('calc-imposto')?.value),
+    afiliadosPercent: parseInputValue(document.getElementById('calc-afiliados')?.value),
+    adsPercent:       parseInputValue(document.getElementById('calc-ads-pct')?.value),
+    adsFixo:          parseInputValue(document.getElementById('calc-ads-fixo')?.value),
+    margemLucro:      parseInputValue(document.getElementById('calc-margem')?.value),
   };
 
   const calcInputs = mapPlataformaToInputs(base, plat, tipoVend, !!state.inputs.campanha);
@@ -732,7 +735,7 @@ export function renderExtrato(resultado) {
   const rows = [
     { label: 'Valor de venda',   valor:  resultado.precoVenda, classe: '', secao: '' },
 
-    // ──── BLOCO 1: CUSTO DA PLATAFORMA ────
+    // ──── BLOCO 1: CUSTO DA PLATAFORMA (comissão + taxa fixa + frete) ────
     { label: 'CUSTO DA PLATAFORMA', valor: null, classe: 'row-secao-header', secao: 'plataforma' },
     {
       label:  resultado._comissaoLabel
@@ -756,18 +759,45 @@ export function renderExtrato(resultado) {
       classe: 'row-deduction',
       secao:  'plataforma',
     },
+    // Frete (fixo ou percentual)
+    {
+      label:  freteLabel,
+      valor:  -bd.freteValor,
+      classe: 'row-deduction',
+      secao:  'plataforma',
+    },
 
-    // ──── BLOCO 2: IMPOSTO ────
+    // ──── BLOCO 2: CUSTOS DE VENDA (afiliados + ads) ────
+    { label: 'CUSTOS DE VENDA', valor: null, classe: 'row-secao-header', secao: 'venda' },
+    ...(bd.afiliadosValor > 0 ? [{
+      label:  'Afiliados',
+      valor:  -bd.afiliadosValor,
+      classe: 'row-deduction',
+      secao:  'venda',
+    }] : []),
+    ...(bd.adsPercentualValor > 0 ? [{
+      label:  'Ads (%)',
+      valor:  -bd.adsPercentualValor,
+      classe: 'row-deduction',
+      secao:  'venda',
+    }] : []),
+    ...(bd.adsFixoValor > 0 ? [{
+      label:  'Ads (fixo)',
+      valor:  -bd.adsFixoValor,
+      classe: 'row-deduction',
+      secao:  'venda',
+    }] : []),
+
+    // ──── BLOCO 3: IMPOSTO ────
     { label: 'IMPOSTO', valor: null, classe: 'row-secao-header', secao: 'imposto' },
     { label: 'Imposto', valor: -bd.impostoValor, classe: 'row-deduction', secao: 'imposto' },
 
-    // ──── BLOCO 3: OUTROS CUSTOS ────
+    // ──── BLOCO 4: OUTROS CUSTOS ────
     { label: 'OUTROS CUSTOS', valor: null, classe: 'row-secao-header', secao: 'outros' },
     { label: 'Custo do produto', valor: -bd.custosProduto, classe: 'row-deduction', secao: 'outros' },
-    { label: freteLabel, valor: -bd.freteValor, classe: 'row-deduction', secao: 'outros' },
-    { label: 'Outros custos', valor: -bd.custosAdicionais, classe: 'row-deduction', secao: 'outros' },
+    { label: 'Custos adicionais', valor: -bd.custosAdicionais, classe: 'row-deduction', secao: 'outros' },
 
-    // ──── OUTROS AJUSTES ────
+    // ──── DESCONTO (se houver) ────
     ...(resultado.desconto > 0 ? [{
       label:  `Desconto (${resultado.desconto}%)`,
       valor:  -bd.descontoValor,
@@ -775,7 +805,7 @@ export function renderExtrato(resultado) {
       secao:  'desconto',
     }] : []),
 
-    // ──── RESULTADO FINAL ────
+    // ──── BLOCO 5: RESULTADO FINAL ────
     { label: 'Lucro líquido', valor: resultado.lucroLiquido, classe: 'row-total', secao: 'resultado' },
   ];
 
@@ -784,7 +814,7 @@ export function renderExtrato(resultado) {
       // Remove linhas com valor 0, exceto headers e totais
       if (r.valor === null) return true; // Headers
       if (r.classe === 'row-total') return true; // Total
-      return Math.abs(r.valor) > 0;
+      return Math.abs(r.valor) > 0.01;  // Filtro levemente mais rigoroso para erros de ponto flutuante
     })
     .map(({ label, valor, classe }) => `
       <tr class="${classe}">

@@ -1,0 +1,10 @@
+{
+  "name": "precificador-pro",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Calculadora de preços para marketplaces",
+  "scripts": {
+    "test": "node tests/test-frete-condicional.js",
+    "test:smoke": "node tests/smoke-test.js"
+  }
+}

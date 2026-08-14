@@ -32,6 +32,9 @@ const BASE_INPUTS = {
   custoProduto:     50,
   custoFrete:       10,
   custosAdicionais:  0,
+  afiliadosPercent:  0,    // Novo campo (frete condicional)
+  adsPercent:        0,    // Novo campo (frete condicional)
+  adsFixo:           0,    // Novo campo (frete condicional)
   margemLucro:      20,
   imposto:           6,
 };
@@ -41,6 +44,7 @@ const CALC_INPUTS_ML = {
   ...BASE_INPUTS,
   comissaoPlataforma: 14,
   taxaAnuncio:        16,
+  fretePercent:       0,   // Novo campo: frete percentual (0 = fixo)
 };
 
 // ─── main ─────────────────────────────────────────────────────────────────
@@ -87,12 +91,11 @@ async function main() {
     console.log(`  ${BOLD}lucroPercentual:${RESET} ${pct(r1.lucroPercentual)}`);
     console.log(`  ${BOLD}custoTotal:${RESET}      ${brl(r1.custoTotal)}`);
     console.log(`\n  Breakdown:`);
-    dim(`comissaoValor:    ${brl(r1.breakdown.comissaoValor)}`);
-    dim(`impostoValor:     ${brl(r1.breakdown.impostoValor)}`);
-    dim(`taxaAnuncioValor: ${brl(r1.breakdown.taxaAnuncioValor)}`);
-    dim(`freteValor:       ${brl(r1.breakdown.freteValor)}`);
-    dim(`margemValor:      ${brl(r1.breakdown.margemValor)}`);
-    dim(`totalDeducoes:    ${brl(r1.breakdown.totalDeducoes)}`);
+    dim(`custoDaPlataforma:   ${brl(r1.breakdown.custoDaPlataforma)}`);
+    dim(`custosDeVenda:       ${brl(r1.breakdown.custosDeVenda)}`);
+    dim(`impostoValor:        ${brl(r1.breakdown.impostoValor)}`);
+    dim(`outrosCustos:        ${brl(r1.breakdown.outrosCustos)}`);
+    dim(`lucroValor:          ${brl(r1.breakdown.lucroValor)}`);
   }
 
   // ═══════════════════════════════════════════════════════════════

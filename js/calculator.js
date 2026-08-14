@@ -7,12 +7,16 @@
 //
 // @typedef {Object} CalcInputs
 // @property {number} custoProduto       - custo de aquisição do produto (R$)
-// @property {number} custoFrete         - custo de frete do vendedor (R$)
+// @property {number} custoFrete         - custo de frete FIXO do vendedor (R$)
 // @property {number} custosAdicionais   - embalagem, etiquetas, etc. (R$)
 // @property {number} comissaoPlataforma - comissão percentual da plataforma (%)
 // @property {number} taxaAnuncio        - taxa fixa de anúncio por venda (R$)
 // @property {number} imposto            - imposto sobre a venda (%)
+// @property {number} afiliadosPercent   - percentual de afiliados (%)
+// @property {number} adsPercent         - percentual de ads (%)
+// @property {number} adsFixo            - valor fixo de ads (R$)
 // @property {number} margemLucro        - margem de lucro desejada (%)
+// @property {number} fretePercent       - SOMENTE SE PERCENTUAL: % do frete no divisor (%)
 //
 // @typedef {Object} CalcResultado
 // @property {number} precoVenda      - preço de venda sugerido (R$)
@@ -20,7 +24,7 @@
 // @property {number} lucroLiquido    - lucro após todos os descontos (R$)
 // @property {number} lucroPercentual - lucro / precoVenda em % (margem real)
 // @property {number} custoTotal      - soma de todos os custos do vendedor (R$)
-// @property {Object} breakdown       - detalhamento de cada dedução
+// @property {Object} breakdown       - detalhamento de 5 blocos: plataforma, venda, imposto, outros, lucro
 // ---------------------------------------------------------------------------
 
 /**
@@ -38,6 +42,9 @@ function _validar(inputs) {
     'comissaoPlataforma',
     'taxaAnuncio',
     'imposto',
+    'afiliadosPercent',
+    'adsPercent',
+    'adsFixo',
     'margemLucro',
   ];
 
@@ -57,14 +64,22 @@ function _r2(n) {
 }
 
 /**
- * Calcula o preço de venda sugerido e o detalhamento de lucro.
+ * Calcula o preço de venda sugerido com a ressalva de frete condicional.
  *
- * Fórmula:
- *   precoVenda = (custoTotal + taxaAnuncio) / (1 - comissao% - imposto% - margem%)
+ * Fórmula (com ressalva sobre FRETE):
+ *   SE fretePercent > 0 (frete PERCENTUAL, ex: TikTok 6%):
+ *     divisor = 1 - (comissão + afiliados% + ads% + frete% + imposto + margem) / 100
+ *     precoVenda = (custoProduto + custosAdicionais + adsFixo) / divisor
+ *   SENÃO (frete FIXO ou nenhum, ex: ML, Shopee):
+ *     divisor = 1 - (comissão + afiliados% + ads% + imposto + margem) / 100
+ *     precoVenda = (custoProduto + custoFrete + custosAdicionais + adsFixo) / divisor
  *
- * Onde:
- *   custoTotal = custoProduto + custoFrete + custosAdicionais
- *   divisor    = 1 - (comissaoPlataforma + imposto + margemLucro) / 100
+ * Breakdown organizado em 5 blocos:
+ *   1. CUSTO DA PLATAFORMA: comissão + taxa fixa + frete (fixo ou percentual)
+ *   2. CUSTOS DE VENDA: afiliados + ads (fixo + percentual)
+ *   3. IMPOSTO
+ *   4. OUTROS CUSTOS: custoProduto + custosAdicionais
+ *   5. LUCRO: margemLucro
  *
  * @param {CalcInputs} inputs - dados do produto e taxas da plataforma
  * @returns {CalcResultado|null} resultado estruturado, ou null se inputs inválidos
@@ -79,50 +94,99 @@ export function calcular(inputs) {
     comissaoPlataforma,
     taxaAnuncio,
     imposto,
+    afiliadosPercent = 0,
+    adsPercent = 0,
+    adsFixo = 0,
     margemLucro,
+    fretePercent = 0,  // SOMENTE se percentual (percentualGMV)
   } = inputs;
 
-  const custoTotal = custoProduto + custoFrete + custosAdicionais;
+  // ─── CALCULAR DIVISOR: condicionalizar frete ───
+  // Se frete é percentual (fretePercent > 0), entra no divisor
+  // Senão, fica no numerador (somado a custoProduto)
+  const pctNoDivisor = comissaoPlataforma + afiliadosPercent + adsPercent + imposto + margemLucro + fretePercent;
+  const divisor = 1 - pctNoDivisor / 100;
 
-  // Soma dos percentuais que incidem sobre o preço de venda
-  const pctSomado = (comissaoPlataforma + imposto + margemLucro) / 100;
-  const divisor   = 1 - pctSomado;
-
-  // Protege contra divisão por zero ou divisor inválido (taxas >= 100%)
   if (divisor <= 0) return null;
 
-  const precoVenda = _r2((custoTotal + taxaAnuncio) / divisor);
+  // ─── CALCULAR NUMERADOR: condicionalizar frete ───
+  // Se frete é fixo (fretePercent === 0), custoFrete entra no numerador
+  // Se frete é percentual, custoFrete não entra (foi substituído por fretePercent no divisor)
+  const numerador = custoProduto
+    + (fretePercent === 0 ? custoFrete : 0)  // Frete fixo entra aqui
+    + custosAdicionais
+    + adsFixo
+    + taxaAnuncio;
 
-  // Deduções calculadas sobre o preço de venda final
+  const precoVenda = _r2(numerador / divisor);
+
+  // ─── DEDUÇÕES SOBRE PREÇO DE VENDA ───
   const comissaoValor = _r2(precoVenda * (comissaoPlataforma / 100));
-  const impostoValor  = _r2(precoVenda * (imposto / 100));
-  const margemValor   = _r2(precoVenda * (margemLucro / 100));
-  const freteValor    = _r2(custoFrete);
+  const fretePercentualValor = _r2(precoVenda * (fretePercent / 100)); // Frete percentual calculado aqui
+  const afiliadosValor = _r2(precoVenda * (afiliadosPercent / 100));
+  const adsPercentualValor = _r2(precoVenda * (adsPercent / 100));
+  const impostoValor = _r2(precoVenda * (imposto / 100));
+  const margemValor = _r2(precoVenda * (margemLucro / 100));
 
-  const totalDeducoes = comissaoValor + impostoValor + taxaAnuncio;
-  const deducoesDaPlataforma = _r2(comissaoValor + taxaAnuncio + custoFrete); // Comissão + taxa fixa + frete
-  const lucroLiquido  = _r2(precoVenda - custoTotal - totalDeducoes);
-  const precoMinimo   = _r2(custoTotal + totalDeducoes);
+  // ─── BLOCOS DE BREAKDOWN (5 categorias) ───
+  // 1. CUSTO DA PLATAFORMA: comissão + taxa fixa + frete (seja fixo ou percentual)
+  const custoDaPlataforma = _r2(
+    comissaoValor
+    + taxaAnuncio
+    + (fretePercent > 0 ? fretePercentualValor : custoFrete)
+  );
+
+  // 2. CUSTOS DE VENDA: afiliados + ads (fixo + percentual)
+  const custosDeVenda = _r2(afiliadosValor + adsPercentualValor + adsFixo);
+
+  // 3. IMPOSTO
+  const impostoTotal = impostoValor;
+
+  // 4. OUTROS CUSTOS: custoProduto + custosAdicionais
+  const outrosCustos = _r2(custoProduto + custosAdicionais);
+
+  // 5. LUCRO (valor, não percentual)
+  const lucroLiquido = _r2(precoVenda - custoDaPlataforma - custosDeVenda - impostoTotal - outrosCustos);
   const lucroPercentual = precoVenda > 0
     ? _r2((lucroLiquido / precoVenda) * 100)
     : 0;
+
+  // Preço mínimo: custo total sem margem
+  const precoMinimo = _r2(custoDaPlataforma + custosDeVenda + impostoTotal + outrosCustos);
+
+  // Custo total tradicional (para compatibilidade)
+  const custoTotal = _r2(outrosCustos + custoFrete);
 
   return {
     precoVenda,
     precoMinimo,
     lucroLiquido,
     lucroPercentual,
-    custoTotal: _r2(custoTotal),
+    custoTotal,
     breakdown: {
+      // Bloco 1: Custo da Plataforma
       comissaoValor,
-      impostoValor,
-      margemValor,
-      freteValor,
       taxaAnuncioValor: _r2(taxaAnuncio),
-      custosProduto:    _r2(custoProduto),
+      freteValor: fretePercent > 0 ? fretePercentualValor : custoFrete,
+      custoDaPlataforma,
+
+      // Bloco 2: Custos de Venda
+      afiliadosValor,
+      adsPercentualValor,
+      adsFixoValor: _r2(adsFixo),
+      custosDeVenda,
+
+      // Bloco 3: Imposto
+      impostoValor,
+
+      // Bloco 4: Outros Custos
+      custosProduto: _r2(custoProduto),
       custosAdicionais: _r2(custosAdicionais),
-      totalDeducoes:    _r2(totalDeducoes),
-      deducoesDaPlataforma, // Apenas comissão + taxa fixa (não inclui imposto)
+      outrosCustos,
+
+      // Bloco 5: Lucro
+      lucroValor: lucroLiquido,
+      lucroPercentualVal: lucroPercentual,
     },
   };
 }
@@ -150,23 +214,43 @@ export function calcularComDesconto(inputs, desconto) {
   const fatorDesconto = 1 - desconto / 100;
   const precoComDesconto = _r2(base.precoVenda * fatorDesconto);
 
-  // Recalcula deduções sobre o preço com desconto
-  const { comissaoPlataforma, imposto, taxaAnuncio, custoProduto, custoFrete, custosAdicionais } = inputs;
+  // Recalcula com os mesmos inputs (agora com novos campos)
+  const {
+    comissaoPlataforma,
+    imposto,
+    taxaAnuncio,
+    custoProduto,
+    custoFrete,
+    custosAdicionais,
+    afiliadosPercent = 0,
+    adsPercent = 0,
+    adsFixo = 0,
+    fretePercent = 0,
+  } = inputs;
 
+  // Recalcula deduções sobre o preço com desconto
   const comissaoValor = _r2(precoComDesconto * (comissaoPlataforma / 100));
-  const impostoValor  = _r2(precoComDesconto * (imposto / 100));
-  const margemValor   = _r2(precoComDesconto * (inputs.margemLucro / 100));
-  const custoTotal    = _r2(custoProduto + custoFrete + custosAdicionais);
-  const totalDeducoes = _r2(comissaoValor + impostoValor + taxaAnuncio);
-  const deducoesDaPlataforma = _r2(comissaoValor + taxaAnuncio + custoFrete); // Comissão + taxa fixa + frete
-  const lucroLiquido  = _r2(precoComDesconto - custoTotal - totalDeducoes);
-  const precoMinimo   = _r2(custoTotal + totalDeducoes);
+  const fretePercentualValor = _r2(precoComDesconto * (fretePercent / 100));
+  const afiliadosValor = _r2(precoComDesconto * (afiliadosPercent / 100));
+  const adsPercentualValor = _r2(precoComDesconto * (adsPercent / 100));
+  const impostoValor = _r2(precoComDesconto * (imposto / 100));
+  const margemValor = _r2(precoComDesconto * (inputs.margemLucro / 100));
+
+  const custoDaPlataforma = _r2(
+    comissaoValor + taxaAnuncio + (fretePercent > 0 ? fretePercentualValor : custoFrete)
+  );
+  const custosDeVenda = _r2(afiliadosValor + adsPercentualValor + adsFixo);
+  const outrosCustos = _r2(custoProduto + custosAdicionais);
+
+  const custoTotal = _r2(outrosCustos + custoFrete);
+  const lucroLiquido = _r2(precoComDesconto - custoDaPlataforma - custosDeVenda - impostoValor - outrosCustos);
+  const precoMinimo = _r2(custoDaPlataforma + custosDeVenda + impostoValor + outrosCustos);
   const lucroPercentual = precoComDesconto > 0
     ? _r2((lucroLiquido / precoComDesconto) * 100)
     : 0;
 
   return {
-    precoVenda:     precoComDesconto,
+    precoVenda: precoComDesconto,
     precoMinimo,
     lucroLiquido,
     lucroPercentual,
@@ -175,15 +259,23 @@ export function calcularComDesconto(inputs, desconto) {
     precoSemDesconto: base.precoVenda,
     breakdown: {
       comissaoValor,
-      impostoValor,
-      margemValor,
-      freteValor:       _r2(custoFrete),
       taxaAnuncioValor: _r2(taxaAnuncio),
-      custosProduto:    _r2(custoProduto),
+      freteValor: fretePercent > 0 ? fretePercentualValor : custoFrete,
+      custoDaPlataforma,
+
+      afiliadosValor,
+      adsPercentualValor,
+      adsFixoValor: _r2(adsFixo),
+      custosDeVenda,
+
+      impostoValor,
+
+      custosProduto: _r2(custoProduto),
       custosAdicionais: _r2(custosAdicionais),
-      totalDeducoes,
-      deducoesDaPlataforma, // Apenas comissão + taxa fixa (não inclui imposto)
-      descontoValor:    _r2(base.precoVenda - precoComDesconto),
+      outrosCustos,
+
+      lucroValor: lucroLiquido,
+      descontoValor: _r2(base.precoVenda - precoComDesconto),
     },
   };
 }
@@ -193,8 +285,10 @@ export function calcularComDesconto(inputs, desconto) {
  * esperado por calcular(), aplicando a faixa de taxa correta para o preço estimado.
  *
  * Suporta cálculo automático de frete se pesoKg for fornecido.
+ * RESSALVA: Se freteRegra.tipo === 'percentualGMV', passa fretePercent no divisor;
+ *           senão, custoFrete entra no numerador.
  *
- * @param {Object} baseInputs       - { custoProduto, custosAdicionais, margemLucro, imposto, pesoKg? }
+ * @param {Object} baseInputs       - { custoProduto, custosAdicionais, margemLucro, imposto, pesoKg?, afiliadosPercent?, adsPercent?, adsFixo? }
  * @param {Object} plataforma       - objeto de plataforma (ver platforms/*.js)
  * @param {string} tipoVendedor     - chave de tipo (ex: 'cnpj', 'fba')
  * @param {boolean} campanha        - se campanha está ativa
@@ -209,26 +303,37 @@ export function mapPlataformaToInputs(baseInputs, plataforma, tipoVendedor, camp
   const custoProduto = baseInputs.custoProduto || 0;
   const custosAdicionais = baseInputs.custosAdicionais || 0;
   const pesoKg = baseInputs.pesoKg || 0;
+  const afiliadosPercent = baseInputs.afiliadosPercent || 0;
+  const adsPercent = baseInputs.adsPercent || 0;
+  const adsFixo = baseInputs.adsFixo || 0;
 
   // Estimativa de preço com primeira faixa para encontrar a faixa correta
-  let custoTotal   = custoProduto + custosAdicionais;
+  let custoTotal = custoProduto + custosAdicionais;
 
   // Iteração 1: estimar preço sem frete (ou com frete manual se fornecido)
   const custoFreteManual = baseInputs.custoFrete || 0;
   custoTotal += custoFreteManual;
 
-  const pctExtra     = campanha && plataforma.campanha ? (plataforma.taxaCampanha || 0) : 0;
-  const pct0         = (faixas[0].comissao + faixas[0].variavel + pctExtra) / 100;
-  const divisor0     = 1 - pct0 - (baseInputs.margemLucro || 0) / 100 - (baseInputs.imposto || 0) / 100;
-  const precoEst1    = divisor0 > 0 ? (custoTotal + faixas[0].fixo) / divisor0 : 0;
+  const pctExtra = campanha && plataforma.campanha ? (plataforma.taxaCampanha || 0) : 0;
+  const pct0 = (faixas[0].comissao + faixas[0].variavel + pctExtra) / 100;
+  const divisor0 = 1 - pct0 - (baseInputs.margemLucro || 0) / 100 - (baseInputs.imposto || 0) / 100;
+  const precoEst1 = divisor0 > 0 ? (custoTotal + faixas[0].fixo) / divisor0 : 0;
 
   // Calcular frete automático se pesoKg foi fornecido
   let freteAutomatico = 0;
   let freteDescricao = '';
+  let fretePercent = 0;  // Frete PERCENTUAL (somente se percentualGMV)
+
   if (pesoKg > 0) {
     const freteInfo = calcularFretePorRegra(plataforma, precoEst1, pesoKg);
     freteAutomatico = freteInfo.frete;
     freteDescricao = freteInfo.descricao;
+
+    // RESSALVA: Se freteRegra.tipo === 'percentualGMV', é percentual
+    if (plataforma.freteRegra?.tipo === 'percentualGMV') {
+      fretePercent = plataforma.freteRegra.percentual || 0;
+      freteAutomatico = 0;  // Será calculado no divisor
+    }
   }
 
   // Iteração 2: recalcular preço com frete automático
@@ -242,14 +347,18 @@ export function mapPlataformaToInputs(baseInputs, plataforma, tipoVendedor, camp
 
   return {
     custoProduto,
-    custoFrete:        freteAutomatico,  // Frete automático calculado
+    custoFrete: freteAutomatico,  // Frete automático calculado (fixo)
     custosAdicionais,
     comissaoPlataforma: faixa.comissao + (faixa.variavel || 0) + pctExtra,
-    taxaAnuncio:       faixa.fixo,
-    imposto:           baseInputs.imposto           || 0,
-    margemLucro:       baseInputs.margemLucro       || 0,
-    _faixaLabel:       faixa.label,
-    _freteDescricao:   freteDescricao,  // Metadado para exibição
+    taxaAnuncio: faixa.fixo,
+    imposto: baseInputs.imposto || 0,
+    afiliadosPercent,
+    adsPercent,
+    adsFixo,
+    margemLucro: baseInputs.margemLucro || 0,
+    fretePercent,  // Frete PERCENTUAL (0 se não for percentualGMV)
+    _faixaLabel: faixa.label,
+    _freteDescricao: freteDescricao,
   };
 }
 
