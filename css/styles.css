@@ -22,12 +22,12 @@
   /* Acentos */
   --accent-green:  #22c55e;
   --accent-red:    #ef4444;
-  --accent-blue:   #3b82f6;
+  --accent-blue:   #FFD700;
   --accent-yellow: #f59e0b;
 
   /* Bordas */
   --border:        #1e2d47;
-  --border-focus:  #3b82f6;
+  --border-focus:  #FFD700;
 
   /* Plataformas */
   --ml-color:     #f59e0b;
@@ -1073,8 +1073,8 @@ input[type="range"] {
 .plat-aviso-box {
   margin-top: var(--space-3);
   padding: var(--space-3);
-  background-color: rgba(59, 130, 246, 0.08);
-  border: 1px solid rgba(59, 130, 246, 0.25);
+  background-color: rgba(255, 215, 0, 0.08);
+  border: 1px solid rgba(255, 215, 0, 0.25);
   border-radius: var(--radius-md);
 }
 
@@ -1136,14 +1136,13 @@ input[type="range"] {
 /* A view do painel admin */
 #view-admin-panel { padding: 1.5rem; }
 
-/* As caixas LADO A LADO (a disposição — o pedido do Ricardo) */
+/* ═══ LAYOUT FINAL RICARDO (3 colunas): ESQUERDA (plat+regras) | MEIO (dados) | DIREITA (result+extrato) ═══ */
 #view-calcular .view-inner {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-template-areas:
-    "seletor seletor"
-    "regras  result"
-    "form    extrato";
+    "seletor form result"
+    "regras   form extrato";
   gap: 1.5rem;
   align-items: start;
 }
@@ -1169,12 +1168,12 @@ input[type="range"] {
 .frete-diretriz {
   margin-top: 1rem;
   padding: 0.9rem 1.1rem;
-  background: rgba(59, 130, 246, 0.08);
-  border: 1px solid rgba(59, 130, 246, 0.35);
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px solid rgba(255, 215, 0, 0.35);
   border-radius: 10px;
   font-size: 0.92rem;
   line-height: 1.5;
-  color: #dbeafe;
+  color: #fde68a;
 }
 .frete-diretriz strong { color: #ffffff; }
 .frete-diretriz .fr-destaque {
