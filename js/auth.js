@@ -51,11 +51,16 @@ export async function initAuth() {
   try {
     // Restaurar sessão do Supabase
     const session = await getSession();
-    if (!session) {
+
+    // Validar: se não há sessão OU a sessão é inválida, garantir limpeza do localStorage
+    if (!session || !session.user) {
+      const { signOut } = await import('./supabase.js');
+      await signOut(); // Limpar qualquer dado antigo do localStorage
       _auth.session = null;
       _auth.user = null;
       _auth.role = null;
       notifyListeners();
+      console.log('ℹ️ Sessão inválida ou expirada — localStorage limpo');
       return;
     }
 
@@ -67,8 +72,16 @@ export async function initAuth() {
     _auth.role = role;
 
     notifyListeners();
+    console.log(`✅ Sessão restaurada: ${session.user.email} (${role})`);
   } catch (error) {
     console.error('❌ Erro ao inicializar autenticação:', error.message);
+    // Se deu erro, garantir limpeza do localStorage
+    try {
+      const { signOut } = await import('./supabase.js');
+      await signOut();
+    } catch (signOutError) {
+      console.warn('⚠️ Erro ao limpar localStorage:', signOutError.message);
+    }
     _auth.session = null;
     _auth.user = null;
     _auth.role = null;
@@ -76,58 +89,22 @@ export async function initAuth() {
   }
 }
 
-// Login com email/senha
-// PRIORIDADE: Supabase REAL → Demo apenas como fallback se Supabase falhar
+// Login com email/senha (Supabase REAL somente — sem fallback demo)
 export async function login(email, password) {
   try {
-    // 1️⃣ TENTAR SUPABASE PRIMEIRO (principal)
-    try {
-      const { signIn } = await import('./supabase.js');
-      const { session, user } = await signIn(email, password);
+    const { signIn } = await import('./supabase.js');
+    const { session, user } = await signIn(email, password);
 
-      _auth.session = session;
-      _auth.user = user;
+    _auth.session = session;
+    _auth.user = user;
 
-      // Buscar role do usuário no banco
-      const role = await getUserRole(user.id);
-      _auth.role = role;
+    // Buscar role do usuário no banco
+    const role = await getUserRole(user.id);
+    _auth.role = role;
 
-      notifyListeners();
-      console.log(`✅ Login bem-sucedido com Supabase: ${email} (${role})`);
-      return { success: true, user, role };
-    } catch (supabaseError) {
-      console.warn('⚠️ Supabase indisponível, tentando modo demo...', supabaseError.message);
-
-      // 2️⃣ FALLBACK: Modo demo apenas se Supabase falhar
-      const DEMO_ACCOUNTS = {
-        'admin@ruah.com.br': { password: '123456', role: 'admin' },
-        'client@ruah.com.br': { password: '123456', role: 'client' },
-      };
-
-      if (DEMO_ACCOUNTS[email]) {
-        if (DEMO_ACCOUNTS[email].password !== password) {
-          return { success: false, error: 'Senha incorreta' };
-        }
-
-        // Simular sessão demo
-        const demoUser = {
-          id: email.split('@')[0],
-          email,
-          user_metadata: { role: DEMO_ACCOUNTS[email].role },
-        };
-
-        _auth.session = { user: demoUser }; // Session fake
-        _auth.user = demoUser;
-        _auth.role = DEMO_ACCOUNTS[email].role;
-
-        notifyListeners();
-        console.log(`⚠️ Login em MODO DEMO (Supabase offline): ${email} (${_auth.role})`);
-        return { success: true, user: demoUser, role: _auth.role };
-      }
-
-      // Nenhuma conta demo encontrada, e Supabase falhou
-      return { success: false, error: 'Usuário ou senha incorretos' };
-    }
+    notifyListeners();
+    console.log(`✅ Login bem-sucedido: ${email} (${role})`);
+    return { success: true, user, role };
   } catch (error) {
     console.error('❌ Erro ao fazer login:', error.message);
     return { success: false, error: error.message };
