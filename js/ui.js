@@ -833,14 +833,87 @@ export function renderComparacao(resultados) {
   rankingEl.classList.remove('hidden');
 }
 
+// ─── HELPERS: Formatar Diretriz de Frete ─────────────────────────────────────
+
+/**
+ * Formata o freteRegra de uma plataforma em HTML legível para exibição.
+ * @param {Object} plat - objeto de plataforma
+ * @returns {string} HTML com a descrição da diretriz de frete
+ */
+function _obterDiretrizFrete(plat) {
+  if (!plat || !plat.freteRegra) return '';
+
+  const regra = plat.freteRegra;
+
+  // ─── TIKTOK: Percentual do GMV com cap ───
+  if (regra.tipo === 'percentualGMV') {
+    return `
+      <div class="frete-info">
+        <h3 class="frete-titulo">📦 Diretriz de frete (SFP)</h3>
+        <p class="frete-descricao">
+          <strong>${regra.percentual}% do valor do produto</strong> (cap de R$ ${regra.cap.toFixed(2)})
+        </p>
+        <p class="frete-exemplo">Exemplo: Em produto de R$100, frete = R$6 (cap não atinge)</p>
+      </div>
+    `;
+  }
+
+  // ─── SHOPEE: Subsídio por faixa de preço ───
+  if (regra.tipo === 'subsidioFaixa') {
+    const faixasDesc = regra.faixas
+      .map((f) => {
+        const ateLbl = isFinite(f.max) ? `até R$ ${f.max.toFixed(2)}` : 'acima';
+        return `<li>Até R$ ${f.max.toFixed(2)}: subsídio de R$ ${f.subsidio.toFixed(2)}</li>`;
+      })
+      .join('');
+    return `
+      <div class="frete-info">
+        <h3 class="frete-titulo">📦 Diretriz de frete</h3>
+        <p class="frete-descricao"><strong>Frete grátis obrigatório</strong> — subsídio da plataforma por faixa</p>
+        <ul class="frete-faixas">
+          ${faixasDesc}
+        </ul>
+      </div>
+    `;
+  }
+
+  // ─── MERCADO LIVRE: Tabela de peso + frete grátis ───
+  if (regra.tipo === 'tabelaPeso') {
+    const tabelaDesc = regra.tabela
+      .slice(0, 6) // Mostrar apenas as 6 primeiras (maioria dos casos)
+      .map((t) => {
+        if (t.valor === null) {
+          return `<li>${t.label}</li>`;
+        }
+        return `<li>${t.label}: R$ ${t.valor.toFixed(2)}</li>`;
+      })
+      .join('');
+    return `
+      <div class="frete-info">
+        <h3 class="frete-titulo">📦 Diretriz de frete (por peso)</h3>
+        <p class="frete-descricao">
+          <strong>Frete grátis obrigatório</strong> para pedidos ≥ R$ ${regra.freteGratisMinimo.toFixed(2)}
+        </p>
+        <p class="frete-subtitulo">Abaixo do limite, tabela por peso:</p>
+        <ul class="frete-tabela">
+          ${tabelaDesc}
+        </ul>
+      </div>
+    `;
+  }
+
+  return '';
+}
+
 // ─── RENDER: PAINEL DE REGRAS E FAIXAS ───────────────────────────────────────
 
 function _renderPlatformaRegras() {
   const cardEl   = document.getElementById('plat-regras-card');
   const tbodyEl  = document.getElementById('plat-faixas-tbody');
+  const freteEl  = document.getElementById('plat-frete-diretriz');
   const avisoBox = document.getElementById('plat-aviso-box');
 
-  if (!cardEl || !tbodyEl) return;
+  if (!cardEl || !tbodyEl || !freteEl) return;
 
   const state     = getState();
   const plat      = _findPlat(state.activePlatform);
@@ -876,6 +949,15 @@ function _renderPlatformaRegras() {
       </tr>
     `;
   }).join('');
+
+  // Renderiza a diretriz de frete
+  const diretrizHTML = _obterDiretrizFrete(plat);
+  if (diretrizHTML) {
+    freteEl.innerHTML = diretrizHTML;
+    freteEl.classList.remove('hidden');
+  } else {
+    freteEl.classList.add('hidden');
+  }
 
   cardEl.classList.remove('hidden');
 }
