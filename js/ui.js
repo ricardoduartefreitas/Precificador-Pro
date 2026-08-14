@@ -665,7 +665,7 @@ export function renderResultHero(resultado) {
   }
 
   const pctPlat = resultado.precoVenda > 0
-    ? (resultado.breakdown.totalDeducoes / resultado.precoVenda) * 100
+    ? (resultado.breakdown.deducoesDaPlataforma / resultado.precoVenda) * 100
     : 0;
 
   console.log('[RENDER] renderResultHero: antes de setInnerHTML');
@@ -730,44 +730,66 @@ export function renderExtrato(resultado) {
     : 'Frete';
 
   const rows = [
-    { label: 'Valor de venda',   valor:  resultado.precoVenda, classe: '' },
-    { label: 'Custo do produto', valor: -bd.custosProduto,      classe: 'row-deduction' },
-    { label: freteLabel,         valor: -bd.freteValor,         classe: 'row-deduction' },
-    { label: 'Outros custos',    valor: -bd.custosAdicionais,   classe: 'row-deduction' },
+    { label: 'Valor de venda',   valor:  resultado.precoVenda, classe: '', secao: '' },
+
+    // ──── BLOCO 1: CUSTO DA PLATAFORMA ────
+    { label: 'CUSTO DA PLATAFORMA', valor: null, classe: 'row-secao-header', secao: 'plataforma' },
     {
       label:  resultado._comissaoLabel
         ? `Comissão ${resultado._comissaoLabel}`
         : 'Comissão',
       valor:  -comissaoExibir,
       classe: 'row-deduction',
+      secao:  'plataforma',
     },
     // Linha de Product Ads separada (apenas ML com campanha ativa)
     ...(isML && resultado._campanhaAtiva && resultado._campanhaValor > 0 ? [{
       label:  resultado._campanhaLabel || 'Product Ads (estimativa 2,5%)',
       valor:  -resultado._campanhaValor,
       classe: 'row-deduction',
+      secao:  'plataforma',
     }] : []),
     // Taxa fixa: label customizado para ML; filtro automático remove se valor = 0
     {
       label:  resultado._taxaFixaLabel || 'Taxa fixa anúncio',
       valor:  -bd.taxaAnuncioValor,
       classe: 'row-deduction',
+      secao:  'plataforma',
     },
-    { label: 'Imposto', valor: -bd.impostoValor, classe: 'row-deduction' },
+
+    // ──── BLOCO 2: IMPOSTO ────
+    { label: 'IMPOSTO', valor: null, classe: 'row-secao-header', secao: 'imposto' },
+    { label: 'Imposto', valor: -bd.impostoValor, classe: 'row-deduction', secao: 'imposto' },
+
+    // ──── BLOCO 3: OUTROS CUSTOS ────
+    { label: 'OUTROS CUSTOS', valor: null, classe: 'row-secao-header', secao: 'outros' },
+    { label: 'Custo do produto', valor: -bd.custosProduto, classe: 'row-deduction', secao: 'outros' },
+    { label: freteLabel, valor: -bd.freteValor, classe: 'row-deduction', secao: 'outros' },
+    { label: 'Outros custos', valor: -bd.custosAdicionais, classe: 'row-deduction', secao: 'outros' },
+
+    // ──── OUTROS AJUSTES ────
     ...(resultado.desconto > 0 ? [{
       label:  `Desconto (${resultado.desconto}%)`,
       valor:  -bd.descontoValor,
       classe: 'row-deduction',
+      secao:  'desconto',
     }] : []),
-    { label: 'Lucro líquido', valor: resultado.lucroLiquido, classe: 'row-total' },
+
+    // ──── RESULTADO FINAL ────
+    { label: 'Lucro líquido', valor: resultado.lucroLiquido, classe: 'row-total', secao: 'resultado' },
   ];
 
   table.innerHTML = rows
-    .filter((r) => Math.abs(r.valor) > 0 || r.classe === 'row-total')
+    .filter((r) => {
+      // Remove linhas com valor 0, exceto headers e totais
+      if (r.valor === null) return true; // Headers
+      if (r.classe === 'row-total') return true; // Total
+      return Math.abs(r.valor) > 0;
+    })
     .map(({ label, valor, classe }) => `
       <tr class="${classe}">
         <td>${label}</td>
-        <td>${valor < 0 ? '−&nbsp;' : ''}${formatBRL(Math.abs(valor))}</td>
+        <td>${valor === null ? '' : (valor < 0 ? '−&nbsp;' : '') + formatBRL(Math.abs(valor))}</td>
       </tr>`)
     .join('');
 
@@ -786,7 +808,7 @@ export function renderComparacao(resultados) {
   const [winner, ...rest] = resultados;
   const maxLucro  = winner.lucroLiquido;
   const pctWinner = winner.precoVenda > 0
-    ? (winner.breakdown.totalDeducoes / winner.precoVenda) * 100
+    ? (winner.breakdown.deducoesDaPlataforma / winner.precoVenda) * 100
     : 0;
 
   winnerEl.innerHTML = `

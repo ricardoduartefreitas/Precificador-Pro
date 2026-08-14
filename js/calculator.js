@@ -100,6 +100,7 @@ export function calcular(inputs) {
   const freteValor    = _r2(custoFrete);
 
   const totalDeducoes = comissaoValor + impostoValor + taxaAnuncio;
+  const deducoesDaPlataforma = _r2(comissaoValor + taxaAnuncio + custoFrete); // Comissão + taxa fixa + frete
   const lucroLiquido  = _r2(precoVenda - custoTotal - totalDeducoes);
   const precoMinimo   = _r2(custoTotal + totalDeducoes);
   const lucroPercentual = precoVenda > 0
@@ -121,6 +122,7 @@ export function calcular(inputs) {
       custosProduto:    _r2(custoProduto),
       custosAdicionais: _r2(custosAdicionais),
       totalDeducoes:    _r2(totalDeducoes),
+      deducoesDaPlataforma, // Apenas comissão + taxa fixa (não inclui imposto)
     },
   };
 }
@@ -156,6 +158,7 @@ export function calcularComDesconto(inputs, desconto) {
   const margemValor   = _r2(precoComDesconto * (inputs.margemLucro / 100));
   const custoTotal    = _r2(custoProduto + custoFrete + custosAdicionais);
   const totalDeducoes = _r2(comissaoValor + impostoValor + taxaAnuncio);
+  const deducoesDaPlataforma = _r2(comissaoValor + taxaAnuncio + custoFrete); // Comissão + taxa fixa + frete
   const lucroLiquido  = _r2(precoComDesconto - custoTotal - totalDeducoes);
   const precoMinimo   = _r2(custoTotal + totalDeducoes);
   const lucroPercentual = precoComDesconto > 0
@@ -179,6 +182,7 @@ export function calcularComDesconto(inputs, desconto) {
       custosProduto:    _r2(custoProduto),
       custosAdicionais: _r2(custosAdicionais),
       totalDeducoes,
+      deducoesDaPlataforma, // Apenas comissão + taxa fixa (não inclui imposto)
       descontoValor:    _r2(base.precoVenda - precoComDesconto),
     },
   };

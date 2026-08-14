@@ -506,6 +506,24 @@ input[type="range"] {
   font-size: var(--text-base);
 }
 
+.extrato-table .row-secao-header {
+  background-color: var(--bg-card-alt);
+  font-weight: var(--font-bold);
+  border-top: 2px solid var(--border);
+}
+
+.extrato-table .row-secao-header td {
+  color: var(--text-primary);
+  padding: var(--space-3) 0;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.extrato-table .row-secao-header td:last-child {
+  display: none;
+}
+
 /* --------------------------------------------------------------------------
    13. WINNER CARD (comparação)
    -------------------------------------------------------------------------- */
