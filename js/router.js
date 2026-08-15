@@ -72,8 +72,10 @@ function navigate(hash) {
     return;
   }
 
-  // Se é login ou aceitar-convite e usuário JÁ está logado, redireciona para calcular
-  if ((route === 'login' || route === 'aceitar-convite') && isLoggedIn()) {
+  // Se é login e usuário JÁ está logado, redireciona para calcular
+  // (o aceitar-convite NUNCA redireciona — o aceite do convite é SEMPRE mostrado,
+  //  mesmo com uma sessão existente — o token do convite é a prioridade!)
+  if (route === 'login' && isLoggedIn()) {
     window.location.hash = '#/calcular';
     return;
   }
