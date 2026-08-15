@@ -131,12 +131,11 @@ export async function deleteCalculation(calculationId) {
 }
 
 
-// Atualizar nome do usuário em profiles
+// Atualizar nome do usuário em profiles (o UPSERT: cria o perfil se não existe — o convite cria só o usuário!)
 export async function updateUserProfile(userId, updates) {
   const { data, error } = await getSupabase()
     .from('profiles')
-    .update(updates)
-    .eq('id', userId)
+    .upsert({ id: userId, ...updates }, { onConflict: 'id' })
     .select()
     .single();
 
