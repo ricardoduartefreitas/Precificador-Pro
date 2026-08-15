@@ -43,11 +43,10 @@ async function boot() {
   let isUIInitialized = false;
   onAuthChange((auth) => {
     if (auth.session) {
-      // Usuário logou: inicializar UI e router
+      // Usuário logou: inicializar UI
       if (!isUIInitialized) {
         initUI(PLATAFORMAS);
         initFreemium();
-        initRouter();
         initAdminPanel();
         addLogoutButton();
         isUIInitialized = true;
@@ -75,13 +74,11 @@ async function boot() {
     }
   });
 
-  // 4️⃣ Se há sessão, redirecionar para rota padrão (não redirecionar se já em login)
-  const currentHash = window.location.hash || '';
-  if (currentHash !== '#/login' && currentHash !== '') {
-    if (!window.location.hash || window.location.hash === '#') {
-      window.location.hash = '#/calcular';
-    }
-  }
+  // 3.5️⃣ Inicializar router SEMPRE (mesmo sem sessão) para gerenciar navegação por hash
+  // FIX: Anteriormente, initRouter() só era chamado se havia uma sessão,
+  // causando que o aceitar-convite não fosse renderizado em navegadores limpos.
+  // Agora é chamado SEMPRE para garantir que o sistema de rotas funciona corretamente.
+  initRouter();
 
   // Atualiza document.title conforme a view ativa
   const VIEW_TITLES = {
