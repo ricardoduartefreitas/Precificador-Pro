@@ -25,7 +25,9 @@ const PROTECTED_ROUTES = ['comparar', 'calcular', 'historico'];
 
 function parseRoute(hash) {
   const clean = (hash || '').replace(/^#\//, '');
-  const [route, param] = clean.split('/');
+  const [routeRaw, param] = clean.split('/');
+  // O hash pode trazer o query (ex.: aceitar-convite?token=...) — limpar!
+  const route = (routeRaw || '').split('?')[0];
   return { route: route || 'comparar', param: param || null };
 }
 
