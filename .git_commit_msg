@@ -1,0 +1,41 @@
+fix: fluxo do aceitar-convite — renderiza sempre (initRouter chamado sempre)
+
+## Problema
+O fluxo de aceite do convite quebrava em navegadores sem uma sessão
+anterior. O hash era corretamente setado para #/aceitar-convite?token=...,
+mas a view não era renderizada.
+
+## Raiz do Problema
+initRouter() só era chamado se havia uma sessão autenticada. Se o usuário
+clicava no link de convite em um navegador limpo (sem sessão), o router
+não era inicializado, causando:
+- navigate() nunca era chamado
+- showView() nunca era executado
+- invite-accept-card continuava display:none
+- Usuário via a tela de login ao invés do aceite
+
+## Solução
+Chamar initRouter() SEMPRE, independentemente de haver sessão. Isso
+garante que:
+- O sistema de rotas está ativo desde o boot
+- A navegação por hash funciona corretamente
+- As views são gerenciadas corretamente mesmo sem autenticação
+- O aceitar-convite é sempre renderizado quando há um token
+
+## Fluxo Corrigido
+1. URL: /auth/confirm?token_hash=...&type=invite
+2. 404.html preserva query e redireciona para /
+3. checkInviteLink() detecta convite, seta #/aceitar-convite?token=...
+4. initRouter() registra listener de hashchange E chama navigate()
+5. navigate() extrai rota 'aceitar-convite' e chama showView()
+6. Card de aceitar-convite é mostrado ✅
+7. Usuário preenche senha e clica em Aceitar
+8. verifyOtp() cria sessão e redireciona para #/calcular
+
+Testes do Aquila (14/08/2026) verificados ✅:
+- 404.html redirect preserva query ✅
+- parseRoute limpa o ? do hash ✅
+- app.js preserva aceitar-convite no else ✅
+- NEW: initRouter sempre chamado ✅
+
+Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>

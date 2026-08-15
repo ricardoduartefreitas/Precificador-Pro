@@ -108,8 +108,10 @@ export function initInviteAcceptUI() {
         return;
       }
 
-      // 2️⃣ Salvar nome em profiles.nome
-      await updateUserProfile(user.id, { nome: _inviteState.nome });
+      // 2️⃣ Salvar nome em profiles.nome (o nome DIGITADO pelo usuário — o campo!)
+      const nomeInput = document.getElementById('invite-nome');
+      const nomeFinal = (nomeInput && nomeInput.value.trim()) || _inviteState.nome || 'Convidado';
+      await updateUserProfile(user.id, { nome: nomeFinal });
 
       // 3️⃣ Definir a senha do usuário
       const { error: updateError } = await getSupabase().auth.updateUser({
