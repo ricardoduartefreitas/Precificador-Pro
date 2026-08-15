@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Redirecionando...</title>
+  <script>
+    // SPA fallback para o GitHub Pages:
+    // rotas como /auth/confirm?token_hash=... não existem no servidor estático —
+    // este 404.html preserva o query/hash e redireciona para o index.html,
+    // onde o app lê o token do convite e mostra o aceite.
+    var destino = '/' + location.search + location.hash;
+    location.replace(destino);
+  </script>
+</head>
+<body>
+  <p>Redirecionando...</p>
+</body>
+</html>
