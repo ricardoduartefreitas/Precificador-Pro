@@ -66,7 +66,12 @@ async function boot() {
       // Usuário fez logout: inicializar login UI e redirecionar
       initLoginUI();
       initInviteAcceptUI();
-      window.location.hash = '#/login';
+      // NÃO sobrescrever o aceite do convite: se o hash é o aceitar-convite,
+      // o fluxo do aceite (nome + senha) é a prioridade — preservar!
+      const rotaAtual = (window.location.hash || '').replace(/^#\//, '').split('?')[0];
+      if (rotaAtual !== 'aceitar-convite') {
+        window.location.hash = '#/login';
+      }
     }
   });
 
