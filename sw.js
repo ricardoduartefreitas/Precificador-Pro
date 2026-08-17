@@ -1,8 +1,8 @@
 // Service Worker — PrecificaPRO
-// Responsabilidade: cache offline dos assets estáticos (Cache First)
+// Responsabilidade: cache offline dos assets estáticos (Stale-While-Revalidate — o psp-v6!)
 // Atualizar APP_SHELL ao adicionar novos arquivos ao projeto
 
-const CACHE_NAME = 'psp-v5';
+const CACHE_NAME = 'psp-v6';
 
 const APP_SHELL = [
   './',
@@ -62,16 +62,21 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Demais assets: Cache First (o desempenho offline)
+  // Assets: Stale-While-Revalidate (o fix 17/08 — o fim da "tela antiga"!)
+  // Serve o cache NA HORA (rápido) e atualiza em background — o asset NOVO
+  // chega sozinho na próxima carga, SEM depender de Ctrl+Shift+R ou bump manual!
   event.respondWith(
     caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-      return fetch(event.request).catch(() => {
-        if (event.request.mode === 'navigate') {
-          return caches.match('./index.html');
-        }
-        return Response.error();
-      });
+      const networkFetch = fetch(event.request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          }
+          return response;
+        })
+        .catch(() => cached || Response.error());
+      return cached || networkFetch;
     })
   );
 });
