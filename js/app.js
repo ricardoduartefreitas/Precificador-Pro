@@ -36,6 +36,10 @@ async function boot() {
   // 1.5️⃣ Verificar se há link de convite na URL e redirecionar
   checkInviteLink();
 
+  // 1.6️⃣ FIX (16/08): o router ANTES do auth — a tela do login aparece IMEDIATAMENTE!
+  // (antes o initAuth podia travar o boot (o await sem timeout) e o router nunca rodava = a tela vazia!)
+  initRouter();
+
   // 2️⃣ Inicializar autenticação (verifica sessão existente)
   // FIX (16/08): o try/catch — se o Supabase falhar (rate limit/offline), o router AINDA roda e a tela do login aparece!
   try {
@@ -83,8 +87,6 @@ async function boot() {
   // FIX: Anteriormente, initRouter() só era chamado se havia uma sessão,
   // causando que o aceitar-convite não fosse renderizado em navegadores limpos.
   // Agora é chamado SEMPRE para garantir que o sistema de rotas funciona corretamente.
-  initRouter();
-
   // Atualiza document.title conforme a view ativa
   const VIEW_TITLES = {
     calcular:  'Calcular — PrecificaPRO',
