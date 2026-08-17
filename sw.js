@@ -2,7 +2,7 @@
 // Responsabilidade: cache offline dos assets estáticos (Cache First)
 // Atualizar APP_SHELL ao adicionar novos arquivos ao projeto
 
-const CACHE_NAME = 'psp-v4';
+const CACHE_NAME = 'psp-v5';
 
 const APP_SHELL = [
   './',
@@ -48,6 +48,21 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
+  // NAVIGATION: Network First — a página sempre busca a versão NOVA (o fix do cache teimoso!)
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          return response;
+        })
+        .catch(() => caches.match('./index.html'))
+    );
+    return;
+  }
+
+  // Demais assets: Cache First (o desempenho offline)
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
