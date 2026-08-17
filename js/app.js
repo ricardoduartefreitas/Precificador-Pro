@@ -37,7 +37,12 @@ async function boot() {
   checkInviteLink();
 
   // 2️⃣ Inicializar autenticação (verifica sessão existente)
-  await initAuth();
+  // FIX (16/08): o try/catch — se o Supabase falhar (rate limit/offline), o router AINDA roda e a tela do login aparece!
+  try {
+    await initAuth();
+  } catch (e) {
+    console.error('⚠️ initAuth falhou (o router segue):', e);
+  }
 
   // 3️⃣ Escutar mudanças de autenticação
   let isUIInitialized = false;
