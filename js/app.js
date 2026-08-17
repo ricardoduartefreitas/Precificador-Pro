@@ -28,11 +28,10 @@ async function boot() {
   // (o initSupabase/initAuth podem falhar ou travar — o router NÃO pode depender deles!)
   initRouter();
 
-  // 0.1️⃣ FIX (16/08): a GARANTIA FINAL — sem sessão, a view-login aparece SEMPRE (direto, sem depender do router!)
-  if (!isLoggedIn()) {
-    const loginView = document.getElementById('view-login');
-    if (loginView) loginView.classList.remove('hidden');
-  }
+  // 0.1️⃣ FIX (16/08): a GARANTIA FINAL — a view-login aparece SEMPRE (SEM condição!)
+  // (o isLoggedIn pode vir true com sessão stale — o remove SEMPRE, o auth depois redireciona se logado!)
+  const loginView = document.getElementById('view-login');
+  if (loginView) loginView.classList.remove('hidden');
 
   // Garante que imposto e desconto existam no estado
   const inputs = getInputs();
