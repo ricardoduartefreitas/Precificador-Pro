@@ -11,14 +11,14 @@ let _auth = {
 
 const AUTH_LISTENERS = [];
 
-function notifyListeners() {
-  AUTH_LISTENERS.forEach((fn) => fn(_auth));
+function notifyListeners(event) {
+  AUTH_LISTENERS.forEach((fn) => fn(event || null, _auth));
 }
 
 export function onAuthChange(callback) {
   AUTH_LISTENERS.push(callback);
-  // Chamar imediatamente com estado atual
-  callback(_auth);
+  // Chamar imediatamente com estado atual (sem evento)
+  callback(null, _auth);
   // Retorna função de unsubscribe
   return () => {
     const idx = AUTH_LISTENERS.indexOf(callback);
@@ -49,6 +49,18 @@ export function getCurrentUserEmail() {
 // Inicializar auth no boot (verificar sessão existente)
 export async function initAuth() {
   try {
+    // FIX (17/08): escutar o evento de RECUPERAÇÃO DE SENHA do Supabase!
+    // (o link do 'Esqueci minha senha' → o supabase processa o token (detectSessionInUrl)
+    //  e dispara PASSWORD_RECOVERY → o app mostra a tela de nova senha!)
+    getSupabase().auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        _auth.session = session;
+        _auth.user = session?.user || null;
+        _auth.role = null;
+        notifyListeners('PASSWORD_RECOVERY');
+      }
+    });
+
     // Restaurar sessão do Supabase
     const session = await getSession();
 
@@ -161,6 +173,23 @@ export async function resetPassword(email) {
     return { success: true };
   } catch (error) {
     console.error('❌ Erro ao enviar link de reset:', error.message);
+    return { success: false, error: error.message };
+  }
+}
+
+// Trocar a senha (na tela de recuperação — o token do link já foi processado)
+export async function updatePassword(novaSenha) {
+  try {
+    const { updatePassword: updatePasswordApi } = await import('./supabase.js');
+    await updatePasswordApi(novaSenha);
+    // Após trocar, encerra a sessão de recovery e volta para o login
+    _auth.session = null;
+    _auth.user = null;
+    _auth.role = null;
+    notifyListeners();
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Erro ao trocar a senha:', error.message);
     return { success: false, error: error.message };
   }
 }

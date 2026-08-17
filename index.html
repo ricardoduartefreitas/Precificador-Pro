@@ -88,6 +88,30 @@
             <p>Link expirou? <a href="#" id="link-solicitar-novo-convite" style="color: #FFD700; cursor: pointer;">Solicitar novo convite</a></p>
           </div>
         </div>
+        <!-- TELA: RECUPERAR SENHA (#/recuperar-senha) - o link do 'Esqueci minha senha' -->
+        <div class="card" id="reset-password-card" style="display: none;">
+          <h2 class="card-title" style="text-align: center;">Redefinir senha</h2>
+          <p style="text-align: center; color: #666; margin-bottom: 2rem;">Digite sua nova senha para concluir a recuperação.</p>
+
+          <div class="form-grid">
+            <div class="form-field form-field--full">
+              <label for="reset-password-nova">Nova senha</label>
+              <input type="password" id="reset-password-nova" placeholder="pelo menos 6 caracteres" autocomplete="new-password" />
+            </div>
+            <div class="form-field form-field--full">
+              <label for="reset-password-confirmar">Confirme a nova senha</label>
+              <input type="password" id="reset-password-confirmar" placeholder="repita a nova senha" autocomplete="new-password" />
+            </div>
+          </div>
+
+          <button class="btn btn--primary" id="btn-reset-password" style="width: 100%; margin-bottom: 1rem;">Salvar nova senha</button>
+
+          <div id="reset-password-error" class="login-error" style="display: none; color: #d32f2f; padding: 1rem; background: #ffebee; border-radius: 4px; margin-bottom: 1rem;"></div>
+
+          <div style="text-align: center; font-size: 0.875rem; color: #666;">
+            <p><a href="#" id="link-back-login-reset-password" style="color: #FFD700; cursor: pointer;">Voltar ao login</a></p>
+          </div>
+        </div>
       </div>
     </section>
 

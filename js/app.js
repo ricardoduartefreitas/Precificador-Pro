@@ -8,7 +8,7 @@ import { initAdminPanel }       from './admin.js';
 import { getInputs, setState }  from './state.js';
 import { initSupabase }         from './supabase.js';
 import { initAuth, onAuthChange, isAdmin, isLoggedIn } from './auth.js';
-import { initLoginUI, addLogoutButton } from './ui-login.js';
+import { initLoginUI, addLogoutButton, initResetPasswordUI } from './ui-login.js';
 import { checkInviteLink, initInviteAcceptUI } from './ui-invite-accept.js';
 
 import ML     from '../platforms/mercadolivre.js';
@@ -55,7 +55,15 @@ async function boot() {
 
   // 3️⃣ Escutar mudanças de autenticação
   let isUIInitialized = false;
-  onAuthChange((auth) => {
+  onAuthChange((event, auth) => {
+    // FIX (17/08): RECUPERAÇÃO DE SENHA — o link do email foi processado!
+    // mostra a tela de nova senha (#/recuperar-senha) em vez de seguir o fluxo normal
+    if (event === 'PASSWORD_RECOVERY') {
+      initResetPasswordUI();
+      window.location.hash = '#/recuperar-senha';
+      return;
+    }
+
     if (auth.session) {
       // Usuário logou: inicializar UI
       if (!isUIInitialized) {
@@ -88,6 +96,7 @@ async function boot() {
       // Usuário fez logout: inicializar login UI e redirecionar
       initLoginUI();
       initInviteAcceptUI();
+      initResetPasswordUI();
       // NÃO sobrescrever o aceite do convite: se o hash é o aceitar-convite,
       // o fluxo do aceite (nome + senha) é a prioridade — preservar!
       const rotaAtual = (window.location.hash || '').replace(/^#\//, '').split('?')[0];

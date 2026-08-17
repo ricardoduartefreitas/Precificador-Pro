@@ -23,7 +23,14 @@ export async function initSupabase() {
     return null;
   }
 
-  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      // FIX (17/08): processa o token do link do email (recuperação de senha)!
+      // (antes: o link do 'Esqueci minha senha' abria e NADA processava o token —
+      //  o usuário caía no login sem opção de digitar a nova senha!)
+      detectSessionInUrl: true,
+    },
+  });
   return supabaseClient;
 }
 
@@ -54,8 +61,15 @@ export async function signOut() {
 
 export async function resetPasswordForEmail(email) {
   const { data, error } = await getSupabase().auth.resetPasswordForEmail(email, {
-    redirectTo: 'https://precificador.ruahtecnologia.com.br/#/login',
+    redirectTo: 'https://precificador.ruahtecnologia.com.br/#/recuperar-senha',
   });
+  if (error) throw error;
+  return data;
+}
+
+// Trocar a senha (usado na tela de recuperação — o token do link já foi processado)
+export async function updatePassword(novaSenha) {
+  const { data, error } = await getSupabase().auth.updateUser({ password: novaSenha });
   if (error) throw error;
   return data;
 }

@@ -298,6 +298,104 @@ function showError(message) {
   }
 }
 
+// ═══════════════════════════════════════════════════════════════
+// RECUPERAÇÃO DE SENHA (#/recuperar-senha) — FIX (17/08)!
+// O link do 'Esqueci minha senha' → o supabase processa o token
+// (detectSessionInUrl) → evento PASSWORD_RECOVERY → este card aparece.
+// ═══════════════════════════════════════════════════════════════
+
+// Mostrar o card de nova senha (dentro da view-login)
+export function showResetPasswordForm() {
+  const loginFormCard = document.getElementById('login-form-card');
+  const resetPasswordCard = document.getElementById('reset-password-card');
+
+  if (loginFormCard) loginFormCard.style.display = 'none';
+  if (resetPasswordCard) resetPasswordCard.style.display = 'block';
+}
+
+export function initResetPasswordUI() {
+  const btnReset = document.getElementById('btn-reset-password');
+  if (!btnReset) return;
+
+  // Guard contra listeners duplicados (o init roda a cada boot/logout)
+  if (btnReset.dataset.uiInit) return;
+  btnReset.dataset.uiInit = '1';
+
+  const novaInput = document.getElementById('reset-password-nova');
+  const confirmarInput = document.getElementById('reset-password-confirmar');
+  const errorDiv = document.getElementById('reset-password-error');
+
+  function showResetError(message) {
+    if (errorDiv) {
+      errorDiv.textContent = message;
+      errorDiv.style.display = message ? 'block' : 'none';
+    }
+  }
+
+  btnReset.addEventListener('click', async () => {
+    const nova = novaInput.value.trim();
+    const confirmar = confirmarInput.value.trim();
+
+    if (!nova || nova.length < 6) {
+      showResetError('A nova senha precisa de pelo menos 6 caracteres');
+      return;
+    }
+    if (nova !== confirmar) {
+      showResetError('As senhas não conferem');
+      return;
+    }
+
+    btnReset.disabled = true;
+    btnReset.textContent = 'Salvando...';
+
+    const { updatePassword } = await import('./auth.js');
+    const result = await updatePassword(nova);
+
+    if (result.success) {
+      showResetError('');
+      novaInput.value = '';
+      confirmarInput.value = '';
+      btnReset.disabled = false;
+      btnReset.textContent = 'Salvar nova senha';
+      // Volta para o login com a mensagem de sucesso
+      const loginError = document.getElementById('login-error');
+      if (loginError) {
+        loginError.style.display = 'block';
+        loginError.style.background = '#e8f5e9';
+        loginError.style.color = '#2e7d32';
+        loginError.textContent = '✅ Senha alterada com sucesso! Faça login com a nova senha.';
+      }
+      window.location.hash = '#/login';
+    } else {
+      showResetError(result.error || 'Erro ao alterar a senha');
+      btnReset.disabled = false;
+      btnReset.textContent = 'Salvar nova senha';
+    }
+  });
+
+  // Enter nos campos dispara o salvamento
+  [novaInput, confirmarInput].forEach((input) => {
+    if (input) {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') btnReset.click();
+      });
+    }
+  });
+
+  // Voltar ao login
+  const linkBack = document.getElementById('link-back-login-reset-password');
+  if (linkBack) {
+    linkBack.addEventListener('click', (e) => {
+      e.preventDefault();
+      const loginFormCard = document.getElementById('login-form-card');
+      const resetPasswordCard = document.getElementById('reset-password-card');
+      if (loginFormCard) loginFormCard.style.display = 'block';
+      if (resetPasswordCard) resetPasswordCard.style.display = 'none';
+      window.location.hash = '#/login';
+    });
+  }
+}
+
 // Logout: adiciona botão no header
 export function addLogoutButton() {
   const header = document.querySelector('.app-header');

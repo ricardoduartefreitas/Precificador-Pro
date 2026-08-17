@@ -12,6 +12,7 @@ function getViews() {
   return {
     login:              document.getElementById('view-login'),
     'aceitar-convite':  document.getElementById('view-login'), // Mesma view, diferente card
+    'recuperar-senha':  document.getElementById('view-login'), // FIX (17/08): mesma view, card de nova senha
     comparar:           document.getElementById('view-comparar'),
     calcular:           document.getElementById('view-calcular'),
     'admin-panel':      document.getElementById('view-admin-panel'),
@@ -22,7 +23,7 @@ function getViews() {
 const TABS = document.querySelectorAll('.tab-btn');
 
 // Rotas que NÃO requerem autenticação
-const PUBLIC_ROUTES = ['login', 'aceitar-convite'];
+const PUBLIC_ROUTES = ['login', 'aceitar-convite', 'recuperar-senha'];
 
 // Rotas que REQUEREM autenticação
 const PROTECTED_ROUTES = ['comparar', 'calcular', 'historico'];
@@ -41,24 +42,27 @@ function showView(routeName) {
   // O forEach antigo processava a view-login 2× — o 'aceitar-convite' re-adicionava
   // o hidden que o 'login' tinha acabado de remover → a 1ª visita SEMPRE escondia
   // a tela de login (e o reload funcionava só porque o hash já era #/login)!
-  const isLoginRoute = routeName === 'login' || routeName === 'aceitar-convite';
+  // ('recuperar-senha' também é a view-login — o card de nova senha!)
+  const isLoginRoute = routeName === 'login' || routeName === 'aceitar-convite' || routeName === 'recuperar-senha';
   Object.entries(VIEWS).forEach(([name, el]) => {
     if (!el) return;
-    const isLoginView = name === 'login' || name === 'aceitar-convite';
+    const isLoginView = name === 'login' || name === 'aceitar-convite' || name === 'recuperar-senha';
     el.classList.toggle('hidden', isLoginRoute ? !isLoginView : name !== routeName);
   });
 
-  // Mostrar/ocultar cards dentro da view-login (login vs aceitar-convite)
-  if (routeName === 'login' || routeName === 'aceitar-convite') {
+  // Mostrar/ocultar cards dentro da view-login (login vs aceitar-convite vs nova senha)
+  if (routeName === 'login' || routeName === 'aceitar-convite' || routeName === 'recuperar-senha') {
     const loginFormCard = document.getElementById('login-form-card');
     const inviteAcceptCard = document.getElementById('invite-accept-card');
+    const resetPasswordCard = document.getElementById('reset-password-card');
 
     if (loginFormCard) loginFormCard.style.display = routeName === 'login' ? 'block' : 'none';
     if (inviteAcceptCard) inviteAcceptCard.style.display = routeName === 'aceitar-convite' ? 'block' : 'none';
+    if (resetPasswordCard) resetPasswordCard.style.display = routeName === 'recuperar-senha' ? 'block' : 'none';
   }
 
   // Mostrar/ocultar tabs apenas quando não está em login
-  const isLoginView = routeName === 'login' || routeName === 'aceitar-convite';
+  const isLoginView = routeName === 'login' || routeName === 'aceitar-convite' || routeName === 'recuperar-senha';
   const header = document.querySelector('.app-header');
   if (header) {
     header.style.display = isLoginView ? 'none' : 'flex';
