@@ -37,9 +37,15 @@ function parseRoute(hash) {
 
 function showView(routeName) {
   const VIEWS = getViews();
+  // FIX (17/08): 'login' e 'aceitar-convite' são a MESMA view (#view-login)!
+  // O forEach antigo processava a view-login 2× — o 'aceitar-convite' re-adicionava
+  // o hidden que o 'login' tinha acabado de remover → a 1ª visita SEMPRE escondia
+  // a tela de login (e o reload funcionava só porque o hash já era #/login)!
+  const isLoginRoute = routeName === 'login' || routeName === 'aceitar-convite';
   Object.entries(VIEWS).forEach(([name, el]) => {
     if (!el) return;
-    el.classList.toggle('hidden', name !== routeName);
+    const isLoginView = name === 'login' || name === 'aceitar-convite';
+    el.classList.toggle('hidden', isLoginRoute ? !isLoginView : name !== routeName);
   });
 
   // Mostrar/ocultar cards dentro da view-login (login vs aceitar-convite)

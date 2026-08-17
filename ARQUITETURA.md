@@ -63,6 +63,7 @@
 
 ## 7. OS PONTOS DE ATENÇÃO (as lições de 16/08!)
 - **O SW + o Cloudflare**: o cache pode servir as versões antigas — o diagnóstico: o fetch com o cache-busting (`?v=Date.now()`)! O usuário: o Ctrl+shift+r!
+- **O showView NUNCA processa a view-login 2×**: 'login' e 'aceitar-convite' são a MESMA view (`#view-login`) — o forEach com o toggle simples re-adicionava o hidden (a 1ª visita SEMPRE escondia o login; o reload funcionava por acaso!) — FIX 17/08: o isLoginRoute/isLoginView!
 - **O router NUNCA pode depender do Supabase** (o boot: o router no TOPO + a garantia final do remove do hidden!)
 - **O rate limit do Supabase Free**: os emails ~1/h + as tentativas de login podem ser limitadas (o "Too many requests" — aguardar uns minutos!)
 - **O VIEWS do router**: SEMPRE via getViews() (nunca na carga do módulo — o DOM pode não estar pronto!)
