@@ -6,14 +6,18 @@
 import { setState } from './state.js';
 import { isLoggedIn, isAdmin } from './auth.js';
 
-const VIEWS = {
-  login:              document.getElementById('view-login'),
-  'aceitar-convite':  document.getElementById('view-login'), // Mesma view, diferente card
-  comparar:           document.getElementById('view-comparar'),
-  calcular:           document.getElementById('view-calcular'),
-  'admin-panel':      document.getElementById('view-admin-panel'),
-  historico:          document.getElementById('view-historico'),
-};
+// FIX (16/08): os VIEWS são buscados SEMPRE (getViews()) — antes eram avaliados na carga do módulo
+// e podiam virar null se o DOM não estivesse pronto → o showView não mostrava a tela (a tela vazia!)
+function getViews() {
+  return {
+    login:              document.getElementById('view-login'),
+    'aceitar-convite':  document.getElementById('view-login'), // Mesma view, diferente card
+    comparar:           document.getElementById('view-comparar'),
+    calcular:           document.getElementById('view-calcular'),
+    'admin-panel':      document.getElementById('view-admin-panel'),
+    historico:          document.getElementById('view-historico'),
+  };
+}
 
 const TABS = document.querySelectorAll('.tab-btn');
 
@@ -32,6 +36,7 @@ function parseRoute(hash) {
 }
 
 function showView(routeName) {
+  const VIEWS = getViews();
   Object.entries(VIEWS).forEach(([name, el]) => {
     if (!el) return;
     el.classList.toggle('hidden', name !== routeName);
@@ -86,6 +91,7 @@ function navigate(hash) {
     setState({ activePlatform: param });
   }
 
+  const VIEWS = getViews();
   if (VIEWS[route]) {
     showView(route);
   } else {
