@@ -7,7 +7,7 @@ import { initUI }               from './ui.js';
 import { initAdminPanel }       from './admin.js';
 import { getInputs, setState }  from './state.js';
 import { initSupabase }         from './supabase.js';
-import { initAuth, onAuthChange, isAdmin } from './auth.js';
+import { initAuth, onAuthChange, isAdmin, isLoggedIn } from './auth.js';
 import { initLoginUI, addLogoutButton } from './ui-login.js';
 import { checkInviteLink, initInviteAcceptUI } from './ui-invite-accept.js';
 
@@ -27,6 +27,12 @@ async function boot() {
   // 0️⃣ FIX (16/08): o router NO TOPO do boot — a tela aparece IMEDIATAMENTE, SEMPRE!
   // (o initSupabase/initAuth podem falhar ou travar — o router NÃO pode depender deles!)
   initRouter();
+
+  // 0.1️⃣ FIX (16/08): a GARANTIA FINAL — sem sessão, a view-login aparece SEMPRE (direto, sem depender do router!)
+  if (!isLoggedIn()) {
+    const loginView = document.getElementById('view-login');
+    if (loginView) loginView.classList.remove('hidden');
+  }
 
   // Garante que imposto e desconto existam no estado
   const inputs = getInputs();
