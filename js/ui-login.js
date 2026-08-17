@@ -12,6 +12,17 @@ export function initLoginUI() {
 
   if (!btnLogin) return; // Não existem elementos de login
 
+  // FIX (17/08): o botão SEMPRE reseta no initLoginUI (roda a cada logout!)
+  // (antes: após um login, o botão ficava disabled 'Entrando...' para sempre —
+  //  o caminho de sucesso não restaurava → o RELOGIN morria!)
+  btnLogin.disabled = false;
+  btnLogin.textContent = 'Entrar';
+
+  // FIX (17/08): guard contra listeners duplicados (o initLoginUI roda a cada
+  // logout — cada execução adicionava +1 listener de click no mesmo botão!)
+  if (btnLogin.dataset.uiInit) return;
+  btnLogin.dataset.uiInit = '1';
+
   // Fazer login
   btnLogin.addEventListener('click', async () => {
     const email = emailInput.value.trim();
@@ -31,7 +42,9 @@ export function initLoginUI() {
       showError(''); // Limpar erro
       emailInput.value = '';
       passwordInput.value = '';
-      // O auth listener vai redirecionar automaticamente
+      // Restaura o botão (o redirect para #/calcular acontece no auth listener)
+      btnLogin.disabled = false;
+      btnLogin.textContent = 'Entrar';
     } else {
       showError(result.error || 'Erro ao fazer login');
       btnLogin.disabled = false;
