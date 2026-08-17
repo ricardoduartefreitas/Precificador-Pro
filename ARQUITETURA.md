@@ -67,7 +67,8 @@
 - **O btnLogin NUNCA fica disabled**: o initLoginUI reseta SEMPRE (disabled=false + 'Entrar') e tem guard de listeners duplicados (`dataset.uiInit`) — o relogin após logout depende disso! — FIX 17/08!
 - **O showView NUNCA processa a view-login 2×**: 'login' e 'aceitar-convite' são a MESMA view (`#view-login`) — o forEach com o toggle simples re-adicionava o hidden (a 1ª visita SEMPRE escondia o login; o reload funcionava por acaso!) — FIX 17/08: o isLoginRoute/isLoginView!
 - **O router NUNCA pode depender do Supabase** (o boot: o router no TOPO + a garantia final do remove do hidden!)
-- **O rate limit do Supabase Free**: os emails ~1/h + as tentativas de login podem ser limitadas (o "Too many requests" — aguardar uns minutos!)
+- **O rate limit do Supabase Free**: os emails ~1/h + as tentativas de login podem ser limitadas (o "Too many requests" — aguardar uns minutos!) · e o anti-abuso pode BLOQUEAR o IP (o login fica preso em 'Entrando...' para sempre — o fetch nunca volta; trocar de rede/4G resolve!)
+- **O NULL no auth.users QUEBRA o login (o erro 500 'Database error querying schema'!)**: o GoTrue não aceita NULL em `email_change`/`email_change_token_new` etc. (o convite/aceite cria o usuário com NULL → 500 no login → o app mostra 'Database error querying schema'). FIX 17/08: TRIGGER `trg_normalize_gotrue_fields` no auth.users (BEFORE INSERT OR UPDATE → COALESCE ''/0) + a senha NUNCA é o problema quando o erro é 500 — ver os logs em `logs` (source auth_logs) para o erro real!
 - **O VIEWS do router**: SEMPRE via getViews() (nunca na carga do módulo — o DOM pode não estar pronto!)
 - **O initAuth**: SEMPRE no try/catch (o boot nunca pode travar!)
 - **O auth RLS**: a segurança é no banco (a anon key é pública!)
