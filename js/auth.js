@@ -113,20 +113,29 @@ export async function login(email, password) {
 
 // Logout
 export async function logout() {
+  // FIX (17/08): o logout do APP NUNCA falha — o _auth é limpo SEMPRE,
+  // mesmo se o signOut do Supabase falhar (o token expirado/offline)!
+  // (antes: o catch retornava o erro SEM limpar o _auth → o isLoggedIn ficava true
+  //  → o router redirecionava para o calcular (vazio) → a TELA BRANCA pós-logout!)
+  let signOutError = null;
   try {
     const { signOut } = await import('./supabase.js');
     await signOut();
-
-    _auth.session = null;
-    _auth.user = null;
-    _auth.role = null;
-
-    notifyListeners();
-    return { success: true };
   } catch (error) {
-    console.error('❌ Erro ao fazer logout:', error.message);
-    return { success: false, error: error.message };
+    signOutError = error;
+    console.error('❌ Erro ao fazer logout no Supabase (o logout local segue):', error.message);
   }
+
+  _auth.session = null;
+  _auth.user = null;
+  _auth.role = null;
+
+  notifyListeners();
+
+  if (signOutError) {
+    return { success: true, warning: 'logout local ok; o Supabase falhou' };
+  }
+  return { success: true };
 }
 
 // Signup (criar conta nova) — DESABILITADO: somente por convite
