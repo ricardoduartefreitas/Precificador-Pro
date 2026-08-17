@@ -66,6 +66,15 @@ async function boot() {
         isUIInitialized = true;
       }
 
+      // FIX (17/08): após login/sessão, ir para a CALCULADORA!
+      // (o ui-login dizia 'o auth listener vai redirecionar' — mas ninguém redirecionava:
+      //  o login entrava, o log saía 'Login bem-sucedido', e a tela ficava presa no
+      //  login com o botão 'Entrando...' para sempre!)
+      const rotaAtual = (window.location.hash || '').replace(/^#\//, '').split('?')[0];
+      if (!rotaAtual || rotaAtual === 'login') {
+        window.location.hash = '#/calcular';
+      }
+
       // Mostrar/ocultar tab de admin baseado na role
       const adminTabBtn = document.querySelector('.tab-btn.admin-only');
       if (adminTabBtn) {
