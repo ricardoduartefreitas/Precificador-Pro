@@ -74,6 +74,19 @@ export async function updatePassword(novaSenha) {
   return data;
 }
 
+// FIX (17/08): processar o token de recuperação MANUALMENTE!
+// (o SPA com hash-router quebra o parse automático do supabase-js:
+//  o link do email traz `#/recuperar-senha?token_hash=...` — o query fica DENTRO
+//  do fragmento e o detectSessionInUrl não reconhece → 'Auth session missing!')
+export async function verifyRecoveryToken(tokenHash) {
+  const { data, error } = await getSupabase().auth.verifyOtp({
+    token_hash: tokenHash,
+    type: 'recovery',
+  });
+  if (error) throw error;
+  return data;
+}
+
 export async function getSession() {
   const { data } = await getSupabase().auth.getSession();
   return data.session;

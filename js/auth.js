@@ -61,6 +61,28 @@ export async function initAuth() {
       }
     });
 
+    // FIX (17/08): processar o token de recuperação MANUALMENTE antes de tudo!
+    // (o hash-router: o link do email é `#/recuperar-senha?token_hash=...&type=recovery`
+    //  — o detectSessionInUrl do supabase-js NÃO parseia o query dentro do fragmento,
+    //  então chamamos o verifyOtp por conta própria → dispara PASSWORD_RECOVERY!)
+    const hashQuery = (window.location.hash || '').split('?')[1] || '';
+    const hashParams = new URLSearchParams(hashQuery);
+    const tokenHash = hashParams.get('token_hash');
+    const hashType = hashParams.get('type');
+    if (tokenHash && hashType === 'recovery') {
+      const { verifyRecoveryToken } = await import('./supabase.js');
+      try {
+        await verifyRecoveryToken(tokenHash);
+        // limpar o token da URL (deixar só a rota limpa)
+        window.history.replaceState(null, '', '#/recuperar-senha');
+        console.log('✅ Token de recuperação validado');
+      } catch (e) {
+        console.error('❌ Token de recuperação inválido:', e.message);
+        window.history.replaceState(null, '', '#/login');
+      }
+      return; // o PASSWORD_RECOVERY (via onAuthStateChange) cuida do resto
+    }
+
     // Restaurar sessão do Supabase
     const session = await getSession();
 
