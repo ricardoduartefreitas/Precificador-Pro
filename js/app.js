@@ -24,6 +24,10 @@ async function boot() {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   }
 
+  // 0️⃣ FIX (16/08): o router NO TOPO do boot — a tela aparece IMEDIATAMENTE, SEMPRE!
+  // (o initSupabase/initAuth podem falhar ou travar — o router NÃO pode depender deles!)
+  initRouter();
+
   // Garante que imposto e desconto existam no estado
   const inputs = getInputs();
   if (inputs.imposto === undefined) {
@@ -35,10 +39,6 @@ async function boot() {
 
   // 1.5️⃣ Verificar se há link de convite na URL e redirecionar
   checkInviteLink();
-
-  // 1.6️⃣ FIX (16/08): o router ANTES do auth — a tela do login aparece IMEDIATAMENTE!
-  // (antes o initAuth podia travar o boot (o await sem timeout) e o router nunca rodava = a tela vazia!)
-  initRouter();
 
   // 2️⃣ Inicializar autenticação (verifica sessão existente)
   // FIX (16/08): o try/catch — se o Supabase falhar (rate limit/offline), o router AINDA roda e a tela do login aparece!
