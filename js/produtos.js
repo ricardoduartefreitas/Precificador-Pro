@@ -152,10 +152,10 @@ async function _loadProdutos() {
     return `
       <tr>
         <td>${_esc(p.nome)}</td>
-        <td>${_esc(p.categoria || '—')}</td>
-        <td>${p.custo != null ? formatBRL(p.custo) : '—'}</td>
-        <td>${_esc(platLabel)}</td>
-        <td class="produtos-acoes">
+        <td data-label="Categoria">${_esc(p.categoria || '—')}</td>
+        <td data-label="Custo">${p.custo != null ? formatBRL(p.custo) : '—'}</td>
+        <td data-label="Plataforma">${_esc(platLabel)}</td>
+        <td class="produtos-acoes" data-label="Ações">
           <button class="btn btn--secondary btn--icon" data-action="calcular" data-id="${p.id}">Calcular</button>
           <button class="btn btn--ghost btn--icon" data-action="editar" data-id="${p.id}">Editar</button>
           <button class="btn btn--danger btn--icon" data-action="apagar" data-id="${p.id}">Apagar</button>

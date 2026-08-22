@@ -322,12 +322,12 @@ function _renderTabela(resultados) {
     return `
       <tr>
         <td>${_esc(r.produto)}</td>
-        <td>${_esc(platLabel)}</td>
-        <td>${r.custo !== null ? BRL.format(r.custo) : '—'}</td>
-        <td>${ok ? BRL.format(r.precoVenda) : '—'}</td>
-        <td>${ok ? BRL.format(r.precoMinimo) : '—'}</td>
-        <td>${ok ? BRL.format(r.lucro) : '—'}</td>
-        <td class="lote-status ${ok ? 'lote-status--ok' : 'lote-status--erro'}">${_esc(ok ? 'OK' : r.status)}</td>
+        <td data-label="Plataforma">${_esc(platLabel)}</td>
+        <td data-label="Custo">${r.custo !== null ? BRL.format(r.custo) : '—'}</td>
+        <td data-label="Preço venda">${ok ? BRL.format(r.precoVenda) : '—'}</td>
+        <td data-label="Preço mínimo">${ok ? BRL.format(r.precoMinimo) : '—'}</td>
+        <td data-label="Lucro">${ok ? BRL.format(r.lucro) : '—'}</td>
+        <td class="lote-status ${ok ? 'lote-status--ok' : 'lote-status--erro'}" data-label="Status">${_esc(ok ? 'OK' : r.status)}</td>
       </tr>
     `;
   }).join('');
