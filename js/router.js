@@ -16,6 +16,7 @@ function getViews() {
     comparar:           document.getElementById('view-comparar'),
     calcular:           document.getElementById('view-calcular'),
     produtos:           document.getElementById('view-produtos'),
+    inteligencia:       document.getElementById('view-inteligencia'),
     'admin-panel':      document.getElementById('view-admin-panel'),
     historico:          document.getElementById('view-historico'),
   };
@@ -84,8 +85,9 @@ function navigate(hash) {
     return;
   }
 
-  // Se é admin-panel e usuário não é admin, redireciona para calcular
-  if (route === 'admin-panel' && !isAdmin()) {
+  // Se é admin-panel/inteligencia e usuário não é admin, redireciona para calcular
+  // (FASE 3: Inteligência de Mercado é admin-only, mesma proteção do admin-panel)
+  if ((route === 'admin-panel' || route === 'inteligencia') && !isAdmin()) {
     window.location.hash = '#/calcular';
     return;
   }

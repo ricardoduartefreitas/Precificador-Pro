@@ -268,3 +268,28 @@ export async function insertCalculo(payload) {
   if (error) throw error;
   return data;
 }
+
+// ══════════════════════ FASE 3 — Inteligência de Mercado (admin-only) ══════════════════════
+// PostgREST não suporta HAVING/GROUP BY complexo — as agregações vivem em funções SQL
+// (SECURITY INVOKER, RLS aplicado normalmente). A régua de anonimato (>=5 usuários
+// distintos por grupo) já vem aplicada no HAVING da função — aqui é só a chamada.
+
+export async function getInteligenciaMercado({ dias = 30, plataforma = null, regiao = null } = {}) {
+  const { data, error } = await getSupabase().rpc('get_inteligencia_mercado', {
+    p_dias: dias,
+    p_plataforma: plataforma || null,
+    p_regiao: regiao || null,
+  });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function getInteligenciaAjustes({ dias = 30, plataforma = null, regiao = null } = {}) {
+  const { data, error } = await getSupabase().rpc('get_inteligencia_ajustes', {
+    p_dias: dias,
+    p_plataforma: plataforma || null,
+    p_regiao: regiao || null,
+  });
+  if (error) throw error;
+  return data || [];
+}

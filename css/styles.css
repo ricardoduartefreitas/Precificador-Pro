@@ -1131,6 +1131,46 @@ input[type="range"] {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   INTELIGÊNCIA DE MERCADO (Fase 3) — cards de KPI no topo da view
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.intel-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+}
+
+.intel-kpi {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+}
+
+.intel-kpi-label {
+  font-size: var(--text-xs);
+  font-weight: var(--font-semi);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.intel-kpi-value {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+}
+
+@media (max-width: 640px) {
+  .intel-kpis {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
    LOGIN — Tela de autenticação
    ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -1407,25 +1447,32 @@ input[type="range"] {
 }
 
 /* --------------------------------------------------------------------------
-   26. RESPONSIVIDADE MOBILE — Meus Produtos (Fase 2) e Lote CSV (Fase 1)
+   26. RESPONSIVIDADE MOBILE — Meus Produtos (Fase 2), Lote CSV (Fase 1)
+       e Inteligência de Mercado (Fase 3)
    As tabelas viram cards empilhados abaixo de 640px — sem scroll horizontal.
    -------------------------------------------------------------------------- */
 @media (max-width: 640px) {
 
-  /* --- Tabela "Meus Produtos" e tabela de resultados do lote viram cards --- */
+  /* --- Tabelas de Produtos/Lote/Inteligência viram cards --- */
   #produtos-tabela thead,
-  #lote-tabela thead {
+  #lote-tabela thead,
+  #intel-tabela thead,
+  #intel-ajustes-tabela thead {
     display: none;
   }
 
   #produtos-tabela, #produtos-tabela tbody,
-  #lote-tabela, #lote-tabela tbody {
+  #lote-tabela, #lote-tabela tbody,
+  #intel-tabela, #intel-tabela tbody,
+  #intel-ajustes-tabela, #intel-ajustes-tabela tbody {
     display: block;
     width: 100%;
   }
 
   #produtos-tabela tbody tr,
-  #lote-tabela tbody tr {
+  #lote-tabela tbody tr,
+  #intel-tabela tbody tr,
+  #intel-ajustes-tabela tbody tr {
     display: block;
     background-color: var(--bg-card-alt);
     border: 1px solid var(--border);
@@ -1435,12 +1482,16 @@ input[type="range"] {
   }
 
   #produtos-tabela tbody tr:last-child,
-  #lote-tabela tbody tr:last-child {
+  #lote-tabela tbody tr:last-child,
+  #intel-tabela tbody tr:last-child,
+  #intel-ajustes-tabela tbody tr:last-child {
     margin-bottom: 0;
   }
 
   #produtos-tabela tbody td,
-  #lote-tabela tbody td {
+  #lote-tabela tbody td,
+  #intel-tabela tbody td,
+  #intel-ajustes-tabela tbody td {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1451,13 +1502,17 @@ input[type="range"] {
   }
 
   #produtos-tabela tbody td:last-child,
-  #lote-tabela tbody td:last-child {
+  #lote-tabela tbody td:last-child,
+  #intel-tabela tbody td:last-child,
+  #intel-ajustes-tabela tbody td:last-child {
     border-bottom: none;
   }
 
   /* Rótulo da coluna (via data-label, injetado pelo JS) */
   #produtos-tabela tbody td::before,
-  #lote-tabela tbody td::before {
+  #lote-tabela tbody td::before,
+  #intel-tabela tbody td::before,
+  #intel-ajustes-tabela tbody td::before {
     content: attr(data-label);
     font-size: var(--text-xs);
     font-weight: var(--font-semi);
@@ -1467,9 +1522,11 @@ input[type="range"] {
     text-align: left;
   }
 
-  /* Primeira coluna (nome do produto) = título do card, sem rótulo */
+  /* Primeira coluna (nome/categoria) = título do card, sem rótulo */
   #produtos-tabela tbody td:first-child,
-  #lote-tabela tbody td:first-child {
+  #lote-tabela tbody td:first-child,
+  #intel-tabela tbody td:first-child,
+  #intel-ajustes-tabela tbody td:first-child {
     display: block;
     text-align: left;
     font-size: var(--text-base);
@@ -1478,7 +1535,9 @@ input[type="range"] {
   }
 
   #produtos-tabela tbody td:first-child::before,
-  #lote-tabela tbody td:first-child::before {
+  #lote-tabela tbody td:first-child::before,
+  #intel-tabela tbody td:first-child::before,
+  #intel-ajustes-tabela tbody td:first-child::before {
     content: none;
   }
 

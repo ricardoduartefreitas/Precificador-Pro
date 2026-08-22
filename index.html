@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#080f1e" />
   <title>PrecificaPRO — Calculadora de Marketplaces</title>
-  <link rel="stylesheet" href="css/styles.css?v=20260822e" />
+  <link rel="stylesheet" href="css/styles.css?v=20260822f" />
   <link rel="manifest" href="manifest.json" />
   <!-- Supabase SDK via CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -28,6 +28,7 @@
       <button class="tab-btn"        data-route="comparar"  role="tab">Comparar</button>
       <button class="tab-btn"        data-route="produtos"  role="tab">Meus Produtos</button>
       <button class="tab-btn"        data-route="historico" role="tab">Histórico</button>
+      <button class="tab-btn admin-only" data-route="inteligencia" role="tab" style="display:none;">Inteligência</button>
       <button class="tab-btn admin-only" data-route="admin-panel" role="tab" style="display:none;">Painel Admin</button>
     </nav>
   </header>
@@ -399,6 +400,107 @@
       </div>
     </section>
 
+    <!-- ─────────────────── TELA: INTELIGÊNCIA DE MERCADO (#/inteligencia) — FASE 3, admin-only -->
+    <section id="view-inteligencia" class="view hidden" aria-label="Inteligência de mercado">
+      <div class="view-inner">
+
+        <!-- Filtros -->
+        <div class="card">
+          <h2 class="card-title">Inteligência de Mercado</h2>
+          <p class="text-muted">Onde a margem está sendo deixada na mesa — agregado e anônimo (categorias com menos de 5 empresas ficam ocultas).</p>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="intel-filtro-plataforma">Plataforma</label>
+              <select id="intel-filtro-plataforma" class="form-select">
+                <option value="">Todas</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="intel-filtro-regiao">Região</label>
+              <select id="intel-filtro-regiao" class="form-select">
+                <option value="">Todas</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="intel-filtro-periodo">Período</label>
+              <select id="intel-filtro-periodo" class="form-select">
+                <option value="7">Últimos 7 dias</option>
+                <option value="30" selected>Últimos 30 dias</option>
+                <option value="90">Últimos 90 dias</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cards de resumo -->
+        <div class="intel-kpis" id="intel-kpis">
+          <div class="intel-kpi">
+            <span class="intel-kpi-label">Cálculos registrados</span>
+            <span class="intel-kpi-value" id="intel-kpi-total">—</span>
+          </div>
+          <div class="intel-kpi">
+            <span class="intel-kpi-label">Gap médio geral</span>
+            <span class="intel-kpi-value" id="intel-kpi-gap">—</span>
+          </div>
+          <div class="intel-kpi">
+            <span class="intel-kpi-label">Top categoria (margem aceita)</span>
+            <span class="intel-kpi-value" id="intel-kpi-top-categoria">—</span>
+          </div>
+          <div class="intel-kpi">
+            <span class="intel-kpi-label">Top plataforma (margem aceita)</span>
+            <span class="intel-kpi-value" id="intel-kpi-top-plataforma">—</span>
+          </div>
+        </div>
+
+        <!-- A pergunta central -->
+        <div class="card">
+          <h2 class="card-title">Onde a margem está sendo deixada na mesa?</h2>
+          <table class="faixas-table" id="intel-tabela">
+            <thead>
+              <tr>
+                <th>Categoria</th>
+                <th>Plataforma</th>
+                <th>Região</th>
+                <th>Nº cálculos</th>
+                <th>Custo médio</th>
+                <th>Margem desejada</th>
+                <th>Margem aceita</th>
+                <th>Gap</th>
+                <th>Taxa de aceite</th>
+              </tr>
+            </thead>
+            <tbody id="intel-tabela-tbody"></tbody>
+          </table>
+          <div class="plat-aviso-box hidden" id="intel-tabela-vazio">
+            <p class="plat-aviso-text">Dados insuficientes no período/filtro selecionado — categorias com menos de 5 empresas ficam ocultas (anonimato).</p>
+          </div>
+        </div>
+
+        <!-- Comportamento de ajuste -->
+        <div class="card">
+          <h2 class="card-title">Comportamento de ajuste</h2>
+          <p class="text-muted">O limite real do mercado: o gap médio quando o usuário PRECISOU ajustar a margem pra baixo.</p>
+          <table class="faixas-table" id="intel-ajustes-tabela">
+            <thead>
+              <tr>
+                <th>Categoria</th>
+                <th>Nº cálculos</th>
+                <th>Sem ajuste</th>
+                <th>Com ajuste</th>
+                <th>Gap médio (c/ ajuste)</th>
+                <th>Descartados</th>
+              </tr>
+            </thead>
+            <tbody id="intel-ajustes-tabela-tbody"></tbody>
+          </table>
+          <div class="plat-aviso-box hidden" id="intel-ajustes-vazio">
+            <p class="plat-aviso-text">Dados insuficientes no período/filtro selecionado (menos de 5 empresas).</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
     <!-- ─────────────────── TELA 3: PAINEL ADMIN (#/admin-panel) -->
     <section id="view-admin-panel" class="view hidden" aria-label="Painel administrativo">
       <div class="view-inner">
@@ -516,6 +618,6 @@
     by <a href="https://www.ruahtecnologia.com.br" target="_blank" rel="noopener">www.ruahtecnologia.com.br</a>
   </div>
 
-  <script type="module" src="js/app.js?v=20260822e"></script>
+  <script type="module" src="js/app.js?v=20260822f"></script>
 </body>
 </html>

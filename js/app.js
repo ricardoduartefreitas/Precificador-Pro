@@ -6,6 +6,7 @@ import { initFreemium }         from './freemium.js';
 import { initUI }               from './ui.js';
 import { initProdutos }         from './produtos.js';
 import { initAdminPanel }       from './admin.js';
+import { initInteligencia }     from './inteligencia.js';
 import { getInputs, setState }  from './state.js';
 import { initSupabase }         from './supabase.js';
 import { initAuth, onAuthChange, isAdmin, isLoggedIn } from './auth.js';
@@ -72,6 +73,7 @@ async function boot() {
         initProdutos(PLATAFORMAS);
         initFreemium();
         initAdminPanel();
+        initInteligencia(PLATAFORMAS);
         addLogoutButton();
         isUIInitialized = true;
       }
@@ -85,15 +87,13 @@ async function boot() {
         window.location.hash = '#/calcular';
       }
 
-      // Mostrar/ocultar tab de admin baseado na role
-      const adminTabBtn = document.querySelector('.tab-btn.admin-only');
-      if (adminTabBtn) {
-        if (isAdmin()) {
-          adminTabBtn.style.display = 'block';
-        } else {
-          adminTabBtn.style.display = 'none';
-        }
-      }
+      // Mostrar/ocultar tabs de admin baseado na role
+      // FIX (FASE 3): antes era querySelector (SINGULAR) — só a 1ª tab admin-only
+      // ('Inteligência') era alternada; a 2ª ('Painel Admin') ficava sempre escondida.
+      // Agora percorre TODAS as tabs com a classe admin-only.
+      document.querySelectorAll('.tab-btn.admin-only').forEach((btn) => {
+        btn.style.display = isAdmin() ? 'block' : 'none';
+      });
     } else {
       // Usuário fez logout: inicializar login UI e redirecionar
       initLoginUI();
@@ -118,6 +118,7 @@ async function boot() {
     comparar:  'Comparar — PrecificaPRO',
     produtos:  'Meus Produtos — PrecificaPRO',
     historico: 'Histórico — PrecificaPRO',
+    inteligencia: 'Inteligência — PrecificaPRO',
   };
   function syncTitle() {
     const route = (window.location.hash || '').replace(/^#\//, '').split('/')[0] || 'calcular';
