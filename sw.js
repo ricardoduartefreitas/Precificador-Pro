@@ -2,7 +2,7 @@
 // Responsabilidade: cache offline dos assets estáticos (Stale-While-Revalidate — o psp-v6!)
 // Atualizar APP_SHELL ao adicionar novos arquivos ao projeto
 
-const CACHE_NAME = 'psp-v9';
+const CACHE_NAME = 'psp-v10';
 
 const APP_SHELL = [
   './',
@@ -61,6 +61,14 @@ self.addEventListener('fetch', (event) => {
         })
         .catch(() => caches.match('./index.html'))
     );
+    return;
+  }
+
+  // FIX (22/08 — Fase 2): NUNCA cachear requisições cross-origin (API do Supabase)!
+  // O SWR abaixo servia respostas VELHAS da API (ex: lista de produtos) na hora,
+  // fazendo "Salvar produto" parecer que não persistiu — só atualizava na navegação seguinte.
+  // API sempre passa direto pra rede, sem cache — só os assets do app shell usam SWR.
+  if (new URL(event.request.url).origin !== self.location.origin) {
     return;
   }
 
