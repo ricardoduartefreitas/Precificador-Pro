@@ -169,3 +169,102 @@ export async function updateUserProfile(userId, updates) {
   if (error) throw error;
   return data;
 }
+
+// ══════════════════════ FASE 2 — Produtos, Lotes, Perfil de Negócio, Cálculos ══════════════════════
+// RLS no banco cuida do isolamento (o usuário só vê o dele; admin vê tudo) — aqui é só a chamada.
+
+export async function listProdutos() {
+  const { data, error } = await getSupabase()
+    .from('produtos')
+    .select('*')
+    .order('criado_em', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function createProduto(payload) {
+  const { data, error } = await getSupabase()
+    .from('produtos')
+    .insert([payload])
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function updateProduto(id, payload) {
+  const { data, error } = await getSupabase()
+    .from('produtos')
+    .update({ ...payload, atualizado_em: new Date().toISOString() })
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteProduto(id) {
+  const { error } = await getSupabase().from('produtos').delete().eq('id', id);
+  if (error) throw error;
+}
+
+// Catálogo fixo de categorias (normaliza a agregação — não é por usuário)
+export async function listCategorias() {
+  const { data, error } = await getSupabase()
+    .from('categorias')
+    .select('nome')
+    .order('nome', { ascending: true });
+  if (error) throw error;
+  return (data || []).map((c) => c.nome);
+}
+
+export async function getPerfilNegocio(userId) {
+  const { data, error } = await getSupabase()
+    .from('perfis_negocio')
+    .select('*')
+    .eq('user_id', userId)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+export async function upsertPerfilNegocio(payload) {
+  const { data, error } = await getSupabase()
+    .from('perfis_negocio')
+    .upsert(payload, { onConflict: 'user_id' })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function createLote(payload) {
+  const { data, error } = await getSupabase()
+    .from('lotes')
+    .insert([payload])
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function insertLoteItens(rows) {
+  if (!rows.length) return [];
+  const { data, error } = await getSupabase()
+    .from('lote_itens')
+    .insert(rows)
+    .select();
+  if (error) throw error;
+  return data || [];
+}
+
+// O dado de ouro (Fase 3 usa para relatório) — cada cálculo vindo de um produto
+export async function insertCalculo(payload) {
+  const { data, error } = await getSupabase()
+    .from('calculos')
+    .insert([payload])
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}

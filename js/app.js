@@ -4,6 +4,7 @@
 import { initRouter }           from './router.js';
 import { initFreemium }         from './freemium.js';
 import { initUI }               from './ui.js';
+import { initProdutos }         from './produtos.js';
 import { initAdminPanel }       from './admin.js';
 import { getInputs, setState }  from './state.js';
 import { initSupabase }         from './supabase.js';
@@ -68,6 +69,7 @@ async function boot() {
       // Usuário logou: inicializar UI
       if (!isUIInitialized) {
         initUI(PLATAFORMAS);
+        initProdutos(PLATAFORMAS);
         initFreemium();
         initAdminPanel();
         addLogoutButton();
@@ -114,6 +116,7 @@ async function boot() {
   const VIEW_TITLES = {
     calcular:  'Calcular — PrecificaPRO',
     comparar:  'Comparar — PrecificaPRO',
+    produtos:  'Meus Produtos — PrecificaPRO',
     historico: 'Histórico — PrecificaPRO',
   };
   function syncTitle() {

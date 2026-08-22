@@ -15,6 +15,7 @@ function getViews() {
     'recuperar-senha':  document.getElementById('view-login'), // FIX (17/08): mesma view, card de nova senha
     comparar:           document.getElementById('view-comparar'),
     calcular:           document.getElementById('view-calcular'),
+    produtos:           document.getElementById('view-produtos'),
     'admin-panel':      document.getElementById('view-admin-panel'),
     historico:          document.getElementById('view-historico'),
   };
@@ -26,7 +27,7 @@ const TABS = document.querySelectorAll('.tab-btn');
 const PUBLIC_ROUTES = ['login', 'aceitar-convite', 'recuperar-senha'];
 
 // Rotas que REQUEREM autenticação
-const PROTECTED_ROUTES = ['comparar', 'calcular', 'historico'];
+const PROTECTED_ROUTES = ['comparar', 'calcular', 'produtos', 'historico'];
 
 function parseRoute(hash) {
   const clean = (hash || '').replace(/^#\//, '');

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#080f1e" />
   <title>PrecificaPRO — Calculadora de Marketplaces</title>
-  <link rel="stylesheet" href="css/styles.css?v=20260822a" />
+  <link rel="stylesheet" href="css/styles.css?v=20260822b" />
   <link rel="manifest" href="manifest.json" />
   <!-- Supabase SDK via CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -24,6 +24,7 @@
     <nav class="tab-nav" role="tablist">
       <button class="tab-btn active" data-route="calcular"  role="tab">Calcular</button>
       <button class="tab-btn"        data-route="comparar"  role="tab">Comparar</button>
+      <button class="tab-btn"        data-route="produtos"  role="tab">Meus Produtos</button>
       <button class="tab-btn"        data-route="historico" role="tab">Histórico</button>
       <button class="tab-btn admin-only" data-route="admin-panel" role="tab" style="display:none;">Painel Admin</button>
     </nav>
@@ -118,6 +119,9 @@
     <!-- ─────────────────── TELA 1: CALCULAR (#/calcular) -->
     <section id="view-calcular" class="view" aria-label="Calculadora individual">
       <div class="view-inner">
+
+        <!-- FASE 2: aparece quando o cálculo veio da aba "Meus Produtos" -->
+        <div id="produto-ativo-banner" class="plat-aviso plat-aviso--warning hidden"></div>
 
         <!-- Plataforma + Tipo de vendedor -->
         <div class="card">
@@ -309,6 +313,90 @@
       </div>
     </section>
 
+    <!-- ─────────────────── TELA: MEUS PRODUTOS (#/produtos) — FASE 2 -->
+    <section id="view-produtos" class="view hidden" aria-label="Meus produtos">
+      <div class="view-inner">
+
+        <!-- Perfil de negócio — usado na Fase 3 para segmentar a inteligência -->
+        <div class="card">
+          <h2 class="card-title">Perfil de negócio</h2>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="perfil-categoria">Categoria principal</label>
+              <select id="perfil-categoria" class="form-select"></select>
+            </div>
+            <div class="form-field">
+              <label for="perfil-cep">CEP</label>
+              <input type="text" id="perfil-cep" placeholder="00000-000" maxlength="9" autocomplete="off" />
+            </div>
+            <div class="form-field">
+              <label for="perfil-volume">Volume mensal estimado (pedidos)</label>
+              <input type="number" id="perfil-volume" placeholder="ex: 100" min="0" step="1" autocomplete="off" />
+            </div>
+            <div class="form-field form-field--full">
+              <p class="text-muted" id="perfil-regiao-preview">Região: —</p>
+            </div>
+          </div>
+          <button class="btn btn--primary" id="btn-salvar-perfil">Salvar perfil</button>
+        </div>
+
+        <!-- Cadastro de produto -->
+        <div class="card">
+          <h2 class="card-title" id="produto-form-title">Novo produto</h2>
+          <input type="hidden" id="produto-edit-id" value="" />
+          <div class="form-grid">
+            <div class="form-field form-field--full">
+              <label for="produto-nome">Nome do produto</label>
+              <input type="text" id="produto-nome" placeholder="Ex: Câmera JBL 360" maxlength="120" autocomplete="off" />
+            </div>
+            <div class="form-field">
+              <label for="produto-categoria">Categoria</label>
+              <select id="produto-categoria" class="form-select"></select>
+            </div>
+            <div class="form-field">
+              <label for="produto-custo">Custo (R$)</label>
+              <input type="number" id="produto-custo" placeholder="0,00" min="0" step="0.01" autocomplete="off" />
+            </div>
+            <div class="form-field">
+              <label for="produto-peso">Peso (kg)</label>
+              <input type="number" id="produto-peso" placeholder="0,00" min="0" step="0.01" autocomplete="off" />
+            </div>
+            <div class="form-field">
+              <label for="produto-plataforma">Plataforma padrão</label>
+              <select id="produto-plataforma" class="form-select"></select>
+            </div>
+            <div class="form-field">
+              <label for="produto-margem">Margem padrão (%)</label>
+              <input type="number" id="produto-margem" placeholder="ex: 30" min="0" max="200" step="1" value="30" autocomplete="off" />
+            </div>
+          </div>
+          <div class="action-row">
+            <button class="btn btn--primary" id="btn-salvar-produto">Salvar produto</button>
+            <button class="btn btn--ghost hidden" id="btn-cancelar-edicao-produto">Cancelar edição</button>
+          </div>
+        </div>
+
+        <!-- Lista de produtos -->
+        <div class="card">
+          <h2 class="card-title">Produtos cadastrados</h2>
+          <table class="faixas-table" id="produtos-tabela">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Custo</th>
+                <th>Plataforma</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="produtos-tabela-tbody"></tbody>
+          </table>
+          <p id="produtos-vazio" class="text-muted hidden">Nenhum produto cadastrado ainda.</p>
+        </div>
+
+      </div>
+    </section>
+
     <!-- ─────────────────── TELA 3: PAINEL ADMIN (#/admin-panel) -->
     <section id="view-admin-panel" class="view hidden" aria-label="Painel administrativo">
       <div class="view-inner">
@@ -426,6 +514,6 @@
     by <a href="https://www.ruahtecnologia.com.br" target="_blank" rel="noopener">www.ruahtecnologia.com.br</a>
   </div>
 
-  <script type="module" src="js/app.js?v=20260822a"></script>
+  <script type="module" src="js/app.js?v=20260822b"></script>
 </body>
 </html>

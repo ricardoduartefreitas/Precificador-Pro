@@ -751,6 +751,17 @@ input[type="range"] {
   flex: 1;
 }
 
+/* FASE 2: botões de ação por linha na tabela "Meus Produtos" — não esticam como .action-row */
+.produtos-acoes {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.produtos-acoes .btn {
+  flex: none;
+}
+
 /* --------------------------------------------------------------------------
    17. MODAIS / OVERLAY
    -------------------------------------------------------------------------- */

@@ -7,6 +7,8 @@ import { calcular, calcularComDesconto, comparar, mapPlataformaToInputs, identif
 import { saveEntry, getHistoryFiltered, clearHistory, groupByDate, getStats, exportCSV } from './history.js';
 import { canCalculate, registerCalculo, isPro, showUpgradeOverlay } from './freemium.js';
 import { initLote } from './lote.js';
+import { insertCalculo } from './supabase.js';
+import { getCurrentUserId } from './auth.js';
 
 // Plataformas injetadas por app.js via initUI()
 let _PLATAFORMAS = [];
@@ -151,6 +153,25 @@ function _initCalcView() {
   document.getElementById('btn-calcular')?.addEventListener('click', _handleCalcular);
   document.getElementById('btn-salvar')?.addEventListener('click', openModalSalvar);
   document.getElementById('btn-limpar')?.addEventListener('click', _clearCalcResult);
+
+  _renderProdutoAtivoBanner();
+  window.addEventListener('hashchange', () => {
+    if (_currentRoute() === 'calcular') _renderProdutoAtivoBanner();
+  });
+}
+
+// FASE 2: quando o cálculo veio de "Meus Produtos" (state.produtoAtivo), mostra de onde veio
+function _renderProdutoAtivoBanner() {
+  const el = document.getElementById('produto-ativo-banner');
+  if (!el) return;
+  const produto = getState().produtoAtivo;
+  if (!produto) {
+    el.classList.add('hidden');
+    el.textContent = '';
+    return;
+  }
+  el.textContent = `📦 Calculando para: ${produto.nome}`;
+  el.classList.remove('hidden');
 }
 
 function _fillCalcFields() {
@@ -376,6 +397,24 @@ function _handleCalcular() {
 
   setState({ lastResult: resultado, activePlatform: plat.id, sellerType: tipoAnuncio });
   console.log('[CALC] Estado atualizado');
+
+  // FASE 2: cálculo feito a partir de "Meus Produtos" → registra em `calculos` (o dado de ouro)
+  if (state.produtoAtivo) {
+    const userId = getCurrentUserId();
+    if (userId) {
+      insertCalculo({
+        user_id:        userId,
+        produto_id:     state.produtoAtivo.id,
+        plataforma:     plat.id,
+        margem_inicial: base.margemLucro,
+        preco_inicial:  resultado.precoVenda,
+        margem_final:   base.margemLucro,
+        preco_final:    resultado.precoVenda,
+        ajustes_count:  0,
+        origem:         'manual',
+      }).catch((err) => console.warn('⚠️ Falha ao registrar cálculo do produto:', err.message));
+    }
+  }
 
   console.log('[CALC] Chamando renderResultHero...');
   renderResultHero(resultado);

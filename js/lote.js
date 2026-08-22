@@ -6,6 +6,8 @@
 import { calcular, mapPlataformaToInputs } from './calculator.js';
 import { canCalculate, registerCalculo, showUpgradeOverlay } from './freemium.js';
 import { showToast } from './ui.js';
+import { getCurrentUserId } from './auth.js';
+import { listProdutos, createProduto, createLote, insertLoteItens, insertCalculo } from './supabase.js';
 
 const TEMPLATE_HEADER = ['produto', 'custo', 'peso_kg', 'margem', 'plataforma', 'tipo_anuncio'];
 const RESULT_HEADER   = ['produto', 'plataforma', 'custo', 'preco_venda', 'preco_minimo', 'lucro', 'margem', 'status'];
@@ -122,6 +124,79 @@ function _processarLote(linhas) {
   if (limiteAtingido) {
     showUpgradeOverlay();
   }
+
+  // FASE 2: liga o lote ao banco (produtos/lotes/lote_itens/calculos) — não bloqueia a UI
+  _persistirLote(resultados).catch((err) => console.warn('⚠️ Falha ao persistir lote:', err.message));
+}
+
+// FASE 2: cria/reaproveita produtos, registra o lote e alimenta `calculos`
+// (o dado de ouro da Fase 3). Roda em segundo plano — erro aqui não derruba a UI de lote.
+async function _persistirLote(resultados) {
+  const userId = getCurrentUserId();
+  if (!userId) return; // usuário não logado (modo demo) — nada a persistir
+
+  const okRows = resultados.filter((r) => r.status === 'ok');
+  if (!okRows.length) return;
+
+  // Mapa nome→produto (case-insensitive) para reaproveitar produtos já cadastrados
+  const produtosExistentes = await listProdutos();
+  const porNome = new Map(produtosExistentes.map((p) => [p.nome.trim().toLowerCase(), p]));
+
+  const lote = await createLote({
+    user_id: userId,
+    nome: `Lote CSV ${new Date().toLocaleString('pt-BR')}`,
+    total_itens: okRows.length,
+  });
+
+  const itens = [];
+  const calculosPendentes = [];
+
+  for (const r of okRows) {
+    const chave = r.produto.trim().toLowerCase();
+    let produto = porNome.get(chave);
+    if (!produto) {
+      produto = await createProduto({
+        user_id: userId,
+        nome: r.produto,
+        categoria: 'Outros', // CSV não coleta categoria — ajustável depois em "Meus Produtos"
+        custo: r.custo,
+        peso_kg: r.pesoKg,
+        plataforma: r.plataforma,
+      });
+      porNome.set(chave, produto);
+    }
+
+    itens.push({
+      lote_id: lote.id,
+      produto_id: produto.id,
+      nome_original: r.produto,
+      plataforma: r.plataforma,
+      custo_entrada: r.custo,
+      margem_entrada: r.margem,
+      preco_sugerido: r.precoVenda,
+      preco_minimo: r.precoMinimo,
+      status: r.status,
+    });
+
+    calculosPendentes.push({
+      user_id: userId,
+      produto_id: produto.id,
+      plataforma: r.plataforma,
+      margem_inicial: r.margem,
+      preco_inicial: r.precoVenda,
+      margem_final: r.margem,
+      preco_final: r.precoVenda,
+      ajustes_count: 0,
+      origem: 'lote',
+    });
+  }
+
+  await insertLoteItens(itens);
+
+  // Fire-and-forget: cada linha do lote vira uma linha em `calculos`
+  for (const payload of calculosPendentes) {
+    insertCalculo(payload).catch((err) => console.warn('⚠️ Falha ao registrar cálculo do lote:', err.message));
+  }
 }
 
 // Exportada (além de usada internamente) para permitir teste direto da lógica real
@@ -132,6 +207,7 @@ export function processarLinha(linha, plataformas = _plataformas) {
     produto: (linha.produto || '').trim(),
     plataforma: '',
     custo: null,
+    pesoKg: null,
     precoVenda: null,
     precoMinimo: null,
     lucro: null,
@@ -149,6 +225,7 @@ export function processarLinha(linha, plataformas = _plataformas) {
   const pesoRaw = _parseNum(linha.peso_kg);
   const pesoKg  = pesoRaw === null ? 0 : pesoRaw;
   if (isNaN(pesoKg) || pesoKg < 0) return { ...base, status: 'erro: peso_kg inválido' };
+  base.pesoKg = pesoKg;
 
   const margemRaw = _parseNum(linha.margem);
   const margem    = margemRaw === null ? DEFAULT_MARGEM : margemRaw;

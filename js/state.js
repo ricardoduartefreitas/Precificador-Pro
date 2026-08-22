@@ -29,6 +29,10 @@ const _state = {
 
   // Termo de busca na tela de Histórico
   historySearch: '',
+
+  // FASE 2: produto sendo calculado a partir da aba "Meus Produtos" (o cálculo é
+  // registrado em `calculos` com esse produto_id — o dado de ouro da Fase 3)
+  produtoAtivo: null,
 };
 
 export function getState() {
