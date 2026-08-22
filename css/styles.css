@@ -189,6 +189,12 @@ img { display: block; max-width: 100%; }
   letter-spacing: -0.02em;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
 .plan-badge {
   font-size: var(--text-xs);
   font-weight: var(--font-bold);
@@ -1151,11 +1157,20 @@ input[type="range"] {
 }
 
 #btn-logout {
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
   font-size: var(--text-sm);
+  padding: var(--space-2) var(--space-3);
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  /* Logout vira só ícone no mobile — não estoura a linha do header ao lado do badge FREE */
+  #btn-logout .logout-text {
+    display: none;
+  }
+
+  #btn-logout {
+    padding: var(--space-2);
+  }
 }
 
 /* Ajuste do header quando em login */

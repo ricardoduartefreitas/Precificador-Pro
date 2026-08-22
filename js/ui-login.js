@@ -409,17 +409,14 @@ export function addLogoutButton() {
   logoutBtn = document.createElement('button');
   logoutBtn.id = 'btn-logout';
   logoutBtn.className = 'btn btn--ghost';
-  logoutBtn.textContent = '🚪 Logout';
-  logoutBtn.style.position = 'absolute';
-  logoutBtn.style.right = '1rem';
-  logoutBtn.style.top = '50%';
-  logoutBtn.style.transform = 'translateY(-50%)';
+  logoutBtn.innerHTML = '<span class="logout-icon">🚪</span><span class="logout-text">Logout</span>';
 
   logoutBtn.addEventListener('click', async () => {
     const { logout } = await import('./auth.js');
     await logout();
   });
 
-  header.style.position = 'relative';
-  header.appendChild(logoutBtn);
+  // Fica ao lado do plan-badge, dentro do fluxo flex do header (sem position: absolute)
+  const actions = header.querySelector('.header-actions') || header.querySelector('.header-inner') || header;
+  actions.appendChild(logoutBtn);
 }
