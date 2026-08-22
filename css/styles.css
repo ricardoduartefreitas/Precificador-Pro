@@ -1342,3 +1342,39 @@ input[type="range"] {
   opacity: 0.8;
   text-decoration: underline;
 }
+
+/* --------------------------------------------------------------------------
+   18. CÁLCULO EM LOTE (CSV)
+   -------------------------------------------------------------------------- */
+.lote-card {
+  margin-top: 1rem;
+}
+
+.lote-desc {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-3);
+}
+
+.lote-tabela-wrapper {
+  margin-top: var(--space-4);
+  overflow-x: auto;
+}
+
+.lote-table {
+  min-width: 640px;
+}
+
+.lote-status {
+  font-weight: var(--font-semi);
+  font-size: var(--text-xs);
+}
+
+/* Especificidade via #lote-tabela: sobrepõe a cor verde padrão de .faixas-table td:last-child */
+#lote-tabela .lote-status--ok {
+  color: var(--accent-green);
+}
+
+#lote-tabela .lote-status--erro {
+  color: var(--accent-red);
+}

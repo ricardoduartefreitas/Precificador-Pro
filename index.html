@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#080f1e" />
   <title>PrecificaPRO — Calculadora de Marketplaces</title>
-  <link rel="stylesheet" href="css/styles.css?v=20260817b" />
+  <link rel="stylesheet" href="css/styles.css?v=20260822a" />
   <link rel="manifest" href="manifest.json" />
   <!-- Supabase SDK via CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -220,6 +220,35 @@
           <button class="btn btn--ghost"     id="btn-limpar">Limpar</button>
         </div>
 
+        <!-- Cálculo em lote (CSV) -->
+        <div class="card lote-card">
+          <h2 class="card-title">Cálculo em lote (CSV)</h2>
+          <p class="lote-desc">Baixe o modelo, preencha com seus produtos e importe para calcular tudo de uma vez.</p>
+          <div class="action-row">
+            <button class="btn btn--secondary" id="btn-lote-template">⬇ Baixar modelo CSV</button>
+            <button class="btn btn--secondary" id="btn-lote-importar">⬆ Importar planilha</button>
+          </div>
+          <input type="file" id="lote-file-input" accept=".csv" class="hidden" />
+
+          <div id="lote-tabela-wrapper" class="lote-tabela-wrapper hidden">
+            <table class="faixas-table lote-table" id="lote-tabela">
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Plataforma</th>
+                  <th>Custo</th>
+                  <th>Preço venda</th>
+                  <th>Preço mínimo</th>
+                  <th>Lucro</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="lote-tabela-tbody"></tbody>
+            </table>
+            <button class="btn btn--secondary" id="btn-lote-exportar" style="margin-top: 0.75rem;">⬇ Baixar resultados CSV</button>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -397,6 +426,6 @@
     by <a href="https://www.ruahtecnologia.com.br" target="_blank" rel="noopener">www.ruahtecnologia.com.br</a>
   </div>
 
-  <script type="module" src="js/app.js?v=20260817b"></script>
+  <script type="module" src="js/app.js?v=20260822a"></script>
 </body>
 </html>

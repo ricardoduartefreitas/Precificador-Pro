@@ -6,6 +6,7 @@ import { formatBRL, formatPct, formatDate, parseInputValue } from './formatter.j
 import { calcular, calcularComDesconto, comparar, mapPlataformaToInputs, identificarFaixa, obterFaixasFormatadas } from './calculator.js';
 import { saveEntry, getHistoryFiltered, clearHistory, groupByDate, getStats, exportCSV } from './history.js';
 import { canCalculate, registerCalculo, isPro, showUpgradeOverlay } from './freemium.js';
+import { initLote } from './lote.js';
 
 // Plataformas injetadas por app.js via initUI()
 let _PLATAFORMAS = [];
@@ -61,6 +62,7 @@ export function initUI(plataformas = []) {
   _initCalcView();
   _initComparView();
   _initHistoricoView();
+  initLote(plataformas);
 }
 
 // ─── MODAIS GLOBAIS ───────────────────────────────────────────────────────────
