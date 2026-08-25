@@ -1648,3 +1648,12 @@ input[type="range"] {
 .leadscore-badge--quente { background: #e6f7ed; color: #2f855a; }
 .leadscore-badge--nutrir { background: #fff8e1; color: #b7791f; }
 .leadscore-badge--frio   { background: #edf2f7; color: #4a5568; }
+
+/* ESCOPO 4 (25/08) — Imposto automático por regime */
+.form-hint {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  line-height: 1.3;
+}

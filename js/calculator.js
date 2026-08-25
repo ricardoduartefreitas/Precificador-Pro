@@ -540,3 +540,49 @@ export function obterFaixasFormatadas(plataforma, tipoVendedor) {
     label:     f.label,
   }));
 }
+
+// ══════════════════════ ESCOPO 4 (25/08) — Imposto automático por regime ══════════════════════
+//
+// Sugestão de alíquota (%) a partir do regime tributário + atividade do vendedor (dados
+// coletados no onboarding). É só um PONTO DE PARTIDA editável — o campo Imposto (%) continua
+// livre pra digitar; isto apenas pré-preenche quando o usuário ainda não mexeu no valor.
+//
+// Fontes (consultadas 25/08/2026):
+// - Simples Nacional: alíquota NOMINAL da 1ª faixa (até R$180.000/ano) de cada Anexo da LC 123/2006
+//   (Comércio = Anexo I, Indústria = Anexo II, Serviço = Anexo III) — a alíquota EFETIVA real
+//   depende da receita bruta dos últimos 12 meses (RBT12) e do Fator R, que este app não coleta;
+//   por isso é sempre rotulada "estimativa" na UI.
+// - Lucro Presumido: soma dos federais sobre a receita de comércio/indústria — PIS (0,65%) +
+//   COFINS (3%) + IRPJ (15% sobre presunção de 8% = 1,2%, +10% adicional se aplicável) +
+//   CSLL (9% sobre presunção de 12% = 1,08%) ≈ 5,93% pra comércio; pra serviços a presunção
+//   de IRPJ/CSLL sobe (32%), ficando ≈ 11,33%. Não inclui ICMS/ISS (varia por estado/município).
+// - Lucro Real: não tem alíquota fixa — depende do lucro real apurado no período. Retorna null
+//   (a UI deve exibir aviso "sem estimativa automática" em vez de um número).
+const _ALIQUOTAS_SIMPLES = {
+  comercio: 4.00,   // Anexo I,  1ª faixa
+  industria: 4.50,  // Anexo II, 1ª faixa
+  servico: 6.00,    // Anexo III, 1ª faixa
+};
+
+const _ALIQUOTAS_PRESUMIDO = {
+  comercio: 5.93,
+  industria: 5.93,
+  servico: 11.33,
+};
+
+/**
+ * Sugere uma alíquota de imposto (%) com base no regime tributário e atividade.
+ * @param {string} regime    - 'simples_nacional' | 'lucro_presumido' | 'lucro_real'
+ * @param {string} atividade - 'comercio' | 'industria' | 'servico'
+ * @returns {number|null} alíquota sugerida (%), ou null se não houver estimativa (Lucro Real)
+ */
+export function sugerirImposto(regime, atividade) {
+  if (regime === 'simples_nacional') {
+    return _ALIQUOTAS_SIMPLES[atividade] ?? _ALIQUOTAS_SIMPLES.comercio;
+  }
+  if (regime === 'lucro_presumido') {
+    return _ALIQUOTAS_PRESUMIDO[atividade] ?? _ALIQUOTAS_PRESUMIDO.comercio;
+  }
+  // lucro_real ou regime desconhecido: sem estimativa automática confiável
+  return null;
+}

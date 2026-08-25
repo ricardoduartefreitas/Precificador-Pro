@@ -3,7 +3,7 @@
 
 import { getState, setState, setInput, getInputs } from './state.js';
 import { formatBRL, formatPct, formatDate, parseInputValue } from './formatter.js';
-import { calcular, calcularComDesconto, comparar, mapPlataformaToInputs, identificarFaixa, obterFaixasFormatadas } from './calculator.js';
+import { calcular, calcularComDesconto, comparar, mapPlataformaToInputs, identificarFaixa, obterFaixasFormatadas, sugerirImposto } from './calculator.js';
 import { saveEntry, getHistoryFiltered, clearHistory, groupByDate, getStats, exportCSV } from './history.js';
 import { canCalculate, registerCalculo, isPro, showUpgradeOverlay } from './freemium.js';
 import { initLote } from './lote.js';
@@ -20,6 +20,21 @@ let _regimeCache = null;
 let _ultimoCalculoId = null;
 let _ultimoCalculoContexto = null;
 let _ultimoCalculoAjustes = 0;
+
+// ESCOPO 4 (25/08) — Imposto automático: atividade cacheada junto do regime (ambos vêm
+// do mesmo profile) só pra alimentar sugerirImposto() — não é usada em mais nada.
+let _atividadeCache = null;
+
+const _REGIME_LABEL = {
+  simples_nacional: 'Simples Nacional',
+  lucro_presumido:  'Lucro Presumido',
+  lucro_real:       'Lucro Real',
+};
+const _ATIVIDADE_LABEL = {
+  comercio:  'Comércio',
+  industria: 'Indústria',
+  servico:   'Serviço',
+};
 
 // ─── EXPORTS EXIGIDOS POR freemium.js ────────────────────────────────────────
 
@@ -84,9 +99,41 @@ async function _loadRegimeCache() {
   try {
     const profile = await getProfile(userId);
     _regimeCache = profile?.regime || null;
+    _atividadeCache = profile?.atividade || null;
+    _aplicarSugestaoImposto();
   } catch (err) {
     console.warn('⚠️ Falha ao buscar regime do usuário (coleta seguirá sem esse dado):', err.message);
   }
+}
+
+// ESCOPO 4 (25/08) — pré-preenche o campo Imposto (%) com uma sugestão baseada no regime
+// tributário, SEM travar o campo (o usuário sempre pode digitar outro valor por cima).
+// Só aplica se o campo ainda estiver no default (0/vazio) — não pisa em valor já digitado
+// (a busca do profile é assíncrona e pode resolver depois que o usuário já mexeu no campo).
+function _aplicarSugestaoImposto() {
+  const input = document.getElementById('calc-imposto');
+  const hint  = document.getElementById('calc-imposto-sugestao');
+  if (!input || !hint) return;
+
+  const valorAtual = parseInputValue(input.value);
+  if (valorAtual) return; // usuário já digitou algo — não sobrescreve
+
+  const sugestao = sugerirImposto(_regimeCache, _atividadeCache);
+  if (sugestao == null) {
+    if (_regimeCache === 'lucro_real') {
+      hint.textContent = '📌 Lucro Real não tem alíquota fixa — defina manualmente conforme apuração.';
+      hint.classList.remove('hidden');
+    }
+    return;
+  }
+
+  input.value = sugestao;
+  setInput('imposto', sugestao);
+  const regimeLabel    = _REGIME_LABEL[_regimeCache] || _regimeCache;
+  const atividadeLabel = _ATIVIDADE_LABEL[_atividadeCache] || _atividadeCache;
+  hint.textContent = `📌 Sugestão para ${regimeLabel}${atividadeLabel ? ' · ' + atividadeLabel : ''}: ${sugestao}% (estimativa — ajuste se necessário)`;
+  hint.classList.remove('hidden');
+  _updatePlatformaAvisoFaixa();
 }
 
 // ─── MODAIS GLOBAIS ───────────────────────────────────────────────────────────
