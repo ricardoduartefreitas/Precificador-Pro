@@ -7,11 +7,19 @@ import { calcular, calcularComDesconto, comparar, mapPlataformaToInputs, identif
 import { saveEntry, getHistoryFiltered, clearHistory, groupByDate, getStats, exportCSV } from './history.js';
 import { canCalculate, registerCalculo, isPro, showUpgradeOverlay } from './freemium.js';
 import { initLote } from './lote.js';
-import { insertCalculo } from './supabase.js';
+import { insertCalculo, updateCalculo, getProfile } from './supabase.js';
 import { getCurrentUserId } from './auth.js';
 
 // Plataformas injetadas por app.js via initUI()
 let _PLATAFORMAS = [];
+
+// ESCOPO 2 (25/08) — Coleta automática: regime tributário (snapshot de profiles, buscado
+// uma vez por sessão) + rastreio do "último cálculo" pra distinguir NOVO cálculo de AJUSTE
+// (mesma plataforma/produto, margem ou preço mudou de novo → sinal de necessidade real).
+let _regimeCache = null;
+let _ultimoCalculoId = null;
+let _ultimoCalculoContexto = null;
+let _ultimoCalculoAjustes = 0;
 
 // ─── EXPORTS EXIGIDOS POR freemium.js ────────────────────────────────────────
 
@@ -65,6 +73,20 @@ export function initUI(plataformas = []) {
   _initComparView();
   _initHistoricoView();
   initLote(plataformas);
+  _loadRegimeCache();
+}
+
+// ESCOPO 2 (25/08): busca o regime tributário do usuário uma vez (usado como snapshot
+// em cada linha de `calculos` — não precisa recarregar a cada cálculo).
+async function _loadRegimeCache() {
+  const userId = getCurrentUserId();
+  if (!userId) return;
+  try {
+    const profile = await getProfile(userId);
+    _regimeCache = profile?.regime || null;
+  } catch (err) {
+    console.warn('⚠️ Falha ao buscar regime do usuário (coleta seguirá sem esse dado):', err.message);
+  }
 }
 
 // ─── MODAIS GLOBAIS ───────────────────────────────────────────────────────────
@@ -398,21 +420,45 @@ function _handleCalcular() {
   setState({ lastResult: resultado, activePlatform: plat.id, sellerType: tipoAnuncio });
   console.log('[CALC] Estado atualizado');
 
-  // FASE 2: cálculo feito a partir de "Meus Produtos" → registra em `calculos` (o dado de ouro)
-  if (state.produtoAtivo) {
-    const userId = getCurrentUserId();
-    if (userId) {
+  // ESCOPO 2 (25/08): TODO cálculo é registrado em `calculos` (o dado de ouro) — antes só
+  // rodava quando vinha de "Meus Produtos", agora cobre cálculos avulsos também. Se o
+  // contexto (plataforma + produto) é o MESMO do cálculo anterior, é um AJUSTE (o usuário
+  // mexeu na margem/preço de novo) → atualiza a linha e soma ajustes_count, em vez de duplicar.
+  const userId = getCurrentUserId();
+  if (userId) {
+    const contexto = `${plat.id}::${state.produtoAtivo ? state.produtoAtivo.id : 'avulso'}`;
+
+    if (_ultimoCalculoId && _ultimoCalculoContexto === contexto) {
+      _ultimoCalculoAjustes += 1;
+      updateCalculo(_ultimoCalculoId, {
+        margem_final: base.margemLucro,
+        preco_final:  resultado.precoVenda,
+        peso_kg:      base.pesoKg || null,
+        custo:        base.custoProduto || null,
+        lucro:        resultado.lucroLiquido ?? null,
+        ajustes_count: _ultimoCalculoAjustes,
+      }).catch((err) => console.warn('⚠️ Falha ao registrar ajuste do cálculo:', err.message));
+    } else {
       insertCalculo({
         user_id:        userId,
-        produto_id:     state.produtoAtivo.id,
+        produto_id:     state.produtoAtivo?.id || null,
+        produto_nome:   state.produtoAtivo?.nome || null,
         plataforma:     plat.id,
+        peso_kg:        base.pesoKg || null,
+        regime:         _regimeCache,
+        custo:          base.custoProduto || null,
+        lucro:          resultado.lucroLiquido ?? null,
         margem_inicial: base.margemLucro,
         preco_inicial:  resultado.precoVenda,
         margem_final:   base.margemLucro,
         preco_final:    resultado.precoVenda,
         ajustes_count:  0,
         origem:         'manual',
-      }).catch((err) => console.warn('⚠️ Falha ao registrar cálculo do produto:', err.message));
+      }).then((row) => {
+        _ultimoCalculoId = row?.id || null;
+        _ultimoCalculoContexto = contexto;
+        _ultimoCalculoAjustes = 0;
+      }).catch((err) => console.warn('⚠️ Falha ao registrar cálculo:', err.message));
     }
   }
 

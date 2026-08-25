@@ -282,6 +282,20 @@ export async function insertCalculo(payload) {
   return data;
 }
 
+// ESCOPO 2 (25/08) — ajuste pós-cálculo (o usuário mexeu na margem/preço do MESMO
+// contexto de novo, sem trocar plataforma/produto) atualiza a linha em vez de duplicar,
+// e incrementa ajustes_count (sinal de necessidade real). RLS: calculos_update_own já cobre.
+export async function updateCalculo(id, payload) {
+  const { data, error } = await getSupabase()
+    .from('calculos')
+    .update(payload)
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
 // ══════════════════════ FASE 3 — Inteligência de Mercado (admin-only) ══════════════════════
 // PostgREST não suporta HAVING/GROUP BY complexo — as agregações vivem em funções SQL
 // (SECURITY INVOKER, RLS aplicado normalmente). A régua de anonimato (>=5 usuários
