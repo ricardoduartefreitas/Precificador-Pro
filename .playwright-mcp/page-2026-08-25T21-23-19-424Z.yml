@@ -1,0 +1,121 @@
+- generic [active] [ref=f13e1]:
+  - banner [ref=f13e30]:
+    - generic [ref=f13e31]:
+      - generic [ref=f13e32]:
+        - generic [ref=f13e33]: RUAH TECNOLOGIA
+        - generic [ref=f13e34]: PrecificaPRO
+      - generic [ref=f13e35]:
+        - generic [ref=f13e36]: FREE
+        - button "🚪 Logout" [ref=f13e37] [cursor=pointer]:
+          - generic [ref=f13e38]: 🚪
+          - generic [ref=f13e39]: Logout
+    - tablist [ref=f13e40]:
+      - tab "Calcular" [ref=f13e41] [cursor=pointer]
+      - tab "Comparar" [ref=f13e42] [cursor=pointer]
+      - tab "Meus Produtos" [ref=f13e43] [cursor=pointer]
+      - tab "Histórico" [ref=f13e44] [cursor=pointer]
+  - main [ref=f13e2]:
+    - region "Calculadora individual" [ref=f13e45]:
+      - generic [ref=f13e46]:
+        - generic [ref=f13e47]:
+          - heading "Plataforma" [level=2] [ref=f13e48]
+          - generic [ref=f13e49]:
+            - generic [ref=f13e50]:
+              - generic [ref=f13e51]: Marketplace
+              - combobox "Marketplace" [ref=f13e52] [cursor=pointer]:
+                - option "Mercado Livre" [selected]
+                - option "Shopee"
+                - option "Amazon"
+                - option "TikTok Shop"
+                - option "Shein"
+            - generic [ref=f13e53]:
+              - generic [ref=f13e54]: Tipo de anúncio
+              - combobox "Tipo de anúncio" [ref=f13e55] [cursor=pointer]:
+                - option "Clássico (11% padrão)" [selected]
+                - option "Premium (16% padrão)"
+            - generic [ref=f13e56]:
+              - generic [ref=f13e57]: Logística
+              - combobox "Logística" [ref=f13e58] [cursor=pointer]:
+                - option "Full (Fulfillment)" [selected]
+                - option "Drop Off (Agência)"
+                - option "Normal (ME1)"
+                - option "Flex"
+        - generic [ref=f13e59]:
+          - heading "Regras de comissão" [level=2] [ref=f13e60]
+          - table [ref=f13e61]:
+            - rowgroup [ref=f13e62]:
+              - row [ref=f13e63]:
+                - columnheader "Faixa de preço" [ref=f13e64]
+                - columnheader "Comissão" [ref=f13e65]
+                - columnheader "Taxa fixa" [ref=f13e66]
+            - rowgroup [ref=f13e67]:
+              - row [ref=f13e68]:
+                - cell "Clássico 11% · Full" [ref=f13e69]
+                - cell "11%" [ref=f13e70]
+                - cell "—" [ref=f13e71]
+          - generic [ref=f13e73]:
+            - heading "📦 Diretriz de frete (por peso)" [level=3] [ref=f13e74]
+            - paragraph [ref=f13e75]:
+              - strong [ref=f13e76]: Frete grátis obrigatório
+              - text: para pedidos ≥ R$ 79.00
+            - paragraph [ref=f13e77]: "Abaixo do limite, tabela por peso:"
+            - list [ref=f13e78]:
+              - listitem [ref=f13e79]: "até 300g: R$ 7.35"
+              - listitem [ref=f13e80]: "300g–1kg (estimativa): R$ 9.90"
+              - listitem [ref=f13e81]: "1kg–2kg: R$ 13.50"
+              - listitem [ref=f13e82]: "2kg–5kg (estimativa): R$ 18.50"
+              - listitem [ref=f13e83]: "5kg–9kg (estimativa): R$ 21.00"
+              - listitem [ref=f13e84]: "9kg–30kg (estimativa): R$ 29.00"
+        - generic [ref=f13e85]:
+          - heading "Dados do produto" [level=2] [ref=f13e86]
+          - generic [ref=f13e87]:
+            - generic [ref=f13e88]:
+              - generic [ref=f13e89]: Custo do produto (R$)
+              - spinbutton "Custo do produto (R$)" [ref=f13e90]: "0"
+            - generic [ref=f13e91]:
+              - generic [ref=f13e92]: Peso do produto (kg)
+              - spinbutton "Peso do produto (kg)" [ref=f13e93]
+            - generic [ref=f13e94]:
+              - generic [ref=f13e95]: Custos adicionais (R$)
+              - spinbutton "Custos adicionais (R$)" [ref=f13e96]: "0"
+            - generic [ref=f13e97]:
+              - generic [ref=f13e98]: Imposto (%)
+              - spinbutton "Imposto (%)" [ref=f13e99]: "4"
+              - generic [ref=f13e100]: "📌 Sugestão para Simples Nacional · Comércio: 4% (estimativa — ajuste se necessário)"
+            - generic [ref=f13e101]:
+              - generic [ref=f13e102]: Afiliados (%)
+              - spinbutton "Afiliados (%)" [ref=f13e103]: "0"
+            - generic [ref=f13e104]:
+              - generic [ref=f13e105]: Ads (%)
+              - spinbutton "Ads (%)" [ref=f13e106]: "0"
+            - generic [ref=f13e107]:
+              - generic [ref=f13e108]: Ads (R$ fixo)
+              - spinbutton "Ads (R$ fixo)" [ref=f13e109]: "0"
+            - generic [ref=f13e110]:
+              - generic [ref=f13e111]: Margem desejada (%)
+              - spinbutton "Margem desejada (%)" [ref=f13e112]: "30"
+            - generic [ref=f13e114] [cursor=pointer]:
+              - checkbox "Campanha promocional (aplica desconto no preço final)" [ref=f13e115]
+              - generic [ref=f13e116]: Campanha promocional (aplica desconto no preço final)
+          - button "Calcular" [ref=f13e117] [cursor=pointer]
+        - generic [ref=f13e118]:
+          - heading "Cálculo em lote (CSV)" [level=2] [ref=f13e119]
+          - paragraph [ref=f13e120]: Baixe o modelo, preencha com seus produtos e importe para calcular tudo de uma vez.
+          - generic [ref=f13e121]:
+            - button "⬇ Baixar modelo CSV" [ref=f13e122] [cursor=pointer]
+            - button "⬆ Importar planilha" [ref=f13e123] [cursor=pointer]
+  - text: ✓ ✓ ✓
+  - contentinfo [ref=f13e19]:
+    - generic [ref=f13e20]:
+      - paragraph [ref=f13e21]:
+        - strong [ref=f13e22]: RUAH TECNOLOGIA
+        - generic [ref=f13e23]: —
+        - generic [ref=f13e24]: O sopro que impulsiona seus negócios
+      - paragraph [ref=f13e25]: © 2026 Ruah Tecnologia. Todos os direitos reservados.
+      - paragraph [ref=f13e26]:
+        - link "www.ruahtecnologia.com.br" [ref=f13e27] [cursor=pointer]:
+          - /url: https://ruahtecnologia.com.br
+  - generic [ref=f13e28]:
+    - text: by
+    - link "www.ruahtecnologia.com.br" [ref=f13e29] [cursor=pointer]:
+      - /url: https://www.ruahtecnologia.com.br

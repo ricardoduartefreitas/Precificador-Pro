@@ -1,0 +1,36 @@
+- generic [active] [ref=f8e1]:
+  - main [ref=f8e2]:
+    - region "Autenticação" [ref=f8e3]:
+      - generic [ref=f8e5]:
+        - heading "Acessar PrecificaPRO" [level=2] [ref=f8e6]
+        - paragraph [ref=f8e7]: Faça login para continuar
+        - generic [ref=f8e8]:
+          - generic [ref=f8e9]:
+            - generic [ref=f8e10]: E-mail
+            - textbox "E-mail" [ref=f8e11]:
+              - /placeholder: seu@email.com
+              - text: qa.seed9@ruahtecnologia.com.br
+          - generic [ref=f8e12]:
+            - generic [ref=f8e13]: Senha
+            - textbox "Senha" [ref=f8e14]:
+              - /placeholder: sua senha
+              - text: QaTeste2026!
+        - button "Entrando..." [disabled] [ref=f8e30] [cursor=pointer]
+        - paragraph [ref=f8e17]:
+          - link "Esqueci minha senha" [ref=f8e18] [cursor=pointer]:
+            - /url: "#"
+  - text: ✓ ✓ ✓
+  - contentinfo [ref=f8e19]:
+    - generic [ref=f8e20]:
+      - paragraph [ref=f8e21]:
+        - strong [ref=f8e22]: RUAH TECNOLOGIA
+        - generic [ref=f8e23]: —
+        - generic [ref=f8e24]: O sopro que impulsiona seus negócios
+      - paragraph [ref=f8e25]: © 2026 Ruah Tecnologia. Todos os direitos reservados.
+      - paragraph [ref=f8e26]:
+        - link "www.ruahtecnologia.com.br" [ref=f8e27] [cursor=pointer]:
+          - /url: https://ruahtecnologia.com.br
+  - generic [ref=f8e28]:
+    - text: by
+    - link "www.ruahtecnologia.com.br" [ref=f8e29] [cursor=pointer]:
+      - /url: https://www.ruahtecnologia.com.br

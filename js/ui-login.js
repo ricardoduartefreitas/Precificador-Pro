@@ -12,6 +12,25 @@ export function initLoginUI() {
 
   if (!btnLogin) return; // Não existem elementos de login
 
+  // ─────────────────────────────────────────────────────────────────
+  // Toggle para ver/ocultar senha (25/08)
+  // ─────────────────────────────────────────────────────────────────
+  const btnTogglePassword = document.getElementById('btn-toggle-password');
+  if (btnTogglePassword) {
+    // Previne comportamento padrão do botão
+    btnTogglePassword.addEventListener('click', (e) => {
+      e.preventDefault();
+      togglePasswordVisibility();
+    });
+  }
+
+  function togglePasswordVisibility() {
+    const isPassword = passwordInput.type === 'password';
+    passwordInput.type = isPassword ? 'text' : 'password';
+    btnTogglePassword.setAttribute('aria-pressed', isPassword ? 'true' : 'false');
+    btnTogglePassword.setAttribute('aria-label', isPassword ? 'Ocultar senha' : 'Mostrar senha');
+  }
+
   // FIX (17/08): o botão SEMPRE reseta no initLoginUI (roda a cada logout!)
   // (antes: após um login, o botão ficava disabled 'Entrando...' para sempre —
   //  o caminho de sucesso não restaurava → o RELOGIN morria!)

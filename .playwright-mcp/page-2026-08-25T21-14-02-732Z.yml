@@ -1,0 +1,34 @@
+- generic [active] [ref=f10e1]:
+  - main [ref=f10e2]:
+    - region "Autenticação" [ref=f10e3]:
+      - generic [ref=f10e5]:
+        - heading "Acessar PrecificaPRO" [level=2] [ref=f10e6]
+        - paragraph [ref=f10e7]: Faça login para continuar
+        - generic [ref=f10e8]:
+          - generic [ref=f10e9]:
+            - generic [ref=f10e10]: E-mail
+            - textbox "E-mail" [ref=f10e11]:
+              - /placeholder: seu@email.com
+          - generic [ref=f10e12]:
+            - generic [ref=f10e13]: Senha
+            - textbox "Senha" [ref=f10e14]:
+              - /placeholder: sua senha
+        - button "Entrar" [ref=f10e15] [cursor=pointer]
+        - paragraph [ref=f10e17]:
+          - link "Esqueci minha senha" [ref=f10e18] [cursor=pointer]:
+            - /url: "#"
+  - text: ✓ ✓ ✓
+  - contentinfo [ref=f10e19]:
+    - generic [ref=f10e20]:
+      - paragraph [ref=f10e21]:
+        - strong [ref=f10e22]: RUAH TECNOLOGIA
+        - generic [ref=f10e23]: —
+        - generic [ref=f10e24]: O sopro que impulsiona seus negócios
+      - paragraph [ref=f10e25]: © 2026 Ruah Tecnologia. Todos os direitos reservados.
+      - paragraph [ref=f10e26]:
+        - link "www.ruahtecnologia.com.br" [ref=f10e27] [cursor=pointer]:
+          - /url: https://ruahtecnologia.com.br
+  - generic [ref=f10e28]:
+    - text: by
+    - link "www.ruahtecnologia.com.br" [ref=f10e29] [cursor=pointer]:
+      - /url: https://www.ruahtecnologia.com.br

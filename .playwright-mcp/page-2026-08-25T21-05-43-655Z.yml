@@ -1,0 +1,38 @@
+- generic [active] [ref=f4e1]:
+  - main [ref=f4e2]:
+    - region "Complete seu cadastro" [ref=f4e3]:
+      - generic [ref=f4e5]:
+        - generic [ref=f4e6]:
+          - generic [ref=f4e7]: 1 · Identidade
+          - generic [ref=f4e8]: 2 · Fiscal
+          - generic [ref=f4e9]: 3 · Operação
+        - generic [ref=f4e10]:
+          - heading "Vamos completar seu cadastro" [level=2] [ref=f4e11]
+          - paragraph [ref=f4e12]: Isso leva menos de 2 minutos e libera a calculadora.
+          - generic [ref=f4e13]:
+            - generic [ref=f4e14]:
+              - generic [ref=f4e15]: Nome
+              - generic [ref=f4e16]: —
+            - generic [ref=f4e17]:
+              - generic [ref=f4e18]: E-mail
+              - generic [ref=f4e19]: —
+            - generic [ref=f4e20]:
+              - generic [ref=f4e21]: Telefone / WhatsApp
+              - textbox "Telefone / WhatsApp" [ref=f4e22]:
+                - /placeholder: (11) 91234-5678
+        - button "Avançar" [ref=f4e24] [cursor=pointer]
+  - text: ✓ ✓ ✓
+  - contentinfo [ref=f4e25]:
+    - generic [ref=f4e26]:
+      - paragraph [ref=f4e27]:
+        - strong [ref=f4e28]: RUAH TECNOLOGIA
+        - generic [ref=f4e29]: —
+        - generic [ref=f4e30]: O sopro que impulsiona seus negócios
+      - paragraph [ref=f4e31]: © 2026 Ruah Tecnologia. Todos os direitos reservados.
+      - paragraph [ref=f4e32]:
+        - link "www.ruahtecnologia.com.br" [ref=f4e33] [cursor=pointer]:
+          - /url: https://ruahtecnologia.com.br
+  - generic [ref=f4e34]:
+    - text: by
+    - link "www.ruahtecnologia.com.br" [ref=f4e35] [cursor=pointer]:
+      - /url: https://www.ruahtecnologia.com.br

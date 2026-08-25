@@ -1,0 +1,51 @@
+- generic [ref=f1e1]:
+  - banner [ref=f1e30]:
+    - generic [ref=f1e31]:
+      - generic [ref=f1e32]:
+        - generic [ref=f1e33]: RUAH TECNOLOGIA
+        - generic [ref=f1e34]: PrecificaPRO
+      - generic [ref=f1e35]:
+        - generic [ref=f1e36]: FREE
+        - button "🚪 Logout" [ref=f1e37] [cursor=pointer]:
+          - generic [ref=f1e38]: 🚪
+          - generic [ref=f1e39]: Logout
+    - tablist [ref=f1e40]:
+      - tab "Calcular" [ref=f1e41] [cursor=pointer]
+      - tab "Comparar" [ref=f1e42] [cursor=pointer]
+      - tab "Meus Produtos" [ref=f1e43] [cursor=pointer]
+      - tab "Histórico" [ref=f1e44] [cursor=pointer]
+      - tab "Inteligência" [ref=f1e45] [cursor=pointer]
+      - tab "Painel Admin" [active] [ref=f1e46] [cursor=pointer]
+  - main [ref=f1e2]:
+    - region "Painel administrativo" [ref=f1e125]:
+      - generic [ref=f1e126]:
+        - generic [ref=f1e127]:
+          - heading "Enviar convite de acesso" [level=2] [ref=f1e128]
+          - generic [ref=f1e129]:
+            - generic [ref=f1e130]:
+              - generic [ref=f1e131]: Nome completo
+              - textbox "Nome completo" [ref=f1e132]:
+                - /placeholder: "ex: João Silva"
+            - generic [ref=f1e133]:
+              - generic [ref=f1e134]: E-mail
+              - textbox "E-mail" [ref=f1e135]:
+                - /placeholder: "ex: joao@exemplo.com"
+          - button "Enviar convite" [ref=f1e136] [cursor=pointer]
+        - generic [ref=f1e137]:
+          - heading "Usuários convidados" [level=2] [ref=f1e138]
+          - paragraph [ref=f1e140]: Nenhum convite enviado ainda
+  - text: ✓ ✓ ✓
+  - contentinfo [ref=f1e19]:
+    - generic [ref=f1e20]:
+      - paragraph [ref=f1e21]:
+        - strong [ref=f1e22]: RUAH TECNOLOGIA
+        - generic [ref=f1e23]: —
+        - generic [ref=f1e24]: O sopro que impulsiona seus negócios
+      - paragraph [ref=f1e25]: © 2026 Ruah Tecnologia. Todos os direitos reservados.
+      - paragraph [ref=f1e26]:
+        - link "www.ruahtecnologia.com.br" [ref=f1e27] [cursor=pointer]:
+          - /url: https://ruahtecnologia.com.br
+  - generic [ref=f1e28]:
+    - text: by
+    - link "www.ruahtecnologia.com.br" [ref=f1e29] [cursor=pointer]:
+      - /url: https://www.ruahtecnologia.com.br

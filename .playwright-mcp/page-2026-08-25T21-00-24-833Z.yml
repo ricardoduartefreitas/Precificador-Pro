@@ -1,0 +1,55 @@
+- generic [ref=f2e1]:
+  - banner [ref=f2e30]:
+    - generic [ref=f2e31]:
+      - generic [ref=f2e32]:
+        - generic [ref=f2e33]: RUAH TECNOLOGIA
+        - generic [ref=f2e34]: PrecificaPRO
+      - generic [ref=f2e35]:
+        - generic [ref=f2e36]: FREE
+        - button "🚪 Logout" [ref=f2e37] [cursor=pointer]:
+          - generic [ref=f2e38]: 🚪
+          - generic [ref=f2e39]: Logout
+    - tablist [ref=f2e40]:
+      - tab "Calcular" [ref=f2e41] [cursor=pointer]
+      - tab "Comparar" [ref=f2e42] [cursor=pointer]
+      - tab "Meus Produtos" [ref=f2e43] [cursor=pointer]
+      - tab "Histórico" [ref=f2e44] [cursor=pointer]
+      - tab "Inteligência" [ref=f2e45] [cursor=pointer]
+      - tab "Painel Admin" [active] [ref=f2e46] [cursor=pointer]
+  - main [ref=f2e2]:
+    - region "Painel administrativo" [ref=f2e125]:
+      - generic [ref=f2e126]:
+        - generic [ref=f2e127]:
+          - heading "Enviar convite de acesso" [level=2] [ref=f2e128]
+          - generic [ref=f2e129]:
+            - generic [ref=f2e130]:
+              - generic [ref=f2e131]: Nome completo
+              - textbox "Nome completo" [ref=f2e132]:
+                - /placeholder: "ex: João Silva"
+            - generic [ref=f2e133]:
+              - generic [ref=f2e134]: E-mail
+              - textbox "E-mail" [ref=f2e135]:
+                - /placeholder: "ex: joao@exemplo.com"
+          - button "Enviar convite" [ref=f2e136] [cursor=pointer]
+        - generic [ref=f2e137]:
+          - heading "Usuários convidados" [level=2] [ref=f2e138]
+          - paragraph [ref=f2e140]: Nenhum convite enviado ainda
+        - generic [ref=f2e141]:
+          - heading "🎯 Lead Scoring" [level=2] [ref=f2e142]
+          - paragraph [ref=f2e143]: Pedidos/dia>30 = +3 · TikTok/Shopee = +2 · Goiânia/GO = +3 · Simples Nacional = +2 · peso médio>1kg = +1
+          - paragraph [ref=f2e145]: Carregando...
+  - text: ✓ ✓ ✓
+  - contentinfo [ref=f2e19]:
+    - generic [ref=f2e20]:
+      - paragraph [ref=f2e21]:
+        - strong [ref=f2e22]: RUAH TECNOLOGIA
+        - generic [ref=f2e23]: —
+        - generic [ref=f2e24]: O sopro que impulsiona seus negócios
+      - paragraph [ref=f2e25]: © 2026 Ruah Tecnologia. Todos os direitos reservados.
+      - paragraph [ref=f2e26]:
+        - link "www.ruahtecnologia.com.br" [ref=f2e27] [cursor=pointer]:
+          - /url: https://ruahtecnologia.com.br
+  - generic [ref=f2e28]:
+    - text: by
+    - link "www.ruahtecnologia.com.br" [ref=f2e29] [cursor=pointer]:
+      - /url: https://www.ruahtecnologia.com.br

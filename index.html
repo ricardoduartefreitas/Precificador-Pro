@@ -51,7 +51,16 @@
             </div>
             <div class="form-field form-field--full">
               <label for="login-password">Senha</label>
-              <input type="password" id="login-password" placeholder="sua senha" autocomplete="current-password" />
+              <div class="password-input-wrapper">
+                <input type="password" id="login-password" placeholder="sua senha" autocomplete="current-password" />
+                <button type="button" id="btn-toggle-password" class="password-toggle-btn" aria-label="Mostrar senha" aria-pressed="false">
+                  <svg class="password-toggle-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <!-- Ícone Olho Aberto (padrão) -->
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
 

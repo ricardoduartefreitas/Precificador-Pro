@@ -1,0 +1,120 @@
+- generic [active] [ref=f9e1]:
+  - banner [ref=f9e30]:
+    - generic [ref=f9e31]:
+      - generic [ref=f9e32]:
+        - generic [ref=f9e33]: RUAH TECNOLOGIA
+        - generic [ref=f9e34]: PrecificaPRO
+      - generic [ref=f9e35]:
+        - generic [ref=f9e36]: FREE
+        - button "🚪 Logout" [ref=f9e37] [cursor=pointer]:
+          - generic [ref=f9e38]: 🚪
+          - generic [ref=f9e39]: Logout
+    - tablist [ref=f9e40]:
+      - tab "Calcular" [ref=f9e41] [cursor=pointer]
+      - tab "Comparar" [ref=f9e42] [cursor=pointer]
+      - tab "Meus Produtos" [ref=f9e43] [cursor=pointer]
+      - tab "Histórico" [ref=f9e44] [cursor=pointer]
+  - main [ref=f9e2]:
+    - region "Calculadora individual" [ref=f9e45]:
+      - generic [ref=f9e46]:
+        - generic [ref=f9e47]:
+          - heading "Plataforma" [level=2] [ref=f9e48]
+          - generic [ref=f9e49]:
+            - generic [ref=f9e50]:
+              - generic [ref=f9e51]: Marketplace
+              - combobox "Marketplace" [ref=f9e52] [cursor=pointer]:
+                - option "Mercado Livre" [selected]
+                - option "Shopee"
+                - option "Amazon"
+                - option "TikTok Shop"
+                - option "Shein"
+            - generic [ref=f9e53]:
+              - generic [ref=f9e54]: Tipo de anúncio
+              - combobox "Tipo de anúncio" [ref=f9e55] [cursor=pointer]:
+                - option "Clássico (11% padrão)" [selected]
+                - option "Premium (16% padrão)"
+            - generic [ref=f9e56]:
+              - generic [ref=f9e57]: Logística
+              - combobox "Logística" [ref=f9e58] [cursor=pointer]:
+                - option "Full (Fulfillment)" [selected]
+                - option "Drop Off (Agência)"
+                - option "Normal (ME1)"
+                - option "Flex"
+        - generic [ref=f9e59]:
+          - heading "Regras de comissão" [level=2] [ref=f9e60]
+          - table [ref=f9e61]:
+            - rowgroup [ref=f9e62]:
+              - row [ref=f9e63]:
+                - columnheader "Faixa de preço" [ref=f9e64]
+                - columnheader "Comissão" [ref=f9e65]
+                - columnheader "Taxa fixa" [ref=f9e66]
+            - rowgroup [ref=f9e67]:
+              - row [ref=f9e68]:
+                - cell "Clássico 11% · Full" [ref=f9e69]
+                - cell "11%" [ref=f9e70]
+                - cell "—" [ref=f9e71]
+          - generic [ref=f9e73]:
+            - heading "📦 Diretriz de frete (por peso)" [level=3] [ref=f9e74]
+            - paragraph [ref=f9e75]:
+              - strong [ref=f9e76]: Frete grátis obrigatório
+              - text: para pedidos ≥ R$ 79.00
+            - paragraph [ref=f9e77]: "Abaixo do limite, tabela por peso:"
+            - list [ref=f9e78]:
+              - listitem [ref=f9e79]: "até 300g: R$ 7.35"
+              - listitem [ref=f9e80]: "300g–1kg (estimativa): R$ 9.90"
+              - listitem [ref=f9e81]: "1kg–2kg: R$ 13.50"
+              - listitem [ref=f9e82]: "2kg–5kg (estimativa): R$ 18.50"
+              - listitem [ref=f9e83]: "5kg–9kg (estimativa): R$ 21.00"
+              - listitem [ref=f9e84]: "9kg–30kg (estimativa): R$ 29.00"
+        - generic [ref=f9e85]:
+          - heading "Dados do produto" [level=2] [ref=f9e86]
+          - generic [ref=f9e87]:
+            - generic [ref=f9e88]:
+              - generic [ref=f9e89]: Custo do produto (R$)
+              - spinbutton "Custo do produto (R$)" [ref=f9e90]: "0"
+            - generic [ref=f9e91]:
+              - generic [ref=f9e92]: Peso do produto (kg)
+              - spinbutton "Peso do produto (kg)" [ref=f9e93]
+            - generic [ref=f9e94]:
+              - generic [ref=f9e95]: Custos adicionais (R$)
+              - spinbutton "Custos adicionais (R$)" [ref=f9e96]: "0"
+            - generic [ref=f9e97]:
+              - generic [ref=f9e98]: Imposto (%)
+              - spinbutton "Imposto (%)" [ref=f9e99]: "0"
+            - generic [ref=f9e100]:
+              - generic [ref=f9e101]: Afiliados (%)
+              - spinbutton "Afiliados (%)" [ref=f9e102]: "0"
+            - generic [ref=f9e103]:
+              - generic [ref=f9e104]: Ads (%)
+              - spinbutton "Ads (%)" [ref=f9e105]: "0"
+            - generic [ref=f9e106]:
+              - generic [ref=f9e107]: Ads (R$ fixo)
+              - spinbutton "Ads (R$ fixo)" [ref=f9e108]: "0"
+            - generic [ref=f9e109]:
+              - generic [ref=f9e110]: Margem desejada (%)
+              - spinbutton "Margem desejada (%)" [ref=f9e111]: "30"
+            - generic [ref=f9e113] [cursor=pointer]:
+              - checkbox "Campanha promocional (aplica desconto no preço final)" [ref=f9e114]
+              - generic [ref=f9e115]: Campanha promocional (aplica desconto no preço final)
+          - button "Calcular" [ref=f9e116] [cursor=pointer]
+        - generic [ref=f9e117]:
+          - heading "Cálculo em lote (CSV)" [level=2] [ref=f9e118]
+          - paragraph [ref=f9e119]: Baixe o modelo, preencha com seus produtos e importe para calcular tudo de uma vez.
+          - generic [ref=f9e120]:
+            - button "⬇ Baixar modelo CSV" [ref=f9e121] [cursor=pointer]
+            - button "⬆ Importar planilha" [ref=f9e122] [cursor=pointer]
+  - text: ✓ ✓ ✓
+  - contentinfo [ref=f9e19]:
+    - generic [ref=f9e20]:
+      - paragraph [ref=f9e21]:
+        - strong [ref=f9e22]: RUAH TECNOLOGIA
+        - generic [ref=f9e23]: —
+        - generic [ref=f9e24]: O sopro que impulsiona seus negócios
+      - paragraph [ref=f9e25]: © 2026 Ruah Tecnologia. Todos os direitos reservados.
+      - paragraph [ref=f9e26]:
+        - link "www.ruahtecnologia.com.br" [ref=f9e27] [cursor=pointer]:
+          - /url: https://ruahtecnologia.com.br
+  - generic [ref=f9e28]:
+    - text: by
+    - link "www.ruahtecnologia.com.br" [ref=f9e29] [cursor=pointer]:
+      - /url: https://www.ruahtecnologia.com.br

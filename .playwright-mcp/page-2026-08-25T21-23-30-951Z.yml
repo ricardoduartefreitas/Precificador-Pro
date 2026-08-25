@@ -1,0 +1,64 @@
+- generic [ref=f13e1]:
+  - banner [ref=f13e30]:
+    - generic [ref=f13e31]:
+      - generic [ref=f13e32]:
+        - generic [ref=f13e33]: RUAH TECNOLOGIA
+        - generic [ref=f13e34]: PrecificaPRO
+      - generic [ref=f13e35]:
+        - generic [ref=f13e36]: FREE
+        - button "🚪 Logout" [ref=f13e37] [cursor=pointer]:
+          - generic [ref=f13e38]: 🚪
+          - generic [ref=f13e39]: Logout
+    - tablist [ref=f13e40]:
+      - tab "Calcular" [ref=f13e41] [cursor=pointer]
+      - tab "Comparar" [active] [ref=f13e42] [cursor=pointer]
+      - tab "Meus Produtos" [ref=f13e43] [cursor=pointer]
+      - tab "Histórico" [ref=f13e44] [cursor=pointer]
+  - main [ref=f13e2]:
+    - region "Comparar plataformas" [ref=f13e124]:
+      - generic [ref=f13e126]:
+        - heading "Dados do produto" [level=2] [ref=f13e127]
+        - generic [ref=f13e128]:
+          - generic [ref=f13e129]:
+            - generic [ref=f13e130]: Custo do produto (R$)
+            - spinbutton "Custo do produto (R$)" [ref=f13e131]: "0"
+          - generic [ref=f13e132]:
+            - generic [ref=f13e133]: Peso do produto (kg)
+            - spinbutton "Peso do produto (kg)" [ref=f13e134]
+          - generic [ref=f13e135]:
+            - generic [ref=f13e136]: Custos adicionais (R$)
+            - spinbutton "Custos adicionais (R$)" [ref=f13e137]: "0"
+          - generic [ref=f13e138]:
+            - generic [ref=f13e139]: Imposto (%)
+            - spinbutton "Imposto (%)" [ref=f13e140]: "4"
+          - generic [ref=f13e141]:
+            - generic [ref=f13e142]: Margem desejada (%)
+            - spinbutton "Margem desejada (%)" [ref=f13e143]: "30"
+        - generic [ref=f13e144]:
+          - generic [ref=f13e145]:
+            - generic [ref=f13e146]: Shopee — perfil do vendedor
+            - combobox "Shopee — perfil do vendedor" [ref=f13e147] [cursor=pointer]:
+              - option "CNPJ" [selected]
+              - option "CPF Iniciante (<450 pedidos/90d)"
+              - option "CPF Experiente (>450 pedidos/90d)"
+          - generic [ref=f13e148]:
+            - generic [ref=f13e149]: Amazon — modalidade
+            - combobox "Amazon — modalidade" [ref=f13e150] [cursor=pointer]:
+              - option "FBA (Amazon entrega)" [selected]
+              - option "FBM (Eu entrego)"
+        - button "Comparar todas as plataformas" [ref=f13e151] [cursor=pointer]
+  - text: ✓ ✓ ✓
+  - contentinfo [ref=f13e19]:
+    - generic [ref=f13e20]:
+      - paragraph [ref=f13e21]:
+        - strong [ref=f13e22]: RUAH TECNOLOGIA
+        - generic [ref=f13e23]: —
+        - generic [ref=f13e24]: O sopro que impulsiona seus negócios
+      - paragraph [ref=f13e25]: © 2026 Ruah Tecnologia. Todos os direitos reservados.
+      - paragraph [ref=f13e26]:
+        - link "www.ruahtecnologia.com.br" [ref=f13e27] [cursor=pointer]:
+          - /url: https://ruahtecnologia.com.br
+  - generic [ref=f13e28]:
+    - text: by
+    - link "www.ruahtecnologia.com.br" [ref=f13e29] [cursor=pointer]:
+      - /url: https://www.ruahtecnologia.com.br

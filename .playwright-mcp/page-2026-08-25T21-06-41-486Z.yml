@@ -1,0 +1,75 @@
+- generic [ref=f5e1]:
+  - banner [ref=f5e30]:
+    - generic [ref=f5e31]:
+      - generic [ref=f5e32]:
+        - generic [ref=f5e33]: RUAH TECNOLOGIA
+        - generic [ref=f5e34]: PrecificaPRO
+      - generic [ref=f5e35]:
+        - generic [ref=f5e36]: FREE
+        - button "🚪 Logout" [ref=f5e37] [cursor=pointer]:
+          - generic [ref=f5e38]: 🚪
+          - generic [ref=f5e39]: Logout
+    - tablist [ref=f5e40]:
+      - tab "Calcular" [ref=f5e41] [cursor=pointer]
+      - tab "Comparar" [ref=f5e42] [cursor=pointer]
+      - tab "Meus Produtos" [ref=f5e43] [cursor=pointer]
+      - tab "Histórico" [ref=f5e44] [cursor=pointer]
+      - tab "Inteligência" [ref=f5e45] [cursor=pointer]
+      - tab "Painel Admin" [active] [ref=f5e46] [cursor=pointer]
+  - main [ref=f5e2]:
+    - region "Painel administrativo" [ref=f5e125]:
+      - generic [ref=f5e126]:
+        - generic [ref=f5e127]:
+          - heading "Enviar convite de acesso" [level=2] [ref=f5e128]
+          - generic [ref=f5e129]:
+            - generic [ref=f5e130]:
+              - generic [ref=f5e131]: Nome completo
+              - textbox "Nome completo" [ref=f5e132]:
+                - /placeholder: "ex: João Silva"
+            - generic [ref=f5e133]:
+              - generic [ref=f5e134]: E-mail
+              - textbox "E-mail" [ref=f5e135]:
+                - /placeholder: "ex: joao@exemplo.com"
+          - button "Enviar convite" [ref=f5e136] [cursor=pointer]
+        - generic [ref=f5e137]:
+          - heading "Usuários convidados" [level=2] [ref=f5e138]
+          - paragraph [ref=f5e140]: Nenhum convite enviado ainda
+        - generic [ref=f5e141]:
+          - heading "🎯 Lead Scoring" [level=2] [ref=f5e142]
+          - paragraph [ref=f5e143]: Pedidos/dia>30 = +3 · TikTok/Shopee = +2 · Goiânia/GO = +3 · Simples Nacional = +2 · peso médio>1kg = +1
+          - table [ref=f5e145]:
+            - rowgroup [ref=f5e146]:
+              - row [ref=f5e147]:
+                - columnheader "Nome / E-mail" [ref=f5e148]
+                - columnheader "Cidade/UF" [ref=f5e149]
+                - columnheader "Pedidos/dia" [ref=f5e150]
+                - columnheader "Regime" [ref=f5e151]
+                - columnheader "Peso médio" [ref=f5e152]
+                - columnheader "Score" [ref=f5e153]
+                - columnheader "Status" [ref=f5e154]
+            - rowgroup [ref=f5e155]:
+              - row [ref=f5e156]:
+                - cell [ref=f5e157]:
+                  - strong [ref=f5e158]: QA Seed 9
+                  - text: —
+                - cell "Goiânia/GO" [ref=f5e159]
+                - cell "31-50" [ref=f5e160]
+                - cell "simples_nacional" [ref=f5e161]
+                - cell "1.50 kg" [ref=f5e162]
+                - cell "11" [ref=f5e163]
+                - cell "🟢 quente" [ref=f5e164]
+  - text: ✓ ✓ ✓
+  - contentinfo [ref=f5e19]:
+    - generic [ref=f5e20]:
+      - paragraph [ref=f5e21]:
+        - strong [ref=f5e22]: RUAH TECNOLOGIA
+        - generic [ref=f5e23]: —
+        - generic [ref=f5e24]: O sopro que impulsiona seus negócios
+      - paragraph [ref=f5e25]: © 2026 Ruah Tecnologia. Todos os direitos reservados.
+      - paragraph [ref=f5e26]:
+        - link "www.ruahtecnologia.com.br" [ref=f5e27] [cursor=pointer]:
+          - /url: https://ruahtecnologia.com.br
+  - generic [ref=f5e28]:
+    - text: by
+    - link "www.ruahtecnologia.com.br" [ref=f5e29] [cursor=pointer]:
+      - /url: https://www.ruahtecnologia.com.br

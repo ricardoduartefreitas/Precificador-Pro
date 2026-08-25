@@ -1,0 +1,105 @@
+- generic [ref=f13e1]:
+  - banner [ref=f13e30]:
+    - generic [ref=f13e31]:
+      - generic [ref=f13e32]:
+        - generic [ref=f13e33]: RUAH TECNOLOGIA
+        - generic [ref=f13e34]: PrecificaPRO
+      - generic [ref=f13e35]:
+        - generic [ref=f13e36]: FREE
+        - button "🚪 Logout" [ref=f13e37] [cursor=pointer]:
+          - generic [ref=f13e38]: 🚪
+          - generic [ref=f13e39]: Logout
+    - tablist [ref=f13e40]:
+      - tab "Calcular" [ref=f13e41] [cursor=pointer]
+      - tab "Comparar" [ref=f13e42] [cursor=pointer]
+      - tab "Meus Produtos" [ref=f13e43] [cursor=pointer]
+      - tab "Histórico" [ref=f13e44] [cursor=pointer]
+  - main [ref=f13e2]:
+    - region "Comparar plataformas" [ref=f13e124]:
+      - generic [ref=f13e125]:
+        - generic [ref=f13e126]:
+          - heading "Dados do produto" [level=2] [ref=f13e127]
+          - generic [ref=f13e128]:
+            - generic [ref=f13e129]:
+              - generic [ref=f13e130]: Custo do produto (R$)
+              - spinbutton "Custo do produto (R$)" [ref=f13e131]: "50"
+            - generic [ref=f13e132]:
+              - generic [ref=f13e133]: Peso do produto (kg)
+              - spinbutton "Peso do produto (kg)" [ref=f13e134]: "0.5"
+            - generic [ref=f13e135]:
+              - generic [ref=f13e136]: Custos adicionais (R$)
+              - spinbutton "Custos adicionais (R$)" [ref=f13e137]: "5"
+            - generic [ref=f13e138]:
+              - generic [ref=f13e139]: Imposto (%)
+              - spinbutton "Imposto (%)" [ref=f13e140]: "4"
+            - generic [ref=f13e141]:
+              - generic [ref=f13e142]: Margem desejada (%)
+              - spinbutton "Margem desejada (%)" [ref=f13e143]: "30"
+          - generic [ref=f13e144]:
+            - generic [ref=f13e145]:
+              - generic [ref=f13e146]: Shopee — perfil do vendedor
+              - combobox "Shopee — perfil do vendedor" [ref=f13e147] [cursor=pointer]:
+                - option "CNPJ" [selected]
+                - option "CPF Iniciante (<450 pedidos/90d)"
+                - option "CPF Experiente (>450 pedidos/90d)"
+            - generic [ref=f13e148]:
+              - generic [ref=f13e149]: Amazon — modalidade
+              - combobox "Amazon — modalidade" [ref=f13e150] [cursor=pointer]:
+                - option "FBA (Amazon entrega)" [selected]
+                - option "FBM (Eu entrego)"
+          - button "Comparar todas as plataformas" [active] [ref=f13e151] [cursor=pointer]
+        - generic [ref=f13e152]:
+          - generic [ref=f13e153]: Melhor opção
+          - paragraph [ref=f13e154]: Shopee
+          - paragraph [ref=f13e155]: R$ 155,77
+          - generic [ref=f13e156]:
+            - generic [ref=f13e157]:
+              - paragraph [ref=f13e158]: Lucro
+              - paragraph [ref=f13e159]: R$ 46,73
+            - generic [ref=f13e160]:
+              - paragraph [ref=f13e161]: Margem real
+              - paragraph [ref=f13e162]: 30,0%
+            - generic [ref=f13e163]:
+              - paragraph [ref=f13e164]: "% plataforma"
+              - paragraph [ref=f13e165]: 30,7%
+          - paragraph [ref=f13e166]: "Faixa: acima de R$200 (14% + R$26)"
+        - generic [ref=f13e167]:
+          - generic [ref=f13e168]:
+            - generic [ref=f13e169]: "2"
+            - paragraph [ref=f13e171]: Amazon
+            - generic [ref=f13e174]:
+              - paragraph [ref=f13e175]: R$ 133,33
+              - paragraph [ref=f13e176]: +R$ 40,00
+          - generic [ref=f13e177]:
+            - generic [ref=f13e178]: "3"
+            - paragraph [ref=f13e180]: Shein
+            - generic [ref=f13e183]:
+              - paragraph [ref=f13e184]: R$ 114,58
+              - paragraph [ref=f13e185]: +R$ 34,38
+          - generic [ref=f13e186]:
+            - generic [ref=f13e187]: "4"
+            - paragraph [ref=f13e189]: TikTok Shop
+            - generic [ref=f13e192]:
+              - paragraph [ref=f13e193]: R$ 112,96
+              - paragraph [ref=f13e194]: +R$ 33,88
+          - generic [ref=f13e195]:
+            - generic [ref=f13e196]: "5"
+            - paragraph [ref=f13e198]: Mercado Livre
+            - generic [ref=f13e201]:
+              - paragraph [ref=f13e202]: R$ 100,00
+              - paragraph [ref=f13e203]: +R$ 30,00
+  - text: ✓ ✓ ✓
+  - contentinfo [ref=f13e19]:
+    - generic [ref=f13e20]:
+      - paragraph [ref=f13e21]:
+        - strong [ref=f13e22]: RUAH TECNOLOGIA
+        - generic [ref=f13e23]: —
+        - generic [ref=f13e24]: O sopro que impulsiona seus negócios
+      - paragraph [ref=f13e25]: © 2026 Ruah Tecnologia. Todos os direitos reservados.
+      - paragraph [ref=f13e26]:
+        - link "www.ruahtecnologia.com.br" [ref=f13e27] [cursor=pointer]:
+          - /url: https://ruahtecnologia.com.br
+  - generic [ref=f13e28]:
+    - text: by
+    - link "www.ruahtecnologia.com.br" [ref=f13e29] [cursor=pointer]:
+      - /url: https://www.ruahtecnologia.com.br

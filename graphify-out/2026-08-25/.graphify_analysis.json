@@ -1,0 +1,324 @@
+{
+  "communities": {
+    "0": [
+      "js_app_boot",
+      "js_formatter_parseinputvalue",
+      "js_state",
+      "js_state_getinputs",
+      "js_state_getstate",
+      "js_state_setinput",
+      "js_state_setstate",
+      "js_state_state",
+      "js_ui",
+      "js_ui_bindcalcinputchange",
+      "js_ui_bindcomparinputchange",
+      "js_ui_bindglobalmodals",
+      "js_ui_clearcalcresult",
+      "js_ui_closemodalsalvar",
+      "js_ui_closeoverlaypro",
+      "js_ui_confirmsave",
+      "js_ui_currentroute",
+      "js_ui_fillcalcfields",
+      "js_ui_fillcomparfields",
+      "js_ui_findplat",
+      "js_ui_handlecalcular",
+      "js_ui_initcalcview",
+      "js_ui_initcomparview",
+      "js_ui_initui",
+      "js_ui_openmodalsalvar",
+      "js_ui_plataformas",
+      "js_ui_setval",
+      "js_ui_updatelogisticaselect",
+      "js_ui_updatesellertypeselect"
+    ],
+    "1": [
+      "js_freemium",
+      "js_freemium_bindproactivation",
+      "js_freemium_cancalculate",
+      "js_freemium_checkpro",
+      "js_freemium_getusagecount",
+      "js_freemium_initfreemium",
+      "js_freemium_pro_hashes",
+      "js_freemium_registercalculo",
+      "js_freemium_sha256",
+      "js_freemium_showupgradeoverlay",
+      "js_storage",
+      "js_storage_storageget",
+      "js_storage_storagekeys",
+      "js_storage_storageremove",
+      "js_ui_handlecomparar",
+      "js_ui_showtoast",
+      "js_ui_updateplanbadge"
+    ],
+    "2": [
+      "js_formatter_formatgrouplabel",
+      "js_freemium_ispro",
+      "js_history",
+      "js_history_clearhistory",
+      "js_history_gethistory",
+      "js_history_gethistoryfiltered",
+      "js_history_getstats",
+      "js_history_groupbydate",
+      "js_history_saveentry",
+      "js_history_uuid",
+      "js_storage_storageset",
+      "js_ui_buildfilterchips",
+      "js_ui_inithistoricoview",
+      "js_ui_openoverlaypro",
+      "js_ui_renderhistorico",
+      "js_ui_renderhistoricolist"
+    ],
+    "3": [
+      "js_app",
+      "js_app_plataformas",
+      "js_router",
+      "js_router_goto",
+      "js_router_initrouter",
+      "js_router_navigate",
+      "js_router_parseroute",
+      "js_router_showview",
+      "js_router_tabs",
+      "js_router_views",
+      "platforms_amazon",
+      "platforms_mercadolivre",
+      "platforms_shein",
+      "platforms_shopee",
+      "platforms_tiktok"
+    ],
+    "4": [
+      "auth",
+      "auth_abrircompra",
+      "auth_abrirsenha",
+      "auth_ativarsenha",
+      "auth_atucont",
+      "auth_fecharsenha",
+      "auth_fecharsucesso",
+      "auth_hex",
+      "auth_lk",
+      "auth_migrarlicencaantiga",
+      "auth_norm",
+      "auth_proativo",
+      "auth_renderbadge",
+      "auth_sha256"
+    ],
+    "5": [
+      "js_formatter",
+      "js_formatter_brl",
+      "js_formatter_formatbrl",
+      "js_formatter_formatdate",
+      "js_formatter_formatpct",
+      "js_formatter_pct",
+      "js_history_exportcsv",
+      "js_ui_esc",
+      "js_ui_rendercomparacao",
+      "js_ui_renderentry",
+      "js_ui_renderextrato",
+      "js_ui_renderresulthero",
+      "js_ui_renderstats",
+      "js_ui_settxt"
+    ],
+    "6": [
+      "tests_smoke_test",
+      "tests_smoke_test_barra",
+      "tests_smoke_test_base_inputs",
+      "tests_smoke_test_brl",
+      "tests_smoke_test_calc_inputs_ml",
+      "tests_smoke_test_dim",
+      "tests_smoke_test_dirname",
+      "tests_smoke_test_err",
+      "tests_smoke_test_h1",
+      "tests_smoke_test_h2",
+      "tests_smoke_test_main",
+      "tests_smoke_test_ok",
+      "tests_smoke_test_pct",
+      "tests_smoke_test_root"
+    ],
+    "7": [
+      "manifest",
+      "manifest_background_color",
+      "manifest_description",
+      "manifest_display",
+      "manifest_icons",
+      "manifest_name",
+      "manifest_orientation",
+      "manifest_scope",
+      "manifest_short_name",
+      "manifest_start_url",
+      "manifest_theme_color"
+    ],
+    "8": [
+      "js_calculator",
+      "js_calculator_calcular",
+      "js_calculator_calcularcomdesconto",
+      "js_calculator_comparar",
+      "js_calculator_mapplataformatoinputs",
+      "js_calculator_r2",
+      "js_calculator_validar"
+    ],
+    "9": [
+      "app",
+      "app_calc",
+      "app_fmt",
+      "app_fmtp",
+      "app_gf",
+      "app_st"
+    ],
+    "10": [
+      "sw",
+      "sw_app_shell"
+    ],
+    "11": [
+      "config"
+    ]
+  },
+  "cohesion": {
+    "0": 0.18719211822660098,
+    "1": 0.2647058823529412,
+    "2": 0.24166666666666667,
+    "3": 0.19047619047619047,
+    "4": 0.26373626373626374,
+    "5": 0.24175824175824176,
+    "6": 0.23076923076923078,
+    "7": 0.18181818181818182,
+    "8": 0.6190476190476191,
+    "9": 0.5333333333333333,
+    "10": 1.0,
+    "11": 1.0
+  },
+  "gods": [
+    {
+      "id": "js_ui_handlecalcular",
+      "label": "_handleCalcular()",
+      "degree": 15
+    },
+    {
+      "id": "js_state_setstate",
+      "label": "setState()",
+      "degree": 14
+    },
+    {
+      "id": "js_ui_inithistoricoview",
+      "label": "_initHistoricoView()",
+      "degree": 14
+    },
+    {
+      "id": "js_ui_initcalcview",
+      "label": "_initCalcView()",
+      "degree": 12
+    },
+    {
+      "id": "js_ui_renderhistoricolist",
+      "label": "_renderHistoricoList()",
+      "degree": 11
+    },
+    {
+      "id": "js_ui_handlecomparar",
+      "label": "_handleComparar()",
+      "degree": 10
+    },
+    {
+      "id": "js_freemium_registercalculo",
+      "label": "registerCalculo()",
+      "degree": 9
+    },
+    {
+      "id": "js_state_getstate",
+      "label": "getState()",
+      "degree": 9
+    },
+    {
+      "id": "tests_smoke_test_main",
+      "label": "main()",
+      "degree": 9
+    },
+    {
+      "id": "js_formatter_formatbrl",
+      "label": "formatBRL()",
+      "degree": 8
+    }
+  ],
+  "surprises": [
+    {
+      "source": "boot()",
+      "target": "initFreemium()",
+      "source_files": [
+        "js/app.js",
+        "js/freemium.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "boot()",
+      "target": "initRouter()",
+      "source_files": [
+        "js/app.js",
+        "js/router.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "_handleCalcular()",
+      "target": "calcular()",
+      "source_files": [
+        "js/ui.js",
+        "js/calculator.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "_handleCalcular()",
+      "target": "calcularComDesconto()",
+      "source_files": [
+        "js/ui.js",
+        "js/calculator.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "_handleCalcular()",
+      "target": "mapPlataformaToInputs()",
+      "source_files": [
+        "js/ui.js",
+        "js/calculator.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `setState()` connect `Calculator State Management` to `Freemium Pro Activation`, `History Management`, `App Routing & Views`?",
+      "why": "High betweenness centrality (0.033) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `_handleCalcular()` connect `Calculator State Management` to `Calculator Logic`, `Freemium Pro Activation`, `Formatting & Export`?",
+      "why": "High betweenness centrality (0.008) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `saveEntry()` connect `History Management` to `Calculator State Management`?",
+      "why": "High betweenness centrality (0.007) - this node is a cross-community bridge."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 2 inferred relationships involving `_initCalcView()` (e.g. with `_handleCalcular()` and `openModalSalvar()`) actually correct?",
+      "why": "`_initCalcView()` has 2 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `PLATAFORMAS`, `VIEWS`, `_state` to the rest of the system?",
+      "why": "19 weakly-connected nodes found - possible documentation gaps or missing edges."
+    }
+  ]
+}
