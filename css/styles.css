@@ -1583,3 +1583,48 @@ input[type="range"] {
     width: 100%;
   }
 }
+
+/* ══════════════════════ ESCOPO 1 (25/08) — Onboarding (cadastro em 3 passos) ══════════════════════ */
+
+.onboarding-steps {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--bg-card-alt);
+}
+
+.onboarding-step {
+  flex: 1;
+  text-align: center;
+  font-size: var(--text-xs);
+  font-weight: var(--font-semi);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid transparent;
+}
+
+.onboarding-step.active {
+  color: var(--accent-gold);
+  border-bottom-color: var(--accent-gold);
+}
+
+.onboarding-step.done {
+  color: var(--accent-green);
+}
+
+.onboarding-readonly {
+  padding: 0.65rem 0.85rem;
+  border-radius: 6px;
+  background-color: var(--bg-card-alt);
+  color: var(--text-secondary);
+}
+
+.onboarding-checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+}

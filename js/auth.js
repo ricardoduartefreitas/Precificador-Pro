@@ -1,12 +1,13 @@
 // auth.js — PrecificaPRO
 // Responsabilidade: gerenciar sessão, login/logout e permissões (admin/cliente)
 
-import { getSupabase, getSession, getCurrentUser, getUserRole } from './supabase.js';
+import { getSupabase, getSession, getCurrentUser, getUserRole, getProfile } from './supabase.js';
 
 let _auth = {
   session: null,
   user: null,
   role: null, // 'admin' | 'client'
+  onboardingCompleto: false, // ESCOPO 1 (25/08): cadastro estendido de 3 passos
 };
 
 const AUTH_LISTENERS = [];
@@ -36,6 +37,11 @@ export function isLoggedIn() {
 
 export function isAdmin() {
   return _auth.role === 'admin';
+}
+
+// ESCOPO 1 (25/08): gate do onboarding estendido (cadastro em 3 passos)
+export function isOnboardingComplete() {
+  return _auth.onboardingCompleto === true;
 }
 
 export function getCurrentUserId() {
@@ -93,6 +99,7 @@ export async function initAuth() {
       _auth.session = null;
       _auth.user = null;
       _auth.role = null;
+      _auth.onboardingCompleto = false;
       notifyListeners();
       console.log('ℹ️ Sessão inválida ou expirada — localStorage limpo');
       return;
@@ -101,12 +108,11 @@ export async function initAuth() {
     _auth.session = session;
     _auth.user = session.user;
 
-    // Buscar role do usuário
-    const role = await getUserRole(session.user.id);
-    _auth.role = role;
+    // Buscar perfil do usuário (role + status do onboarding — ESCOPO 1)
+    await _hydrateProfile(session.user.id);
 
     notifyListeners();
-    console.log(`✅ Sessão restaurada: ${session.user.email} (${role})`);
+    console.log(`✅ Sessão restaurada: ${session.user.email} (${_auth.role})`);
   } catch (error) {
     console.error('❌ Erro ao inicializar autenticação:', error.message);
     // Se deu erro, garantir limpeza do localStorage
@@ -119,7 +125,23 @@ export async function initAuth() {
     _auth.session = null;
     _auth.user = null;
     _auth.role = null;
+    _auth.onboardingCompleto = false;
     notifyListeners();
+  }
+}
+
+// Busca o perfil (profiles) e popula role + onboardingCompleto no _auth.
+// Isolado num helper porque é chamado de 3 lugares (initAuth, login, hydrateSession)
+// e não pode derrubar o fluxo de login se a tabela profiles falhar por algum motivo.
+async function _hydrateProfile(userId) {
+  try {
+    const profile = await getProfile(userId);
+    _auth.role = profile?.role || 'client';
+    _auth.onboardingCompleto = !!profile?.onboarding_completo;
+  } catch (error) {
+    console.warn('⚠️ Falha ao buscar perfil (usando fallback role=client):', error.message);
+    _auth.role = _auth.role || 'client';
+    _auth.onboardingCompleto = false;
   }
 }
 
@@ -132,13 +154,12 @@ export async function login(email, password) {
     _auth.session = session;
     _auth.user = user;
 
-    // Buscar role do usuário no banco
-    const role = await getUserRole(user.id);
-    _auth.role = role;
+    // Buscar role + status do onboarding no banco (ESCOPO 1)
+    await _hydrateProfile(user.id);
 
     notifyListeners();
-    console.log(`✅ Login bem-sucedido: ${email} (${role})`);
-    return { success: true, user, role };
+    console.log(`✅ Login bem-sucedido: ${email} (${_auth.role})`);
+    return { success: true, user, role: _auth.role };
   } catch (error) {
     console.error('❌ Erro ao fazer login:', error.message);
     return { success: false, error: error.message };
@@ -163,6 +184,7 @@ export async function logout() {
   _auth.session = null;
   _auth.user = null;
   _auth.role = null;
+  _auth.onboardingCompleto = false;
 
   notifyListeners();
 
@@ -208,10 +230,38 @@ export async function updatePassword(novaSenha) {
     _auth.session = null;
     _auth.user = null;
     _auth.role = null;
+    _auth.onboardingCompleto = false;
     notifyListeners();
     return { success: true };
   } catch (error) {
     console.error('❌ Erro ao trocar a senha:', error.message);
     return { success: false, error: error.message };
   }
+}
+
+// ESCOPO 1 (25/08): re-consulta o onboarding_completo em profiles e notifica os
+// listeners — chamado pelo onboarding.js após salvar o último passo do wizard.
+export async function refreshOnboardingStatus() {
+  if (!_auth.user) return;
+  try {
+    const profile = await getProfile(_auth.user.id);
+    _auth.onboardingCompleto = !!profile?.onboarding_completo;
+    _auth.role = profile?.role || _auth.role;
+    notifyListeners();
+  } catch (error) {
+    console.warn('⚠️ Falha ao atualizar status do onboarding:', error.message);
+  }
+}
+
+// FIX (25/08): o aceite de convite (ui-invite-accept.js) chama verifyOtp() DIRETO
+// no SDK do Supabase — sem passar por login() — então o _auth local nunca era
+// sincronizado. Isso deixava isLoggedIn()===false logo após aceitar o convite,
+// e o router bounceava o usuário recém-cadastrado de volta pro #/login.
+// Este setter permite que quem já tem `session`/`user` em mãos (o retorno do
+// verifyOtp) sincronize o auth.js sem duplicar a lógica de login por senha.
+export async function hydrateSession(session, user) {
+  _auth.session = session;
+  _auth.user = user;
+  await _hydrateProfile(user.id);
+  notifyListeners();
 }

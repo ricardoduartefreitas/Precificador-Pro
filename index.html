@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#080f1e" />
   <title>PrecificaPRO — Calculadora de Marketplaces</title>
-  <link rel="stylesheet" href="css/styles.css?v=20260822f" />
+  <link rel="stylesheet" href="css/styles.css?v=20260825a" />
   <link rel="manifest" href="manifest.json" />
   <!-- Supabase SDK via CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -114,6 +114,123 @@
 
           <div style="text-align: center; font-size: 0.875rem; color: #666;">
             <p><a href="#" id="link-back-login-reset-password" style="color: #FFD700; cursor: pointer;">Voltar ao login</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────── ESCOPO 1 (25/08): CADASTRO ESTENDIDO (#/onboarding) -->
+    <section id="view-onboarding" class="view hidden" aria-label="Complete seu cadastro">
+      <div class="view-inner" style="max-width: 560px; margin: 3rem auto;">
+        <div class="card">
+          <div class="onboarding-steps" id="onboarding-steps">
+            <span class="onboarding-step" data-step="1">1 · Identidade</span>
+            <span class="onboarding-step" data-step="2">2 · Fiscal</span>
+            <span class="onboarding-step" data-step="3">3 · Operação</span>
+          </div>
+
+          <div class="onboarding-panel" id="onboarding-step-1">
+            <h2 class="card-title">Vamos completar seu cadastro</h2>
+            <p class="text-muted">Isso leva menos de 2 minutos e libera a calculadora.</p>
+            <div class="form-grid">
+              <div class="form-field form-field--full">
+                <label>Nome</label>
+                <div class="onboarding-readonly" id="onboarding-nome-display">—</div>
+              </div>
+              <div class="form-field form-field--full">
+                <label>E-mail</label>
+                <div class="onboarding-readonly" id="onboarding-email-display">—</div>
+              </div>
+              <div class="form-field form-field--full">
+                <label for="onboarding-telefone">Telefone / WhatsApp</label>
+                <input type="tel" id="onboarding-telefone" placeholder="(11) 91234-5678" autocomplete="tel" />
+              </div>
+            </div>
+          </div>
+
+          <div class="onboarding-panel hidden" id="onboarding-step-2">
+            <h2 class="card-title">Dados fiscais</h2>
+            <div class="form-grid">
+              <div class="form-field form-field--full">
+                <label for="onboarding-cnpj">CNPJ</label>
+                <input type="text" id="onboarding-cnpj" placeholder="00.000.000/0000-00" maxlength="18" autocomplete="off" />
+              </div>
+              <div class="form-field">
+                <label for="onboarding-regime">Regime tributário</label>
+                <select id="onboarding-regime" class="form-select">
+                  <option value="">Selecione</option>
+                  <option value="simples_nacional">Simples Nacional</option>
+                  <option value="lucro_presumido">Lucro Presumido</option>
+                  <option value="lucro_real">Lucro Real</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="onboarding-atividade">Atividade principal</label>
+                <select id="onboarding-atividade" class="form-select">
+                  <option value="">Selecione</option>
+                  <option value="comercio">Comércio</option>
+                  <option value="industria">Indústria</option>
+                  <option value="servico">Serviço</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="onboarding-panel hidden" id="onboarding-step-3">
+            <h2 class="card-title">Como você vende hoje</h2>
+            <div class="form-grid">
+              <div class="form-field form-field--full">
+                <label>Plataformas que você vende</label>
+                <div class="onboarding-checkbox-group" id="onboarding-plataformas"></div>
+              </div>
+              <div class="form-field">
+                <label for="onboarding-skus">Quantos SKUs você tem?</label>
+                <select id="onboarding-skus" class="form-select">
+                  <option value="">Selecione</option>
+                  <option value="1-10">1 a 10</option>
+                  <option value="11-50">11 a 50</option>
+                  <option value="51-200">51 a 200</option>
+                  <option value="200+">Mais de 200</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="onboarding-pedidos-dia">Pedidos por dia</label>
+                <select id="onboarding-pedidos-dia" class="form-select">
+                  <option value="">Selecione</option>
+                  <option value="0-10">0 a 10</option>
+                  <option value="11-30">11 a 30</option>
+                  <option value="31-50">31 a 50</option>
+                  <option value="50+">Mais de 50</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="onboarding-cidade">Cidade</label>
+                <input type="text" id="onboarding-cidade" placeholder="ex: Goiânia" autocomplete="off" />
+              </div>
+              <div class="form-field">
+                <label for="onboarding-uf">UF</label>
+                <select id="onboarding-uf" class="form-select"></select>
+              </div>
+              <div class="form-field form-field--full">
+                <label class="toggle-label">
+                  <input type="checkbox" id="onboarding-funcionario" />
+                  <span>Tem funcionário para embalar/despachar pedidos?</span>
+                </label>
+              </div>
+              <div class="form-field form-field--full">
+                <label class="toggle-label">
+                  <input type="checkbox" id="onboarding-outro-precificador" />
+                  <span>Já usa outra ferramenta de precificação?</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div id="onboarding-error" class="login-error" style="display:none;"></div>
+
+          <div class="action-row" style="margin-top: 1.5rem;">
+            <button class="btn btn--ghost hidden" id="btn-onboarding-voltar">Voltar</button>
+            <button class="btn btn--primary" id="btn-onboarding-avancar">Avançar</button>
           </div>
         </div>
       </div>
@@ -618,6 +735,6 @@
     by <a href="https://www.ruahtecnologia.com.br" target="_blank" rel="noopener">www.ruahtecnologia.com.br</a>
   </div>
 
-  <script type="module" src="js/app.js?v=20260822f"></script>
+  <script type="module" src="js/app.js?v=20260825a"></script>
 </body>
 </html>

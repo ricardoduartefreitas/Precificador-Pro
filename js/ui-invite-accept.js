@@ -2,6 +2,7 @@
 // Responsabilidade: gerenciar interface de aceite de convite
 
 import { updateUserProfile, getSupabase } from './supabase.js';
+import { hydrateSession } from './auth.js';
 import { showToast } from './ui.js';
 
 let _inviteState = {
@@ -107,6 +108,11 @@ export function initInviteAcceptUI() {
         btnAceitar.textContent = 'Aceitar convite';
         return;
       }
+
+      // 1.5️⃣ FIX (25/08): sincronizar o auth.js com a sessão que o verifyOtp acabou
+      // de criar — sem isso, isLoggedIn() ficava false e o router bounceava o
+      // usuário recém-cadastrado de volta pro #/login (o onboarding depende disso).
+      await hydrateSession(session, user);
 
       // 2️⃣ Salvar nome em profiles.nome (o nome DIGITADO pelo usuário — o campo!)
       const nomeInput = document.getElementById('invite-nome');

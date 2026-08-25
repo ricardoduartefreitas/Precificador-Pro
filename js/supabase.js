@@ -170,6 +170,19 @@ export async function updateUserProfile(userId, updates) {
   return data;
 }
 
+// ══════════════════════ ESCOPO 1 (25/08) — Cadastro estendido (onboarding) ══════════════════════
+
+// Perfil completo do usuário (usado pelo onboarding.js para retomar de onde parou)
+export async function getProfile(userId) {
+  const { data, error } = await getSupabase()
+    .from('profiles')
+    .select('*')
+    .eq('id', userId)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
 // ══════════════════════ FASE 2 — Produtos, Lotes, Perfil de Negócio, Cálculos ══════════════════════
 // RLS no banco cuida do isolamento (o usuário só vê o dele; admin vê tudo) — aqui é só a chamada.
 

@@ -4,7 +4,7 @@
 // Rotas protegidas: #/comparar | #/calcular/:platform | #/historico
 
 import { setState } from './state.js';
-import { isLoggedIn, isAdmin } from './auth.js';
+import { isLoggedIn, isAdmin, isOnboardingComplete } from './auth.js';
 
 // FIX (16/08): os VIEWS são buscados SEMPRE (getViews()) — antes eram avaliados na carga do módulo
 // e podiam virar null se o DOM não estivesse pronto → o showView não mostrava a tela (a tela vazia!)
@@ -13,6 +13,7 @@ function getViews() {
     login:              document.getElementById('view-login'),
     'aceitar-convite':  document.getElementById('view-login'), // Mesma view, diferente card
     'recuperar-senha':  document.getElementById('view-login'), // FIX (17/08): mesma view, card de nova senha
+    onboarding:         document.getElementById('view-onboarding'), // ESCOPO 1 (25/08): cadastro em 3 passos
     comparar:           document.getElementById('view-comparar'),
     calcular:           document.getElementById('view-calcular'),
     produtos:           document.getElementById('view-produtos'),
@@ -27,8 +28,11 @@ const TABS = document.querySelectorAll('.tab-btn');
 // Rotas que NÃO requerem autenticação
 const PUBLIC_ROUTES = ['login', 'aceitar-convite', 'recuperar-senha'];
 
-// Rotas que REQUEREM autenticação
-const PROTECTED_ROUTES = ['comparar', 'calcular', 'produtos', 'historico'];
+// Rotas que REQUEREM autenticação (onboarding entra aqui — só falta o cadastro completo)
+const PROTECTED_ROUTES = ['comparar', 'calcular', 'produtos', 'historico', 'onboarding'];
+
+// Rotas que escondem o header/tabs (telas "fora do app")
+const HIDE_HEADER_ROUTES = ['login', 'aceitar-convite', 'recuperar-senha', 'onboarding'];
 
 function parseRoute(hash) {
   const clean = (hash || '').replace(/^#\//, '');
@@ -63,11 +67,11 @@ function showView(routeName) {
     if (resetPasswordCard) resetPasswordCard.style.display = routeName === 'recuperar-senha' ? 'block' : 'none';
   }
 
-  // Mostrar/ocultar tabs apenas quando não está em login
-  const isLoginView = routeName === 'login' || routeName === 'aceitar-convite' || routeName === 'recuperar-senha';
+  // Mostrar/ocultar tabs (login, aceite de convite, recuperação de senha e onboarding
+  // são telas "fora do app" — sem header/tabs)
   const header = document.querySelector('.app-header');
   if (header) {
-    header.style.display = isLoginView ? 'none' : 'flex';
+    header.style.display = HIDE_HEADER_ROUTES.includes(routeName) ? 'none' : 'flex';
   }
 
   TABS.forEach((btn) => {
@@ -96,6 +100,26 @@ function navigate(hash) {
   // (o aceitar-convite NUNCA redireciona — o aceite do convite é SEMPRE mostrado,
   //  mesmo com uma sessão existente — o token do convite é a prioridade!)
   if (route === 'login' && isLoggedIn()) {
+    window.location.hash = '#/calcular';
+    return;
+  }
+
+  // ESCOPO 1 (25/08): gate do cadastro estendido — usuário logado, não-admin e sem
+  // onboarding completo é sempre desviado pro wizard antes de qualquer rota protegida
+  // (admin nunca passa pelo onboarding — é fluxo de cliente).
+  if (
+    PROTECTED_ROUTES.includes(route) &&
+    route !== 'onboarding' &&
+    isLoggedIn() &&
+    !isAdmin() &&
+    !isOnboardingComplete()
+  ) {
+    window.location.hash = '#/onboarding';
+    return;
+  }
+
+  // Se o onboarding já está completo (ou é admin) não faz sentido voltar pro wizard
+  if (route === 'onboarding' && (isAdmin() || isOnboardingComplete())) {
     window.location.hash = '#/calcular';
     return;
   }

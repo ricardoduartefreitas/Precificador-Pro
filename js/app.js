@@ -7,6 +7,7 @@ import { initUI }               from './ui.js';
 import { initProdutos }         from './produtos.js';
 import { initAdminPanel }       from './admin.js';
 import { initInteligencia }     from './inteligencia.js';
+import { initOnboarding }       from './onboarding.js';
 import { getInputs, setState }  from './state.js';
 import { initSupabase }         from './supabase.js';
 import { initAuth, onAuthChange, isAdmin, isLoggedIn } from './auth.js';
@@ -74,6 +75,7 @@ async function boot() {
         initFreemium();
         initAdminPanel();
         initInteligencia(PLATAFORMAS);
+        initOnboarding(); // ESCOPO 1 (25/08): wizard de cadastro estendido
         addLogoutButton();
         isUIInitialized = true;
       }
@@ -119,6 +121,7 @@ async function boot() {
     produtos:  'Meus Produtos — PrecificaPRO',
     historico: 'Histórico — PrecificaPRO',
     inteligencia: 'Inteligência — PrecificaPRO',
+    onboarding: 'Complete seu cadastro — PrecificaPRO',
   };
   function syncTitle() {
     const route = (window.location.hash || '').replace(/^#\//, '').split('/')[0] || 'calcular';
