@@ -2,7 +2,7 @@
 // Painel de administração: gerenciar convites de usuários
 
 import { showToast } from './ui.js';
-import { getSupabase } from './supabase.js';
+import { getSupabase, getLeadsScore } from './supabase.js';
 
 export async function initAdminPanel() {
   const btnEnviar = document.getElementById('btn-enviar-convite');
@@ -22,6 +22,9 @@ export async function initAdminPanel() {
 
   // Carregar lista de convidados ao abrir a view
   await _loadConvidados();
+
+  // ESCOPO 3 (25/08): Lead Scoring
+  await _loadLeadScore();
 }
 
 async function _handleSendInvite(inputNome, inputEmail) {
@@ -164,6 +167,81 @@ async function _loadConvidados() {
     console.error('Erro ao carregar convidados:', error);
     listEl.innerHTML = `<p style="color: #d32f2f; padding: 2rem;">Erro ao carregar convidados: ${error.message}</p>`;
   }
+}
+
+// ESCOPO 3 (25/08) — Lead Scoring: tabela de usuários ordenada por score (a RPC já ordena)
+async function _loadLeadScore() {
+  const listEl = document.getElementById('leadscore-list');
+  if (!listEl) return;
+
+  try {
+    const leads = await getLeadsScore();
+
+    if (!leads.length) {
+      listEl.innerHTML = '<p style="color: #999; text-align: center; padding: 2rem;">Nenhum lead com cadastro completo ainda</p>';
+      return;
+    }
+
+    const badgeClass = (status) => {
+      if (status?.includes('quente')) return 'leadscore-badge--quente';
+      if (status?.includes('nutrir')) return 'leadscore-badge--nutrir';
+      return 'leadscore-badge--frio';
+    };
+
+    let html = `
+      <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem;">
+        <thead style="background-color: #f5f5f5; border-bottom: 2px solid #ddd;">
+          <tr>
+            <th style="padding: 0.75rem; text-align: left; font-weight: 600;">Nome / E-mail</th>
+            <th style="padding: 0.75rem; text-align: center; font-weight: 600;">Cidade/UF</th>
+            <th style="padding: 0.75rem; text-align: center; font-weight: 600;">Pedidos/dia</th>
+            <th style="padding: 0.75rem; text-align: center; font-weight: 600;">Regime</th>
+            <th style="padding: 0.75rem; text-align: center; font-weight: 600;">Peso médio</th>
+            <th style="padding: 0.75rem; text-align: center; font-weight: 600;">Score</th>
+            <th style="padding: 0.75rem; text-align: center; font-weight: 600;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    leads.forEach((lead) => {
+      const pesoMedio = lead.peso_medio != null ? `${Number(lead.peso_medio).toFixed(2)} kg` : '—';
+      const cidadeUf = [lead.cidade, lead.uf].filter(Boolean).join('/') || '—';
+      html += `
+        <tr style="border-bottom: 1px solid #eee;">
+          <td style="padding: 0.75rem; word-break: break-word;">
+            <strong>${_esc(lead.nome) || '—'}</strong><br>
+            <span style="color: #666; font-size: 0.8rem;">${_esc(lead.email) || '—'}</span>
+          </td>
+          <td style="padding: 0.75rem; text-align: center;">${_esc(cidadeUf)}</td>
+          <td style="padding: 0.75rem; text-align: center;">${_esc(lead.pedidos_dia) || '—'}</td>
+          <td style="padding: 0.75rem; text-align: center;">${_esc(lead.regime) || '—'}</td>
+          <td style="padding: 0.75rem; text-align: center;">${pesoMedio}</td>
+          <td style="padding: 0.75rem; text-align: center; font-weight: 600;">${lead.score}</td>
+          <td style="padding: 0.75rem; text-align: center;">
+            <span class="leadscore-badge ${badgeClass(lead.status)}">${lead.status}</span>
+          </td>
+        </tr>
+      `;
+    });
+
+    html += `
+        </tbody>
+      </table>
+    `;
+
+    listEl.innerHTML = html;
+  } catch (error) {
+    console.error('Erro ao carregar lead scoring:', error);
+    listEl.innerHTML = `<p style="color: #d32f2f; padding: 2rem;">Erro ao carregar lead scoring: ${error.message}</p>`;
+  }
+}
+
+function _esc(str) {
+  if (str === null || str === undefined) return '';
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
 }
 
 function _isValidEmail(email) {

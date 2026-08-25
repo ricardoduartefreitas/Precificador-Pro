@@ -301,6 +301,14 @@ export async function updateCalculo(id, payload) {
 // (SECURITY INVOKER, RLS aplicado normalmente). A régua de anonimato (>=5 usuários
 // distintos por grupo) já vem aplicada no HAVING da função — aqui é só a chamada.
 
+// ══════════════════════ ESCOPO 3 (25/08) — Lead Scoring (admin-only) ══════════════════════
+
+export async function getLeadsScore() {
+  const { data, error } = await getSupabase().rpc('get_leads_score');
+  if (error) throw error;
+  return data || [];
+}
+
 export async function getInteligenciaMercado({ dias = 30, plataforma = null, regiao = null } = {}) {
   const { data, error } = await getSupabase().rpc('get_inteligencia_mercado', {
     p_dias: dias,

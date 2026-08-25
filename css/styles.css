@@ -1628,3 +1628,23 @@ input[type="range"] {
   flex-wrap: wrap;
   gap: 0.75rem 1.5rem;
 }
+
+/* ESCOPO 3 (25/08) — Lead Scoring (Painel Admin) */
+.card-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  margin: -0.5rem 0 1rem;
+}
+
+.leadscore-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.leadscore-badge--quente { background: #e6f7ed; color: #2f855a; }
+.leadscore-badge--nutrir { background: #fff8e1; color: #b7791f; }
+.leadscore-badge--frio   { background: #edf2f7; color: #4a5568; }

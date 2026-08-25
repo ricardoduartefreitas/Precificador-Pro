@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#080f1e" />
   <title>PrecificaPRO — Calculadora de Marketplaces</title>
-  <link rel="stylesheet" href="css/styles.css?v=20260825a" />
+  <link rel="stylesheet" href="css/styles.css?v=20260825b" />
   <link rel="manifest" href="manifest.json" />
   <!-- Supabase SDK via CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -645,6 +645,15 @@
           </div>
         </div>
 
+        <!-- ESCOPO 3 (25/08) — Lead Scoring: quem tem mais potencial de virar cliente -->
+        <div class="card">
+          <h2 class="card-title">🎯 Lead Scoring</h2>
+          <p class="card-subtitle">Pedidos/dia&gt;30 = +3 · TikTok/Shopee = +2 · Goiânia/GO = +3 · Simples Nacional = +2 · peso médio&gt;1kg = +1</p>
+          <div id="leadscore-list" class="convidados-list">
+            <p style="color: #999; text-align: center; padding: 2rem;">Carregando...</p>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -735,6 +744,6 @@
     by <a href="https://www.ruahtecnologia.com.br" target="_blank" rel="noopener">www.ruahtecnologia.com.br</a>
   </div>
 
-  <script type="module" src="js/app.js?v=20260825a"></script>
+  <script type="module" src="js/app.js?v=20260825b"></script>
 </body>
 </html>
