@@ -988,13 +988,13 @@ export function renderComparacao(resultados) {
   if (!winnerEl || !rankingEl || !resultados?.length) return;
 
   const [winner, ...rest] = resultados;
-  const maxLucro  = winner.lucroLiquido;
   const pctWinner = winner.precoVenda > 0
     ? (winner.breakdown.custoDaPlataforma / winner.precoVenda) * 100
     : 0;
 
+  // ── 🏆 Winner banner ──
   winnerEl.innerHTML = `
-    <span class="winner-badge">Melhor opção</span>
+    <span class="winner-badge">🏆 Melhor opção</span>
     <p class="ranking-platform" style="color:${winner.cor}">${_esc(winner.nome)}</p>
     <p class="result-preco-valor">${formatBRL(winner.precoVenda)}</p>
     <div class="result-grid">
@@ -1015,24 +1015,59 @@ export function renderComparacao(resultados) {
   `;
   winnerEl.classList.remove('hidden');
 
-  rankingEl.innerHTML = rest.map((r, i) => {
-    const pct = maxLucro > 0 ? (r.lucroLiquido / maxLucro) * 100 : 0;
-    return `
-      <div class="ranking-card">
-        <span class="ranking-pos">${i + 2}</span>
-        <div class="ranking-info">
-          <p class="ranking-platform" style="color:${r.cor}">${_esc(r.nome)}</p>
-          <div class="ranking-bar">
-            <div class="ranking-bar-fill"
-                 style="width:${pct.toFixed(1)}%;background-color:${r.cor}"></div>
-          </div>
-        </div>
-        <div class="ranking-price">
-          <p class="ranking-price-value">${formatBRL(r.precoVenda)}</p>
-          <p class="ranking-price-lucro">+${formatBRL(r.lucroLiquido)}</p>
-        </div>
-      </div>`;
+  // ── ESCOPO 5 (25/08): tabela comparativa — métricas em linha, plataformas em coluna ──
+  // resultados já vem ordenado (desc por lucroLiquido) pelo comparar(); a 1ª coluna é a vencedora.
+  const piorLucro = resultados[resultados.length - 1].lucroLiquido;
+  const diffLucro = winner.lucroLiquido - piorLucro;
+  const diffPct   = piorLucro !== 0 ? (diffLucro / Math.abs(piorLucro)) * 100 : 0;
+
+  const linhas = [
+    { label: 'Preço de venda',    fmt: (r) => formatBRL(r.precoVenda) },
+    { label: 'Taxas da plataforma', fmt: (r) => formatBRL(r.breakdown.custoDaPlataforma) },
+    { label: 'Imposto',           fmt: (r) => formatBRL(r.breakdown.impostoValor) },
+    { label: 'Lucro líquido',     fmt: (r) => formatBRL(r.lucroLiquido), destaque: true },
+    { label: 'Margem real',       fmt: (r) => formatPct(r.lucroPercentual) },
+  ];
+
+  const theadCols = resultados.map((r) => `
+    <th style="color:${r.cor}" class="${r === winner ? 'cmp-th--winner' : ''}">
+      ${r === winner ? '🏆 ' : ''}${_esc(r.nome)}
+    </th>
+  `).join('');
+
+  const tbodyRows = linhas.map((linha) => {
+    const cols = resultados.map((r) => {
+      const isMelhor = linha.destaque && r === winner;
+      return `<td class="${isMelhor ? 'cmp-td--gold' : ''}">${linha.fmt(r)}</td>`;
+    }).join('');
+    return `<tr><td class="cmp-row-label">${_esc(linha.label)}</td>${cols}</tr>`;
   }).join('');
+
+  // Avisos por plataforma (config `plat.aviso` das plataformas em jogo)
+  const avisos = resultados
+    .map((r) => {
+      const plat = _PLATAFORMAS.find((p) => p.id === r.plataforma);
+      if (!plat?.aviso) return '';
+      const tipoClass = plat.avisoTipo === 'error' ? ' plat-aviso--error' : '';
+      return `<div class="plat-aviso${tipoClass}"><strong>${_esc(r.nome)}:</strong> ${_esc(plat.aviso)}</div>`;
+    })
+    .filter(Boolean)
+    .join('');
+
+  rankingEl.innerHTML = `
+    <div class="cmp-table-wrap">
+      <table class="cmp-table">
+        <thead><tr><th></th>${theadCols}</tr></thead>
+        <tbody>${tbodyRows}</tbody>
+      </table>
+    </div>
+    ${avisos ? `<div class="cmp-avisos">${avisos}</div>` : ''}
+    <p class="cmp-footer-summary">
+      🏆 <strong>${_esc(winner.nome)}</strong> rende
+      <strong class="text-green">${formatBRL(diffLucro)}</strong> a mais de lucro
+      (${formatPct(diffPct)}) que a pior opção nesta comparação.
+    </p>
+  `;
 
   rankingEl.classList.remove('hidden');
 }

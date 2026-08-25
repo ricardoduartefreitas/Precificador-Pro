@@ -2,7 +2,7 @@
 // Responsabilidade: cache offline dos assets estáticos (Stale-While-Revalidate — o psp-v6!)
 // Atualizar APP_SHELL ao adicionar novos arquivos ao projeto
 
-const CACHE_NAME = 'psp-v17';
+const CACHE_NAME = 'psp-v18';
 
 const APP_SHELL = [
   './',

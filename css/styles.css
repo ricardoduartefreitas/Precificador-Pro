@@ -639,6 +639,89 @@ input[type="range"] {
 }
 
 /* --------------------------------------------------------------------------
+   14b. TABELA COMPARATIVA (ESCOPO 5 — 25/08)
+   Métricas em linha × plataformas em coluna, célula de melhor lucro em dourado
+   -------------------------------------------------------------------------- */
+.cmp-comparison {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.cmp-table-wrap {
+  overflow-x: auto;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2);
+}
+
+.cmp-table {
+  width: 100%;
+  min-width: 480px;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.cmp-table th,
+.cmp-table td {
+  padding: var(--space-3) var(--space-2);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.cmp-table thead th {
+  font-size: var(--text-xs);
+  font-weight: var(--font-semi);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--border);
+}
+
+.cmp-th--winner {
+  background-color: rgba(212, 175, 55, 0.08);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.cmp-table tbody tr {
+  border-bottom: 1px solid var(--border);
+}
+
+.cmp-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.cmp-row-label {
+  text-align: left;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.cmp-td--gold {
+  color: var(--accent-gold);
+  font-weight: var(--font-bold);
+  background-color: rgba(212, 175, 55, 0.10);
+  border-radius: var(--radius-md);
+}
+
+.cmp-avisos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.cmp-avisos .plat-aviso {
+  margin-top: 0;
+}
+
+.cmp-footer-summary {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  padding: var(--space-2) 0;
+}
+
+/* --------------------------------------------------------------------------
    15. HISTÓRICO
    -------------------------------------------------------------------------- */
 .history-toolbar {
