@@ -357,7 +357,7 @@ export function mapPlataformaToInputs(baseInputs, plataforma, tipoVendedor, camp
   for (let i = 0; i < 10; i++) {
     // Frete automático depende do preço estimado da iteração anterior (peso × preço)
     if (pesoKg > 0) {
-      const freteInfo = calcularFretePorRegra(plataforma, precoAtual, pesoKg);
+      const freteInfo = calcularFretePorRegra(plataforma, precoAtual, pesoKg, custoFreteManual);
       freteDescricao = freteInfo.descricao;
 
       if (plataforma.freteRegra?.tipo === 'percentualGMV') {
@@ -464,18 +464,23 @@ export function comparar(baseInputs, plataformas, tipoVendedor = null, campanha 
 /**
  * Calcula o frete automático baseado nas regras da plataforma.
  *
- * @param {Object} plataforma  - objeto de plataforma (platforms/*.js)
- * @param {number} precoVenda  - preço de venda sugerido (R$)
- * @param {number} pesoKg      - peso do produto em kg
+ * @param {Object} plataforma     - objeto de plataforma (platforms/*.js)
+ * @param {number} precoVenda     - preço de venda sugerido (R$)
+ * @param {number} pesoKg         - peso do produto em kg
+ * @param {number} [freteDigitado] - frete REAL que o vendedor digitou no campo "Frete (R$)"
+ *                                   (o que ele de fato paga na prática). Só é usado na regra
+ *                                   Shopee (subsidioFaixa) — o vendedor não sabe o frete real
+ *                                   de antemão por peso/região, mas sabe o que paga na prática,
+ *                                   então esse valor SEMPRE vale sobre a estimativa automática.
  * @returns {Object} { frete: number, descricao: string, aviso?: string }
  *
  * Regras:
  *   - Mercado Livre: tabela de peso, frete grátis se preço >= R$79
- *   - Shopee: subsídio por faixa de preço (frete grátis obrigatório)
+ *   - Shopee: subsídio por faixa de preço — custo real = max(0, freteDigitado − subsídio)
  *   - TikTok: 6% do GMV do preço de venda (cap R$50)
  *   - Amazon/Shein: não implementado (retorna 0)
  */
-export function calcularFretePorRegra(plataforma, precoVenda, pesoKg) {
+export function calcularFretePorRegra(plataforma, precoVenda, pesoKg, freteDigitado = 0) {
   if (!plataforma || typeof precoVenda !== 'number' || typeof pesoKg !== 'number') {
     return { frete: 0, descricao: 'sem frete', aviso: null };
   }
@@ -513,12 +518,18 @@ export function calcularFretePorRegra(plataforma, precoVenda, pesoKg) {
   }
 
   // ─── SHOPEE: subsídio por faixa de preço ───
+  // O frete DIGITADO pelo vendedor no campo "Frete (R$)" SEMPRE vale — ele não sabe o frete
+  // real de antemão (varia por peso/região), mas sabe o que paga na prática. Desconta o
+  // subsídio da faixa: custo real = max(0, freteDigitado − subsídio). Se nada foi digitado,
+  // assume que o subsídio cobre 100% (custo R$0) — mesmo comportamento de antes.
   if (freteRegra.tipo === 'subsidioFaixa') {
     const faixa = freteRegra.faixas.find((f) => precoVenda <= f.max) || freteRegra.faixas[freteRegra.faixas.length - 1];
-    // Frete grátis obrigatório — subsídio cobre, custo do vendedor = 0 (default)
+    const custoReal = Math.max(0, (freteDigitado || 0) - faixa.subsidio);
     return {
-      frete: 0,
-      descricao: `Shopee frete grátis obrigatório — subsídio de R$ ${faixa.subsidio.toFixed(2)} (costo do vendedor ≈ R$0)`,
+      frete: custoReal,
+      descricao: custoReal > 0
+        ? `Frete (após subsídio): frete real R$ ${freteDigitado.toFixed(2)} − subsídio Shopee R$ ${faixa.subsidio.toFixed(2)} = R$ ${custoReal.toFixed(2)}`
+        : `Shopee frete grátis obrigatório — subsídio de R$ ${faixa.subsidio.toFixed(2)} cobre o frete (custo do vendedor R$0)`,
     };
   }
 
