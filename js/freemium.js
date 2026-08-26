@@ -7,8 +7,8 @@ import { updatePlanBadge, openOverlayPro, showToast } from './ui.js';
 
 const KEY_COUNT = 'u';   // contador de cálculos (prefixado por storage.js → _psp_u)
 const KEY_HASH  = 'h';   // hash da senha PRO (_psp_h)
-const FREE_LIMIT = 100000; // uso interno (quando produto público, volta a 30)
-const WARN_AT    = 99999;  // nunca avisar
+const FREE_LIMIT = 30; // 30 cálculos gratuitos
+const WARN_AT    = 25; // avisa perto do limite
 
 // Hashes SHA-256 válidos para ativação PRO (adicionar senhas via config)
 // Para gerar: crypto.subtle.digest('SHA-256', encoder.encode(senha))
