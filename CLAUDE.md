@@ -23,7 +23,7 @@ O deploy é automático via GitHub Actions após o push.
 ## O que foi implementado (sessão Jun/2026)
 
 ### Mercado Livre
-- Tipos de anúncio: Clássico (11%) e Premium (19%)
+- Tipos de anúncio: Clássico (11% padrão — faixa oficial 10-14%) e Premium (16% padrão — faixa oficial 15-19%; Moda/Calçados pode chegar a 19%)
 - 4 opções de logística: Full, Drop Off (sem taxa fixa), Normal e Flex (R$4 abaixo de R$79,99)
 - Chave combinada `tipoAnuncio_logistica` no objeto `faixas`
 - Campanha = Product Ads (2,5%) exibido como linha separada no extrato
