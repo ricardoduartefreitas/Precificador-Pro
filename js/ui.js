@@ -396,8 +396,9 @@ function _handleCalcular() {
     ? parseInputValue(document.getElementById('calc-desconto')?.value)
     : 0;
 
+  const faixasAtivas = plat.faixas[tipoVend] || plat.faixas[Object.keys(plat.faixas)[0]];
   const resultado = desconto > 0
-    ? calcularComDesconto(calcInputs, desconto)
+    ? calcularComDesconto(calcInputs, desconto, faixasAtivas)
     : calcular(calcInputs);
 
   if (!resultado) {
@@ -408,7 +409,7 @@ function _handleCalcular() {
 
   console.log('[CALC] Resultado calculado:', resultado.precoVenda);
 
-  resultado._faixa           = calcInputs._faixaLabel;
+  resultado._faixa           = resultado._faixaLabel || calcInputs._faixaLabel;
   resultado._freteDescricao  = calcInputs._freteDescricao || '';
   resultado._platNome        = plat.nome;
   resultado._platCor         = plat.cor;

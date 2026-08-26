@@ -199,9 +199,13 @@ export function calcular(inputs) {
  *
  * @param {CalcInputs} inputs   - mesmos inputs de calcular()
  * @param {number}     desconto - percentual de desconto da campanha (ex: 10 = 10%)
+ * @param {Array}      [faixas] - faixas da plataforma (plataforma.faixas[tipoVendedor]); se
+ *                                fornecido, reverifica se o preço COM desconto ainda pertence
+ *                                à faixa aplicada ao preço cheio — se não, usa a faixa correta
+ *                                (o desconto pode empurrar o preço pra faixa de baixo)
  * @returns {CalcResultado|null} resultado com precoVenda descontado, ou null se inválido
  */
-export function calcularComDesconto(inputs, desconto) {
+export function calcularComDesconto(inputs, desconto, faixas = null) {
   if (!_validar(inputs)) return null;
   if (typeof desconto !== 'number' || !isFinite(desconto) || desconto < 0 || desconto >= 100) {
     return null;
@@ -215,10 +219,12 @@ export function calcularComDesconto(inputs, desconto) {
   const precoComDesconto = _r2(base.precoVenda * fatorDesconto);
 
   // Recalcula com os mesmos inputs (agora com novos campos)
-  const {
+  let {
     comissaoPlataforma,
-    imposto,
     taxaAnuncio,
+  } = inputs;
+  const {
+    imposto,
     custoProduto,
     custoFrete,
     custosAdicionais,
@@ -227,6 +233,19 @@ export function calcularComDesconto(inputs, desconto) {
     adsFixo = 0,
     fretePercent = 0,
   } = inputs;
+
+  // INVARIANTE: a faixa usada nas deduções deve ser a do preço FINAL (com desconto),
+  // não a do preço cheio. Reverifica e re-seleciona se necessário.
+  let faixaLabel = inputs._faixaLabel;
+  if (Array.isArray(faixas) && faixas.length) {
+    const faixaCheia = faixas.find((f) => base.precoVenda <= f.max) || faixas[faixas.length - 1];
+    // pctExtra = campanha/product ads, já embutido em comissaoPlataforma pelo mapPlataformaToInputs
+    const pctExtra = comissaoPlataforma - (faixaCheia.comissao + (faixaCheia.variavel || 0));
+    const faixaDesconto = faixas.find((f) => precoComDesconto <= f.max) || faixas[faixas.length - 1];
+    comissaoPlataforma = faixaDesconto.comissao + (faixaDesconto.variavel || 0) + pctExtra;
+    taxaAnuncio = faixaDesconto.fixo;
+    faixaLabel = faixaDesconto.label;
+  }
 
   // Recalcula deduções sobre o preço com desconto
   const comissaoValor = _r2(precoComDesconto * (comissaoPlataforma / 100));
@@ -257,6 +276,7 @@ export function calcularComDesconto(inputs, desconto) {
     custoTotal,
     desconto,
     precoSemDesconto: base.precoVenda,
+    _faixaLabel: faixaLabel,
     breakdown: {
       comissaoValor,
       taxaAnuncioValor: _r2(taxaAnuncio),
@@ -306,44 +326,90 @@ export function mapPlataformaToInputs(baseInputs, plataforma, tipoVendedor, camp
   const afiliadosPercent = baseInputs.afiliadosPercent || 0;
   const adsPercent = baseInputs.adsPercent || 0;
   const adsFixo = baseInputs.adsFixo || 0;
-
-  // Estimativa de preço com primeira faixa para encontrar a faixa correta
-  let custoTotal = custoProduto + custosAdicionais;
-
-  // Iteração 1: estimar preço sem frete (ou com frete manual se fornecido)
+  const margemLucro = baseInputs.margemLucro || 0;
+  const imposto = baseInputs.imposto || 0;
   const custoFreteManual = baseInputs.custoFrete || 0;
-  custoTotal += custoFreteManual;
-
   const pctExtra = campanha && plataforma.campanha ? (plataforma.taxaCampanha || 0) : 0;
-  const pct0 = (faixas[0].comissao + faixas[0].variavel + pctExtra) / 100;
-  const divisor0 = 1 - pct0 - (baseInputs.margemLucro || 0) / 100 - (baseInputs.imposto || 0) / 100;
-  const precoEst1 = divisor0 > 0 ? (custoTotal + faixas[0].fixo) / divisor0 : 0;
 
-  // Calcular frete automático se pesoKg foi fornecido
-  let freteAutomatico = 0;
+  // ─── LOOP DE CONVERGÊNCIA: faixa ⇄ preço final ───
+  // A comissão/faixa depende do preço de venda, mas o preço de venda depende da comissão
+  // (ela entra no divisor). Por isso a faixa é escolhida por ESTIMATIVA e precisa ser
+  // reverificada contra o preço FINAL (calculado com calcular(), a mesma fórmula usada
+  // no resultado exibido) — se o preço final cair fora da faixa estimada, reseleciona a
+  // faixa correta e recalcula. Repete até estabilizar (trava de segurança: 10 iterações).
+  //
+  // INVARIANTE mantida ao sair do loop: faixa.max >= preço final calculado com essa faixa.
+  //
+  // CASO DEGENERADO (sem ponto fixo): em tabelas com taxa fixa que desaparece acima de um
+  // limiar (ex.: ML Flex — R$4 abaixo de R$79,98, R$0 acima), combinações extremas de
+  // margem+imposto podem oscilar para sempre entre duas faixas (aplicar a taxa empurra o
+  // preço pra cima da faixa; remover a taxa empurra de volta pra baixo — nenhuma das duas
+  // é autoconsistente). Nesse caso não existe preço que atinja a margem exata pedida; a
+  // saída SEGURA é a de MAIOR preço observada — ela nunca deixa a margem real do vendedor
+  // abaixo da solicitada (o preço mais alto tende a cair na faixa de taxa mais baixa).
+  let faixa = faixas[0];
+  let freteAutomatico = custoFreteManual;
   let freteDescricao = '';
   let fretePercent = 0;  // Frete PERCENTUAL (somente se percentualGMV)
+  let precoAtual = 0;
+  let melhorSeguro = null; // fallback anti-oscilação: maior preço já observado no loop
 
-  if (pesoKg > 0) {
-    const freteInfo = calcularFretePorRegra(plataforma, precoEst1, pesoKg);
-    freteAutomatico = freteInfo.frete;
-    freteDescricao = freteInfo.descricao;
+  for (let i = 0; i < 10; i++) {
+    // Frete automático depende do preço estimado da iteração anterior (peso × preço)
+    if (pesoKg > 0) {
+      const freteInfo = calcularFretePorRegra(plataforma, precoAtual, pesoKg);
+      freteDescricao = freteInfo.descricao;
 
-    // RESSALVA: Se freteRegra.tipo === 'percentualGMV', é percentual
-    if (plataforma.freteRegra?.tipo === 'percentualGMV') {
-      fretePercent = plataforma.freteRegra.percentual || 0;
-      freteAutomatico = 0;  // Será calculado no divisor
+      if (plataforma.freteRegra?.tipo === 'percentualGMV') {
+        fretePercent = plataforma.freteRegra.percentual || 0;
+        freteAutomatico = 0;  // Será calculado no divisor
+      } else {
+        fretePercent = 0;
+        freteAutomatico = freteInfo.frete;
+      }
     }
+
+    const resultadoIteracao = calcular({
+      custoProduto,
+      custoFrete: freteAutomatico,
+      custosAdicionais,
+      comissaoPlataforma: faixa.comissao + (faixa.variavel || 0) + pctExtra,
+      taxaAnuncio: faixa.fixo,
+      imposto,
+      afiliadosPercent,
+      adsPercent,
+      adsFixo,
+      margemLucro,
+      fretePercent,
+    });
+    const novoPreco = resultadoIteracao ? resultadoIteracao.precoVenda : 0;
+
+    // Guarda o candidato de MAIOR preço já produzido pela faixa ATUAL — fallback seguro
+    if (!melhorSeguro || novoPreco > melhorSeguro.preco) {
+      melhorSeguro = { faixa, preco: novoPreco, freteAutomatico, fretePercent, freteDescricao };
+    }
+
+    const novaFaixa = faixas.find((f) => novoPreco <= f.max) || faixas[faixas.length - 1];
+
+    if (novaFaixa === faixa) {
+      // AUTOCONSISTENTE: a faixa aplicada produz um preço que continua dentro dela mesma
+      precoAtual = novoPreco;
+      break;
+    }
+
+    faixa = novaFaixa;
+    precoAtual = novoPreco;
   }
 
-  // Iteração 2: recalcular preço com frete automático
-  custoTotal = custoProduto + custosAdicionais + freteAutomatico;
-  const pct1 = (faixas[0].comissao + faixas[0].variavel + pctExtra) / 100;
-  const divisor1 = 1 - pct1 - (baseInputs.margemLucro || 0) / 100 - (baseInputs.imposto || 0) / 100;
-  const precoEst2 = divisor1 > 0 ? (custoTotal + faixas[0].fixo) / divisor1 : 0;
-
-  // Faixa final (uma iteração resolve 99% dos casos de mudança de faixa)
-  const faixa = faixas.find((f) => precoEst2 <= f.max) || faixas[faixas.length - 1];
+  // Se a faixa final não é autoconsistente (loop esgotou as 10 iterações oscilando, sem
+  // ponto fixo — caso degenerado descrito acima), usa o candidato de MAIOR preço observado.
+  if (faixas.find((f) => precoAtual <= f.max) !== faixa) {
+    faixa = melhorSeguro.faixa;
+    precoAtual = melhorSeguro.preco;
+    freteAutomatico = melhorSeguro.freteAutomatico;
+    fretePercent = melhorSeguro.fretePercent;
+    freteDescricao = melhorSeguro.freteDescricao;
+  }
 
   return {
     custoProduto,
@@ -351,11 +417,11 @@ export function mapPlataformaToInputs(baseInputs, plataforma, tipoVendedor, camp
     custosAdicionais,
     comissaoPlataforma: faixa.comissao + (faixa.variavel || 0) + pctExtra,
     taxaAnuncio: faixa.fixo,
-    imposto: baseInputs.imposto || 0,
+    imposto,
     afiliadosPercent,
     adsPercent,
     adsFixo,
-    margemLucro: baseInputs.margemLucro || 0,
+    margemLucro,
     fretePercent,  // Frete PERCENTUAL (0 se não for percentualGMV)
     _faixaLabel: faixa.label,
     _freteDescricao: freteDescricao,
