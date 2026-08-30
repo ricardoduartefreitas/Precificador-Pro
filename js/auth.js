@@ -194,13 +194,14 @@ export async function logout() {
   return { success: true };
 }
 
-// Signup (criar conta nova) — DESABILITADO: somente por convite
-export async function signup(email, password) {
+// Signup (criar conta nova) — HABILITADO 30/08: cadastro aberto (self-signup)
+// O metadata (nome, consentimento LGPD, UTM) vai para o user_metadata do auth.
+export async function signup(email, password, metadata = {}) {
   try {
     const { signUp } = await import('./supabase.js');
-    const result = await signUp(email, password);
+    const result = await signUp(email, password, metadata);
 
-    // Após signup, a sessão não é automática — usuário precisa verificar email ou fazer login
+    // Após signup, a sessão não é automática — usuário precisa confirmar o email
     // Aqui só retornamos o resultado
     return { success: true, user: result.user };
   } catch (error) {

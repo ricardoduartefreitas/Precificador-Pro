@@ -70,6 +70,7 @@
 
           <div style="text-align: center; font-size: 0.875rem; color: #666;">
             <p><a href="#" id="link-forgot-password" style="color: #FFD700; cursor: pointer;">Esqueci minha senha</a></p>
+            <p style="margin-top: 0.75rem;"><a href="#" id="link-criar-conta" style="color: #FFD700; cursor: pointer; font-weight: 600;">Não tem conta? Criar conta grátis</a></p>
           </div>
         </div>
 
@@ -123,6 +124,42 @@
 
           <div style="text-align: center; font-size: 0.875rem; color: #666;">
             <p><a href="#" id="link-back-login-reset-password" style="color: #FFD700; cursor: pointer;">Voltar ao login</a></p>
+          </div>
+        </div>
+
+        <!-- TELA: CRIAR CONTA (cadastro aberto - self-signup) - inicialmente escondida -->
+        <div class="card" id="signup-card" style="display: none;">
+          <h2 class="card-title" style="text-align: center;">Criar conta grátis</h2>
+          <p style="text-align: center; color: #666; margin-bottom: 2rem;">Cadastre-se e use o PrecificaPRO gratuitamente.</p>
+
+          <div class="form-grid">
+            <div class="form-field form-field--full">
+              <label for="signup-nome">Nome</label>
+              <input type="text" id="signup-nome" placeholder="Seu nome" autocomplete="name" />
+            </div>
+            <div class="form-field form-field--full">
+              <label for="signup-email">E-mail</label>
+              <input type="email" id="signup-email" placeholder="seu@email.com" autocomplete="email" />
+            </div>
+            <div class="form-field form-field--full">
+              <label for="signup-password">Senha</label>
+              <input type="password" id="signup-password" placeholder="pelo menos 6 caracteres" autocomplete="new-password" />
+            </div>
+            <div class="form-field form-field--full">
+              <label class="checkbox-label" style="display: flex; gap: 0.5rem; align-items: flex-start; font-size: 0.85rem; color: #666; cursor: pointer;">
+                <input type="checkbox" id="signup-consent" style="margin-top: 0.2rem;" />
+                <span>Li e concordo com os <a href="#" id="link-termos" style="color: #FFD700;">Termos de Uso</a> e a <a href="#" id="link-privacidade" style="color: #FFD700;">Política de Privacidade</a>, e autorizo a Ruah Tecnologia a entrar em contato a respeito de meus interesses.</span>
+              </label>
+            </div>
+          </div>
+
+          <button class="btn btn--primary" id="btn-signup" style="width: 100%; margin-bottom: 1rem;">Criar conta grátis</button>
+
+          <div id="signup-error" class="login-error" style="display: none; color: #d32f2f; padding: 1rem; background: #ffebee; border-radius: 4px; margin-bottom: 1rem;"></div>
+          <div id="signup-success" style="display: none; color: #2e7d32; padding: 1rem; background: #e8f5e9; border-radius: 4px; margin-bottom: 1rem;"></div>
+
+          <div style="text-align: center; font-size: 0.875rem; color: #666;">
+            <p>Já tem conta? <a href="#" id="link-back-login-signup" style="color: #FFD700; cursor: pointer;">Fazer login</a></p>
           </div>
         </div>
       </div>

@@ -1,7 +1,8 @@
 // ui-login.js — PrecificaPRO
 // Responsabilidade: gerenciar interface de login e reset de senha (sem signup — somente por convite)
 
-import { login, resetPassword } from './auth.js';
+import { login, resetPassword, signup } from './auth.js';
+import { updateUserProfile } from './supabase.js';
 
 export function initLoginUI() {
   const emailInput = document.getElementById('login-email');
@@ -61,6 +62,9 @@ export function initLoginUI() {
       showError(''); // Limpar erro
       emailInput.value = '';
       passwordInput.value = '';
+      // Pós-login: se veio de um cadastro aberto, grava o nome no perfil (o resto
+      // do cadastro rico acontece no onboarding, que o router já força)
+      _aplicarSignupAposLogin();
       // Restaura o botão (o redirect para #/calcular acontece no auth listener)
       btnLogin.disabled = false;
       btnLogin.textContent = 'Entrar';
@@ -149,6 +153,89 @@ export function initLoginUI() {
     btnBackToLoginFromConfirm.addEventListener('click', (e) => {
       e.preventDefault();
       showLoginForm();
+    });
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // CADASTRO ABERTO (30/08): Criar conta grátis (self-signup)
+  // ─────────────────────────────────────────────────────────────
+  const linkCriarConta = document.getElementById('link-criar-conta');
+  const linkBackLoginSignup = document.getElementById('link-back-login-signup');
+  const btnSignup = document.getElementById('btn-signup');
+  const signupCard = document.getElementById('signup-card');
+  const signupNome = document.getElementById('signup-nome');
+  const signupEmail = document.getElementById('signup-email');
+  const signupPassword = document.getElementById('signup-password');
+  const signupConsent = document.getElementById('signup-consent');
+
+  if (linkCriarConta && signupCard) {
+    linkCriarConta.addEventListener('click', (e) => {
+      e.preventDefault();
+      showSignupForm();
+    });
+  }
+
+  if (linkBackLoginSignup && signupCard) {
+    linkBackLoginSignup.addEventListener('click', (e) => {
+      e.preventDefault();
+      showLoginForm();
+      _hideSignupFeedback();
+    });
+  }
+
+  if (btnSignup && signupCard) {
+    btnSignup.addEventListener('click', async () => {
+      const nome = signupNome.value.trim();
+      const email = signupEmail.value.trim();
+      const senha = signupPassword.value.trim();
+
+      if (!nome) return _showSignupError('Informe seu nome');
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return _showSignupError('Informe um e-mail válido');
+      if (senha.length < 6) return _showSignupError('A senha precisa de pelo menos 6 caracteres');
+      if (!signupConsent.checked) return _showSignupError('É preciso concordar com os Termos e a Política de Privacidade');
+
+      _hideSignupError();
+      btnSignup.disabled = true;
+      btnSignup.textContent = 'Criando conta...';
+
+      // Origem (UTM) + consentimento — registrados no user_metadata do auth
+      const origem = _capturarOrigem();
+      const metadata = {
+        nome,
+        consentimento_lgpd: true,
+        consentimento_em: new Date().toISOString(),
+        utm_source: origem.utm_source,
+        utm_medium: origem.utm_medium,
+        utm_campaign: origem.utm_campaign,
+        utm_content: origem.utm_content,
+        utm_term: origem.utm_term,
+        referrer: origem.referrer,
+      };
+
+      // Guarda localmente para gravar o nome no perfil após o primeiro login
+      try {
+        localStorage.setItem('_psp_signup', JSON.stringify({ email, nome }));
+      } catch (_) { /* storage cheio — segue sem */ }
+
+      const result = await signup(email, senha, metadata);
+
+      btnSignup.disabled = false;
+      btnSignup.textContent = 'Criar conta grátis';
+
+      if (result.success) {
+        _showSignupSuccess('Conta criada! Enviamos um link de confirmação para o seu e-mail. Confirme e depois faça login.');
+        signupNome.value = '';
+        signupEmail.value = '';
+        signupPassword.value = '';
+        signupConsent.checked = false;
+      } else {
+        _showSignupError(result.error || 'Erro ao criar a conta. Tente novamente.');
+      }
+    });
+
+    // Permitir Enter para criar conta
+    signupPassword.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') btnSignup.click();
     });
   }
 }
@@ -438,4 +525,80 @@ export function addLogoutButton() {
   // Fica ao lado do plan-badge, dentro do fluxo flex do header (sem position: absolute)
   const actions = header.querySelector('.header-actions') || header.querySelector('.header-inner') || header;
   actions.appendChild(logoutBtn);
+}
+
+// ─────────────────────────────────────────────────────────────
+// CADASTRO ABERTO (30/08) — helpers do self-signup
+// ─────────────────────────────────────────────────────────────
+
+function showSignupForm() {
+  const loginFormCard = document.getElementById('login-form-card');
+  const signupCard = document.getElementById('signup-card');
+  if (loginFormCard) loginFormCard.style.display = 'none';
+  if (signupCard) signupCard.style.display = 'block';
+  _hideSignupFeedback();
+}
+
+function _showSignupError(msg) {
+  const el = document.getElementById('signup-error');
+  if (el) {
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+}
+
+function _hideSignupError() {
+  const el = document.getElementById('signup-error');
+  if (el) { el.textContent = ''; el.style.display = 'none'; }
+}
+
+function _showSignupSuccess(msg) {
+  const el = document.getElementById('signup-success');
+  if (el) {
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+}
+
+function _hideSignupFeedback() {
+  _hideSignupError();
+  const el = document.getElementById('signup-success');
+  if (el) { el.textContent = ''; el.style.display = 'none'; }
+}
+
+// Origem do visitante: UTM da URL (search ou hash) + referrer
+function _capturarOrigem() {
+  const params = new URLSearchParams(window.location.search || '');
+  const hashQuery = (window.location.hash || '').split('?')[1];
+  if (hashQuery) {
+    new URLSearchParams(hashQuery).forEach((v, k) => {
+      if (!params.has(k)) params.set(k, v);
+    });
+  }
+  return {
+    utm_source: params.get('utm_source') || null,
+    utm_medium: params.get('utm_medium') || null,
+    utm_campaign: params.get('utm_campaign') || null,
+    utm_content: params.get('utm_content') || null,
+    utm_term: params.get('utm_term') || null,
+    referrer: document.referrer || null,
+  };
+}
+
+// Após o 1º login de quem se cadastrou sozinho: grava o nome no perfil
+// (o cadastro rico completo acontece no onboarding, que o router já força)
+function _aplicarSignupAposLogin() {
+  let dados;
+  try {
+    dados = JSON.parse(localStorage.getItem('_psp_signup') || 'null');
+  } catch (_) { dados = null; }
+  if (!dados || !dados.nome) return;
+
+  try { localStorage.removeItem('_psp_signup'); } catch (_) { /* segue */ }
+
+  import('./supabase.js').then(({ updateUserProfile }) => {
+    updateUserProfile({ nome: dados.nome })
+      .then(() => console.log('[SIGNUP] Nome gravado no perfil:', dados.nome))
+      .catch((err) => console.warn('⚠️ Falha ao gravar nome pós-signup:', err.message));
+  }).catch(() => { /* módulo já carregado — sem ação */ });
 }

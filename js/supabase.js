@@ -42,8 +42,14 @@ export function getSupabase() {
 }
 
 // Helpers
-export async function signUp(email, password) {
-  const { data, error } = await getSupabase().auth.signUp({ email, password });
+export async function signUp(email, password, metadata = {}) {
+  // metadata (nome, consentimento LGPD, UTM) vai para user_metadata do auth —
+  // fica registrado no usuário sem precisar de colunas extras no banco.
+  const { data, error } = await getSupabase().auth.signUp({
+    email,
+    password,
+    options: { data: metadata },
+  });
   if (error) throw error;
   return data;
 }
