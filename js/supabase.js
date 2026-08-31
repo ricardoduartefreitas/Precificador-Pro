@@ -334,3 +334,22 @@ export async function getInteligenciaAjustes({ dias = 30, plataforma = null, reg
   if (error) throw error;
   return data || [];
 }
+
+// ══════════════════════ FASE 2 — Freemium → Lead (31/08) ══════════════════════
+// Quem estoura o limite de 30 cálculos grátis é um lead quente de monetização.
+// SEM coluna nova no banco: grava em user_metadata (auth.updateUser faz merge raso
+// no nível superior — não apaga nome/consentimento LGPD/UTM já salvos no signup).
+// Fica visível no painel Auth do Supabase (raw_user_meta_data) — sem precisar de RLS/RPC novo.
+export async function registerFreemiumLimite() {
+  const user = await getCurrentUser();
+  if (!user) return; // sem sessão (não deveria acontecer — a calculadora exige login)
+
+  const vezesAnterior = user.user_metadata?.freemium_limite_vezes || 0;
+  const { error } = await getSupabase().auth.updateUser({
+    data: {
+      freemium_limite_em: new Date().toISOString(),
+      freemium_limite_vezes: vezesAnterior + 1,
+    },
+  });
+  if (error) throw error;
+}

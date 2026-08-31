@@ -4,6 +4,7 @@
 
 import { storageGet, storageSet } from './storage.js';
 import { updatePlanBadge, openOverlayPro, showToast } from './ui.js';
+import { registerFreemiumLimite } from './supabase.js';
 
 const KEY_COUNT = 'u';   // contador de cálculos (prefixado por storage.js → _psp_u)
 const KEY_HASH  = 'h';   // hash da senha PRO (_psp_h)
@@ -63,8 +64,22 @@ export function registerCalculo() {
 
 // ---------- OVERLAY DE UPGRADE ----------
 
+// FASE 2 (31/08): quem esbarra no overlay de upgrade é lead quente de monetização —
+// registra no banco (fire-and-forget) 1x por sessão, sem NUNCA bloquear o app por isso.
+let _limiteRegistradoNestaSessao = false;
+
 export function showUpgradeOverlay() {
   openOverlayPro();
+  _registrarLimiteComoLead();
+}
+
+function _registrarLimiteComoLead() {
+  if (_limiteRegistradoNestaSessao) return; // evita martelar o banco a cada clique/reload
+  _limiteRegistradoNestaSessao = true;
+
+  registerFreemiumLimite().catch((err) => {
+    console.warn('⚠️ Falha ao registrar lead de freemium (não bloqueia o app):', err.message);
+  });
 }
 
 // ---------- ATIVAÇÃO PRO ----------
