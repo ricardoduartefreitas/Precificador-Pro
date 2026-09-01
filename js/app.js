@@ -13,6 +13,7 @@ import { initSupabase }         from './supabase.js';
 import { initAuth, onAuthChange, isAdmin, isLoggedIn } from './auth.js';
 import { initLoginUI, addLogoutButton, initResetPasswordUI } from './ui-login.js';
 import { checkInviteLink, initInviteAcceptUI } from './ui-invite-accept.js';
+import { initRuahAd } from './ruah-ad.js';
 
 import ML     from '../platforms/mercadolivre.js';
 import Shopee from '../platforms/shopee.js';
@@ -30,6 +31,14 @@ async function boot() {
   // 0️⃣ FIX (16/08): o router NO TOPO do boot — a tela aparece IMEDIATAMENTE, SEMPRE!
   // (o initSupabase/initAuth podem falhar ou travar — o router NÃO pode depender deles!)
   initRouter();
+
+  // 0.05️⃣ Aba lateral de propaganda (Ruah Tecnologia) — aditiva, independe de login/rota,
+  // sempre visível (sem botão de fechar). Widget isolado: não pode travar o boot do app.
+  try {
+    initRuahAd();
+  } catch (e) {
+    console.warn('⚠️ Aba de propaganda não inicializou (app segue normalmente):', e);
+  }
 
   // 0.1️⃣ FIX (16/08): a GARANTIA FINAL — a view-login aparece SEMPRE (SEM condição!)
   // (o isLoggedIn pode vir true com sessão stale — o remove SEMPRE, o auth depois redireciona se logado!)

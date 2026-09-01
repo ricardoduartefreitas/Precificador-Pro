@@ -1783,3 +1783,308 @@ input[type="range"] {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+/* --------------------------------------------------------------------------
+   RUAH AD — aba lateral de propaganda (Ruah Tecnologia)
+   Aditiva: não altera nenhuma view existente. Mobile-first — em telas
+   estreitas fica em fluxo (compacta, empurra o conteúdo, nunca sobrepõe);
+   a partir de 1180px vira coluna fixa à direita e reserva espaço no
+   .app-main pra nunca cobrir a área de cálculo.
+   -------------------------------------------------------------------------- */
+.ruah-ad {
+  position: relative;
+  z-index: 40;
+  width: 100%;
+  max-width: var(--max-width);
+  margin: var(--space-4) auto 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: "viewport" "footer";
+  background: #0F1418;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 14px 32px -18px rgba(0, 0, 0, 0.6);
+  font-family: 'Archivo', var(--font-sans);
+}
+
+.ruah-ad__spine {
+  display: none;
+  grid-area: spine;
+  width: 26px;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 0 12px;
+  background: #0B0F12;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ruah-ad__spine-dot { width: 7px; height: 7px; flex: none; background: #EE4D2D; }
+
+.ruah-ad__spine-label,
+.ruah-ad__spine-rt {
+  writing-mode: vertical-rl;
+  font: 600 8.5px 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  letter-spacing: 0.24em;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.ruah-ad__spine-rt { margin-top: auto; color: rgba(255, 255, 255, 0.62); }
+
+.ruah-ad__spine-ticks { display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 4px; }
+.ruah-ad__spine-ticks i { display: block; width: 9px; height: 1px; background: rgba(255, 255, 255, 0.18); }
+.ruah-ad__spine-ticks i:nth-child(2) { width: 5px; }
+
+.ruah-ad__viewport {
+  grid-area: viewport;
+  overflow: hidden;
+  min-width: 0;
+  height: 236px;
+}
+
+.ruah-ad__track {
+  display: flex;
+  width: 300%;
+  height: 100%;
+  transition: transform 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+  will-change: transform;
+}
+
+.ruah-ad__slide {
+  flex: 0 0 33.3333%;
+  min-width: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 15px 16px 14px;
+}
+
+/* CTA sempre fixado embaixo do card, qualquer que seja a altura do texto acima */
+.ruah-ad__cta { margin-top: auto; text-decoration: none; }
+
+.ruah-ad__badge {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.ruah-ad__badge--cut {
+  background: #EE4D2D;
+  color: #fff;
+  font: 600 8.5px 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  letter-spacing: 0.14em;
+  padding: 5px 9px 5px 8px;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%);
+}
+
+.ruah-ad__badge--outline {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-left: 3px solid #EE4D2D;
+}
+.ruah-ad__badge-code,
+.ruah-ad__badge-cat {
+  padding: 5px 8px;
+  font: 600 8.5px 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  letter-spacing: 0.14em;
+}
+.ruah-ad__badge-code { color: #FF8A6D; }
+.ruah-ad__badge-cat { border-left: 1px dashed rgba(255, 255, 255, 0.16); color: rgba(255, 255, 255, 0.72); }
+
+.ruah-ad__badge--dark {
+  align-self: flex-end;
+  background: #0F1418;
+  color: #fff;
+  font: 600 8.5px 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  letter-spacing: 0.14em;
+  padding: 5px 9px;
+  clip-path: polygon(7px 0, 100% 0, 100% 100%, 0 100%, 0 7px);
+}
+
+.ruah-ad__title { margin: 0; color: #fff; }
+.ruah-ad__desc { margin: 0; }
+
+/* ── Slide 1 · RUAH DESK 360 — chapa escura, título grande, CTA dividido ── */
+.ruah-ad__slide--desk .ruah-ad__title {
+  margin: 18px 0 0;
+  font: 800 27px/0.95 'Archivo', var(--font-sans);
+  letter-spacing: -0.04em;
+}
+.ruah-ad__slide--desk .ruah-ad__hl { background: #EE4D2D; padding: 0 5px; margin-left: -2px; }
+.ruah-ad__slide--desk .ruah-ad__desc {
+  margin: 14px 0 0;
+  font: 13px/1.5 'Archivo', var(--font-sans);
+  color: #93a1ad;
+}
+.ruah-ad__cta--split {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font: 700 13px 'Archivo', var(--font-sans);
+  letter-spacing: -0.015em;
+  transition: border-top-color 0.2s ease;
+}
+.ruah-ad__cta--split:hover,
+.ruah-ad__cta--split:focus-visible { border-top-color: #EE4D2D; }
+.ruah-ad__cta--split .ruah-ad__arrow {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #EE4D2D;
+  color: #fff;
+  font: 700 12px 'Archivo', sans-serif;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 7px 100%, 0 calc(100% - 7px));
+}
+
+/* ── Slide 2 · Doctor Flow 360 — recuo assimétrico, textura diagonal sutil ── */
+.ruah-ad__slide--doctor { position: relative; }
+.ruah-ad__slide--doctor::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 64px;
+  height: 56px;
+  background: repeating-linear-gradient(115deg, rgba(255, 122, 92, 0.12) 0 6px, transparent 6px 13px);
+  pointer-events: none;
+}
+.ruah-ad__title--doctor {
+  margin: 13px 0 0;
+  font: 700 22px/1.05 'Archivo', var(--font-sans);
+  letter-spacing: -0.025em;
+}
+.ruah-ad__title--doctor .ruah-ad__indent {
+  display: inline-block;
+  margin-left: 22px;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+.ruah-ad__desc--indent {
+  margin: 13px 0 0 22px;
+  font: 12.5px/1.55 'Archivo', var(--font-sans);
+  color: #93a1ad;
+}
+.ruah-ad__tags {
+  display: block;
+  margin: 12px 0 10px;
+  font: 600 8.5px 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  letter-spacing: 0.13em;
+  color: rgba(255, 255, 255, 0.66);
+}
+.ruah-ad__tags::before {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 1px;
+  margin-right: 6px;
+  vertical-align: middle;
+  background: #EE4D2D;
+}
+.ruah-ad__cta--underline {
+  align-self: flex-start;
+  padding-bottom: 3px;
+  border-bottom: 2px solid #EE4D2D;
+  color: #EE4D2D;
+  font: 700 13.5px 'Archivo', var(--font-sans);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.ruah-ad__cta--underline:hover,
+.ruah-ad__cta--underline:focus-visible { color: #fff; border-bottom-color: #fff; }
+
+/* ── Slide 3 · PrecificaPRO Pro — chapa invertida em laranja cheio ── */
+.ruah-ad__slide--pro { background: #D8401F; }
+.ruah-ad__slide--pro .ruah-ad__title {
+  margin: 21px 0 0;
+  font: 800 30px/0.92 'Archivo', var(--font-sans);
+  letter-spacing: -0.045em;
+}
+.ruah-ad__slide--pro .ruah-ad__hl--dark { color: #0F1418; }
+.ruah-ad__desc--onorange {
+  margin: 12px 0 0;
+  font: 13px/1.45 'Archivo', var(--font-sans);
+  color: #fff;
+}
+.ruah-ad__cta--block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 13px;
+  background: #0F1418;
+  color: #fff;
+  font: 700 13.5px 'Archivo', var(--font-sans);
+  letter-spacing: -0.015em;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 9px 100%, 0 calc(100% - 9px));
+  transition: background 0.2s ease;
+}
+.ruah-ad__cta--block:hover,
+.ruah-ad__cta--block:focus-visible { background: #000; }
+.ruah-ad__arrow--onblock { color: #FF7E60; font: 700 13px 'Archivo', sans-serif; }
+
+/* ── Rodapé do card: dots do carrossel + assinatura ── */
+.ruah-ad__footer {
+  grid-area: footer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 14px;
+  background: #0B0F12;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.ruah-ad__dot {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  padding: 0;
+  border: none;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.28);
+  cursor: pointer;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+.ruah-ad__dot:focus-visible { outline: 2px solid #EE4D2D; outline-offset: 2px; }
+.ruah-ad__dot.is-active { width: 18px; background: #EE4D2D; }
+.ruah-ad__brand {
+  margin-left: auto;
+  font: 600 8.5px 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  letter-spacing: 0.16em;
+  color: rgba(255, 255, 255, 0.66);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ruah-ad__track { transition: none; }
+}
+
+/* Tablet+: volta a espinha lateral "PUBLICIDADE / RT" e ganha um pouco de ar */
+@media (min-width: 768px) {
+  .ruah-ad {
+    grid-template-columns: 26px 1fr;
+    grid-template-areas: "spine viewport" "footer footer";
+  }
+  .ruah-ad__spine { display: flex; }
+  .ruah-ad__viewport { height: 300px; }
+}
+
+/* Desktop largo: a aba vira coluna fixa à direita — a calculadora nunca é coberta
+   porque .app-main reserva o espaço equivalente com padding-right. */
+@media (min-width: 1180px) {
+  .ruah-ad {
+    position: fixed;
+    top: calc(var(--header-height) + 20px);
+    right: 20px;
+    width: 260px;
+    max-width: 260px;
+    max-height: calc(100dvh - var(--header-height) - 108px);
+    margin: 0;
+  }
+  .app-main { padding-right: 300px; }
+}

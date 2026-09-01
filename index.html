@@ -5,8 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#080f1e" />
   <title>PrecificaPRO — Calculadora de Marketplaces</title>
-  <link rel="stylesheet" href="css/styles.css?v=20260825d" />
+  <link rel="stylesheet" href="css/styles.css?v=20260901a" />
   <link rel="manifest" href="manifest.json" />
+  <!-- Tipografia da aba de propaganda (RUAH TECNOLOGIA) -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
   <!-- Supabase SDK via CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -35,6 +38,55 @@
 
   <!-- ═══════════════════════════════════════════ MAIN -->
   <main class="app-main">
+
+    <!-- ═══════════ ABA LATERAL — publicidade Ruah Tecnologia (fixa, aditiva, sem botão de fechar) -->
+    <aside id="ruah-ad" class="ruah-ad" aria-label="Publicidade Ruah Tecnologia">
+      <div class="ruah-ad__spine" aria-hidden="true">
+        <span class="ruah-ad__spine-dot"></span>
+        <span class="ruah-ad__spine-label">PUBLICIDADE</span>
+        <span class="ruah-ad__spine-ticks"><i></i><i></i><i></i></span>
+        <span class="ruah-ad__spine-rt">RT</span>
+      </div>
+
+      <div class="ruah-ad__viewport">
+        <div class="ruah-ad__track" id="ruah-ad-track">
+
+          <article class="ruah-ad__slide ruah-ad__slide--desk">
+            <span class="ruah-ad__badge ruah-ad__badge--cut">RT-01 · ATENDIMENTO</span>
+            <h3 class="ruah-ad__title">RUAH<br>DESK&nbsp;<span class="ruah-ad__hl">360</span></h3>
+            <p class="ruah-ad__desc">Atendimento inteligente via WhatsApp com IA para o seu negócio.</p>
+            <a class="ruah-ad__cta ruah-ad__cta--split" href="#">
+              <span>Conhecer</span><span class="ruah-ad__arrow" aria-hidden="true">→</span>
+            </a>
+          </article>
+
+          <article class="ruah-ad__slide ruah-ad__slide--doctor">
+            <span class="ruah-ad__badge ruah-ad__badge--outline"><span class="ruah-ad__badge-code">DF-02</span><span class="ruah-ad__badge-cat">SAÚDE</span></span>
+            <h3 class="ruah-ad__title ruah-ad__title--doctor">Doctor<br><span class="ruah-ad__indent">Flow 360</span></h3>
+            <p class="ruah-ad__desc ruah-ad__desc--indent">Gestão completa para clínicas e consultórios.</p>
+            <span class="ruah-ad__tags">AGENDA · PRONTUÁRIO · CAIXA</span>
+            <a class="ruah-ad__cta ruah-ad__cta--underline" href="#">Conhecer <span class="ruah-ad__arrow" aria-hidden="true">→</span></a>
+          </article>
+
+          <article class="ruah-ad__slide ruah-ad__slide--pro">
+            <span class="ruah-ad__badge ruah-ad__badge--dark">PP-03 · PRECIFICAÇÃO</span>
+            <h3 class="ruah-ad__title">Precifica<br>PRO&nbsp;<span class="ruah-ad__hl ruah-ad__hl--dark">Pro</span></h3>
+            <p class="ruah-ad__desc ruah-ad__desc--onorange">Cálculos ilimitados e o histórico inteiro das suas simulações salvo.</p>
+            <a class="ruah-ad__cta ruah-ad__cta--block" href="#">
+              <span>Assinar</span><span class="ruah-ad__arrow ruah-ad__arrow--onblock" aria-hidden="true">→</span>
+            </a>
+          </article>
+
+        </div>
+      </div>
+
+      <div class="ruah-ad__footer">
+        <button type="button" class="ruah-ad__dot" data-i="0" aria-label="Ir para o anúncio de RUAH DESK 360"></button>
+        <button type="button" class="ruah-ad__dot" data-i="1" aria-label="Ir para o anúncio de Doctor Flow 360"></button>
+        <button type="button" class="ruah-ad__dot" data-i="2" aria-label="Ir para o anúncio de PrecificaPRO Pro"></button>
+        <span class="ruah-ad__brand">RUAH TECNOLOGIA</span>
+      </div>
+    </aside>
 
     <!-- ─────────────────── TELA 0: LOGIN (#/login) -->
     <section id="view-login" class="view" aria-label="Autenticação">
@@ -791,6 +843,6 @@
     by <a href="https://www.ruahtecnologia.com.br" target="_blank" rel="noopener">www.ruahtecnologia.com.br</a>
   </div>
 
-  <script type="module" src="js/app.js?v=20260825d"></script>
+  <script type="module" src="js/app.js?v=20260901a"></script>
 </body>
 </html>
