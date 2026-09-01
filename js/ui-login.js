@@ -1,7 +1,7 @@
 // ui-login.js — PrecificaPRO
 // Responsabilidade: gerenciar interface de login e reset de senha (sem signup — somente por convite)
 
-import { login, resetPassword, signup } from './auth.js';
+import { login, resetPassword, signup, getCurrentUserId } from './auth.js';
 import { updateUserProfile } from './supabase.js';
 
 export function initLoginUI() {
@@ -596,8 +596,11 @@ function _aplicarSignupAposLogin() {
 
   try { localStorage.removeItem('_psp_signup'); } catch (_) { /* segue */ }
 
+  const userId = getCurrentUserId();
+  if (!userId) return; // sessão ainda não hidratada — nada a fazer aqui
+
   import('./supabase.js').then(({ updateUserProfile }) => {
-    updateUserProfile({ nome: dados.nome })
+    updateUserProfile(userId, { nome: dados.nome })
       .then(() => console.log('[SIGNUP] Nome gravado no perfil:', dados.nome))
       .catch((err) => console.warn('⚠️ Falha ao gravar nome pós-signup:', err.message));
   }).catch(() => { /* módulo já carregado — sem ação */ });
