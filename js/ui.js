@@ -426,7 +426,7 @@ function _handleCalcular() {
 
     resultado._comissaoLabel     = `${tipoLabel} (${comissaoBase}%)`;
     resultado._showAviso         = true;
-    resultado._avisoTexto        = '⚠️ Comissões podem variar por categoria. Valide em mercadolivre.com.br/tarifas antes de precificar.';
+    resultado._avisoTexto        = 'Atenção: comissões podem variar por categoria. Valide em mercadolivre.com.br/tarifas antes de precificar.';
     resultado._avisoTipo         = 'warning';
     resultado._campanhaAtiva     = isCampanha;
     resultado._campanhaLabel     = `Product Ads (estimativa ${plat.taxaCampanha || 2.5}%)`;
@@ -757,7 +757,7 @@ function _renderHistoricoList() {
 
 function _renderEntry(entry) {
   const platObj = _findPlat(entry.plataforma);
-  const cor     = platObj?.cor || 'var(--accent-blue)';
+  const cor     = platObj?.corTexto || platObj?.cor || 'var(--accent-blue)';
   const r       = entry.resultado;
 
   if (entry.tipo === 'comparacao') {
@@ -993,10 +993,11 @@ export function renderComparacao(resultados) {
     ? (winner.breakdown.custoDaPlataforma / winner.precoVenda) * 100
     : 0;
 
-  // ── 🏆 Winner banner ──
+  // ── Winner banner ──
+  const winnerCor = _findPlat(winner.plataforma)?.corTexto || winner.cor;
   winnerEl.innerHTML = `
-    <span class="winner-badge">🏆 Melhor opção</span>
-    <p class="ranking-platform" style="color:${winner.cor}">${_esc(winner.nome)}</p>
+    <span class="winner-badge">Melhor opção</span>
+    <p class="ranking-platform" style="color:${winnerCor}">${_esc(winner.nome)}</p>
     <p class="result-preco-valor">${formatBRL(winner.precoVenda)}</p>
     <div class="result-grid">
       <div>
@@ -1031,8 +1032,8 @@ export function renderComparacao(resultados) {
   ];
 
   const theadCols = resultados.map((r) => `
-    <th style="color:${r.cor}" class="${r === winner ? 'cmp-th--winner' : ''}">
-      ${r === winner ? '🏆 ' : ''}${_esc(r.nome)}
+    <th style="color:${_findPlat(r.plataforma)?.corTexto || r.cor}" class="${r === winner ? 'cmp-th--winner' : ''}">
+      ${_esc(r.nome)}
     </th>
   `).join('');
 
@@ -1064,7 +1065,7 @@ export function renderComparacao(resultados) {
     </div>
     ${avisos ? `<div class="cmp-avisos">${avisos}</div>` : ''}
     <p class="cmp-footer-summary">
-      🏆 <strong>${_esc(winner.nome)}</strong> rende
+      <strong>${_esc(winner.nome)}</strong> rende
       <strong class="text-green">${formatBRL(diffLucro)}</strong> a mais de lucro
       (${formatPct(diffPct)}) que a pior opção nesta comparação.
     </p>
@@ -1268,7 +1269,7 @@ function _updatePlatformaAvisoFaixa() {
     return;
   }
 
-  avisoBox.innerHTML = `<p class="plat-aviso-text">💡 ${_esc(faixaInfo.aviso)}</p>`;
+  avisoBox.innerHTML = `<p class="plat-aviso-text">${_esc(faixaInfo.aviso)}</p>`;
   avisoBox.classList.remove('hidden');
 }
 

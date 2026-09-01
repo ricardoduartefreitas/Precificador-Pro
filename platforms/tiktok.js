@@ -22,7 +22,7 @@ export default {
   campanha:    true,
   taxaCampanha: 2.0,
 
-  aviso:     '⚠️ Tabela vigente desde 15/07/2026. Novos vendedores podem ter 0% por 60 dias (benefício temporário). Confirme em seller-br.tiktok.com.',
+  aviso:     'Tabela vigente desde 15/07/2026. Novos vendedores podem ter 0% por 60 dias (benefício temporário). Confirme em seller-br.tiktok.com.',
   avisoTipo: 'warning',
 
   faixas: {

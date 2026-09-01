@@ -32,7 +32,7 @@ export default {
   campanha:     true,
   taxaCampanha: 2.0,
 
-  aviso:     '⚠️ Tabela vigente desde 01/03/2026. Produtos abaixo de R$7,99 têm 50% de comissão. Valide em seller.shopee.com.br',
+  aviso:     'Tabela vigente desde 01/03/2026. Produtos abaixo de R$7,99 têm 50% de comissão. Valide em seller.shopee.com.br',
   avisoTipo: 'warning',
 
   faixas: {

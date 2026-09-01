@@ -33,7 +33,7 @@ export default {
   campanha:    false,
   taxaCampanha: 0,
 
-  aviso:     '⚠️ Comissão varia por categoria (11–15%). FBA: custo por unidade varia por peso e dimensão — use o simulador em sellercentral.amazon.com.br e inclua o valor de fulfillment em "Custos adicionais".',
+  aviso:     'Comissão varia por categoria (11–15%). FBA: custo por unidade varia por peso e dimensão — use o simulador em sellercentral.amazon.com.br e inclua o valor de fulfillment em "Custos adicionais".',
   avisoTipo: 'warning',
 
   faixas: {

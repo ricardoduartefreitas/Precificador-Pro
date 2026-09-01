@@ -280,7 +280,7 @@ function showForgotPasswordForm() {
         <div id="forgot-password-error" class="login-error" style="display: none; color: #d32f2f; padding: 1rem; background: #ffebee; border-radius: 4px; margin-bottom: 1rem;"></div>
 
         <div style="text-align: center; font-size: 0.875rem; color: #666;">
-          <p><a href="#" id="link-back-login-reset" style="color: #FFD700; cursor: pointer;">Voltar ao login</a></p>
+          <p><a href="#" id="link-back-login-reset" style="color: #EE4D2D; cursor: pointer;">Voltar ao login</a></p>
         </div>
       </div>
 
@@ -288,7 +288,7 @@ function showForgotPasswordForm() {
         <h2 class="card-title" style="text-align: center;">Verifique seu e-mail</h2>
         <p style="text-align: center; color: #666; margin-bottom: 2rem;">Enviamos um link de redefinição de senha para seu e-mail.</p>
         <div style="text-align: center; padding: 2rem; background: #e8f5e9; border-radius: 4px; margin-bottom: 2rem;">
-          <p style="font-size: 0.875rem; color: #2e7d32;">✅ Link enviado com sucesso!</p>
+          <p style="font-size: 0.875rem; color: #2e7d32; font-weight: 600;">Link enviado com sucesso!</p>
           <p style="font-size: 0.875rem; color: #555; margin-top: 0.5rem;">Procure o e-mail na sua caixa de entrada ou na pasta de spam.</p>
         </div>
         <button class="btn btn--primary" id="btn-back-to-login-reset-confirm" style="width: 100%;">Voltar ao login</button>
@@ -515,7 +515,7 @@ export function addLogoutButton() {
   logoutBtn = document.createElement('button');
   logoutBtn.id = 'btn-logout';
   logoutBtn.className = 'btn btn--ghost';
-  logoutBtn.innerHTML = '<span class="logout-icon">🚪</span><span class="logout-text">Logout</span>';
+  logoutBtn.innerHTML = `<svg class="logout-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg><span class="logout-text">Logout</span>`;
 
   logoutBtn.addEventListener('click', async () => {
     const { logout } = await import('./auth.js');

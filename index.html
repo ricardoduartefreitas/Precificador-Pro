@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#080f1e" />
+  <meta name="theme-color" content="#EE4D2D" />
   <title>PrecificaPRO — Calculadora de Marketplaces</title>
   <link rel="stylesheet" href="css/styles.css?v=20260901a" />
   <link rel="manifest" href="manifest.json" />
@@ -121,14 +121,14 @@
           <div id="login-error" class="login-error" style="display: none; color: #d32f2f; padding: 1rem; background: #ffebee; border-radius: 4px; margin-bottom: 1rem;"></div>
 
           <div style="text-align: center; font-size: 0.875rem; color: #666;">
-            <p><a href="#" id="link-forgot-password" style="color: #FFD700; cursor: pointer;">Esqueci minha senha</a></p>
-            <p style="margin-top: 0.75rem;"><a href="#" id="link-criar-conta" style="color: #FFD700; cursor: pointer; font-weight: 600;">Não tem conta? Criar conta grátis</a></p>
+            <p><a href="#" id="link-forgot-password" style="color: #EE4D2D; cursor: pointer;">Esqueci minha senha</a></p>
+            <p style="margin-top: 0.75rem;"><a href="#" id="link-criar-conta" style="color: #EE4D2D; cursor: pointer; font-weight: 600;">Não tem conta? Criar conta grátis</a></p>
           </div>
         </div>
 
         <!-- TELA: ACEITAR CONVITE (#/aceitar-convite) - inicialmente escondida -->
         <div class="card" id="invite-accept-card" style="display: none;">
-          <h2 class="card-title" style="text-align: center;">Bem-vindo ao PrecificaPRO! 🎉</h2>
+          <h2 class="card-title" style="text-align: center;">Bem-vindo ao PrecificaPRO!</h2>
           <p style="text-align: center; color: #666; margin-bottom: 2rem;">Confirme seus dados e crie sua senha para começar.</p>
 
           <div class="form-grid">
@@ -146,12 +146,12 @@
             </div>
           </div>
 
-          <button class="btn btn--primary" id="btn-aceitar-convite" style="width: 100%; margin-bottom: 1rem; background-color: #FFD700; color: #000; font-weight: 600;">Aceitar convite</button>
+          <button class="btn btn--primary" id="btn-aceitar-convite" style="width: 100%; margin-bottom: 1rem;">Aceitar convite</button>
 
           <div id="invite-accept-error" class="login-error" style="display: none; color: #d32f2f; padding: 1rem; background: #ffebee; border-radius: 4px; margin-bottom: 1rem;"></div>
 
           <div style="text-align: center; font-size: 0.875rem; color: #666;">
-            <p>Link expirou? <a href="#" id="link-solicitar-novo-convite" style="color: #FFD700; cursor: pointer;">Solicitar novo convite</a></p>
+            <p>Link expirou? <a href="#" id="link-solicitar-novo-convite" style="color: #EE4D2D; cursor: pointer;">Solicitar novo convite</a></p>
           </div>
         </div>
         <!-- TELA: RECUPERAR SENHA (#/recuperar-senha) - o link do 'Esqueci minha senha' -->
@@ -175,7 +175,7 @@
           <div id="reset-password-error" class="login-error" style="display: none; color: #d32f2f; padding: 1rem; background: #ffebee; border-radius: 4px; margin-bottom: 1rem;"></div>
 
           <div style="text-align: center; font-size: 0.875rem; color: #666;">
-            <p><a href="#" id="link-back-login-reset-password" style="color: #FFD700; cursor: pointer;">Voltar ao login</a></p>
+            <p><a href="#" id="link-back-login-reset-password" style="color: #EE4D2D; cursor: pointer;">Voltar ao login</a></p>
           </div>
         </div>
 
@@ -200,7 +200,7 @@
             <div class="form-field form-field--full">
               <label class="checkbox-label" style="display: flex; gap: 0.5rem; align-items: flex-start; font-size: 0.85rem; color: #666; cursor: pointer;">
                 <input type="checkbox" id="signup-consent" style="margin-top: 0.2rem;" />
-                <span>Li e concordo com os <a href="#" id="link-termos" style="color: #FFD700;">Termos de Uso</a> e a <a href="#" id="link-privacidade" style="color: #FFD700;">Política de Privacidade</a>, e autorizo a Ruah Tecnologia a entrar em contato a respeito de meus interesses.</span>
+                <span>Li e concordo com os <a href="#" id="link-termos" style="color: #EE4D2D;">Termos de Uso</a> e a <a href="#" id="link-privacidade" style="color: #EE4D2D;">Política de Privacidade</a>, e autorizo a Ruah Tecnologia a entrar em contato a respeito de meus interesses.</span>
               </label>
             </div>
           </div>
@@ -211,7 +211,7 @@
           <div id="signup-success" style="display: none; color: #2e7d32; padding: 1rem; background: #e8f5e9; border-radius: 4px; margin-bottom: 1rem;"></div>
 
           <div style="text-align: center; font-size: 0.875rem; color: #666;">
-            <p>Já tem conta? <a href="#" id="link-back-login-signup" style="color: #FFD700; cursor: pointer;">Fazer login</a></p>
+            <p>Já tem conta? <a href="#" id="link-back-login-signup" style="color: #EE4D2D; cursor: pointer;">Fazer login</a></p>
           </div>
         </div>
       </div>
@@ -448,8 +448,8 @@
           <h2 class="card-title">Cálculo em lote (CSV)</h2>
           <p class="lote-desc">Baixe o modelo, preencha com seus produtos e importe para calcular tudo de uma vez.</p>
           <div class="action-row">
-            <button class="btn btn--secondary" id="btn-lote-template">⬇ Baixar modelo CSV</button>
-            <button class="btn btn--secondary" id="btn-lote-importar">⬆ Importar planilha</button>
+            <button class="btn btn--secondary" id="btn-lote-template">Baixar modelo CSV</button>
+            <button class="btn btn--secondary" id="btn-lote-importar">Importar planilha</button>
           </div>
           <input type="file" id="lote-file-input" accept=".csv" class="hidden" />
 
@@ -468,7 +468,7 @@
               </thead>
               <tbody id="lote-tabela-tbody"></tbody>
             </table>
-            <button class="btn btn--secondary" id="btn-lote-exportar" style="margin-top: 0.75rem;">⬇ Baixar resultados CSV</button>
+            <button class="btn btn--secondary" id="btn-lote-exportar" style="margin-top: 0.75rem;">Baixar resultados CSV</button>
           </div>
         </div>
 
@@ -746,7 +746,7 @@
 
         <!-- ESCOPO 3 (25/08) — Lead Scoring: quem tem mais potencial de virar cliente -->
         <div class="card">
-          <h2 class="card-title">🎯 Lead Scoring</h2>
+          <h2 class="card-title">Lead Scoring</h2>
           <p class="card-subtitle">Pedidos/dia&gt;30 = +3 · TikTok/Shopee = +2 · Goiânia/GO = +3 · Simples Nacional = +2 · peso médio&gt;1kg = +1</p>
           <div id="leadscore-list" class="convidados-list">
             <p style="color: #999; text-align: center; padding: 2rem;">Carregando...</p>
@@ -762,7 +762,7 @@
 
         <div class="history-toolbar">
           <input type="search" id="history-search" placeholder="Buscar produto..." autocomplete="off" />
-          <button class="btn btn--secondary btn--icon" id="btn-export-csv">⬇ CSV</button>
+          <button class="btn btn--secondary btn--icon" id="btn-export-csv">CSV</button>
         </div>
 
         <div class="stats-bar" id="stats-bar">
