@@ -55,6 +55,7 @@
   --font-medium:  500;
   --font-semi:    600;
   --font-bold:    700;
+  --font-extrabold: 800;
 
   /* Espaçamentos */
   --space-1:  0.25rem;
@@ -287,7 +288,7 @@ img { display: block; max-width: 100%; }
 .card-title {
   font-family: var(--font-mono);
   font-size: var(--text-sm);
-  font-weight: var(--font-bold);
+  font-weight: var(--font-extrabold);
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.1em;
