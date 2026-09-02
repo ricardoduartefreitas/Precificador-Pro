@@ -13,6 +13,10 @@ npm-debug.log*
 # superpowers (ferramentas de desenvolvimento)
 .superpowers/
 
+# briefings internos e mockups de referência (nunca vão pro deploy)
+BRIEFING_*.md
+design_aba_lateral_referencia.html
+
 # worktrees isoladas (desenvolvimento)
 .worktrees/
 

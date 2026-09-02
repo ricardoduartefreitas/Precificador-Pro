@@ -1420,27 +1420,30 @@ input[type="range"] {
   max-width: 1400px;
 }
 
-/* ═══ MEUS PRODUTOS — mockup v3 aprovado (02/09) ═══
-   ESQUERDA: Novo produto (1º) + Perfil de negócio logo abaixo (2º), empilhados com gap
-   DIREITA: Produtos cadastrados (a lista, ocupando a altura) */
+/* ═══ MEUS PRODUTOS — mockup v4 aprovado (02/09) ═══
+   ESQUERDA: coluna flex própria com Novo produto (1º) + Perfil de negócio logo abaixo (2º)
+   DIREITA: Produtos cadastrados (a lista, gigante — não pode empurrar a esquerda)
+   Grid simples de 2 colunas (sem grid-template-areas com "lista" ocupando 2 linhas,
+   que era a causa raiz: a altura da lista inflava a linha 1 e empurrava o Perfil para baixo). */
 #view-produtos .view-inner {
   display: grid;
   grid-template-columns: 1fr 1.3fr;
-  grid-template-areas:
-    "novo   lista"
-    "perfil lista";
   gap: 1.5rem;
   align-items: start;
   max-width: 1400px;
 }
-#produtos-lista-card  { grid-area: lista; }
-#novo-produto-card    { grid-area: novo; }
-#perfil-negocio-card  { grid-area: perfil; }
+.produtos-col-esquerda {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+#produtos-lista-card {
+  align-self: start;
+}
 
 @media (max-width: 900px) {
   #view-produtos .view-inner {
     grid-template-columns: 1fr;
-    grid-template-areas: "novo" "perfil" "lista";
   }
 }
 

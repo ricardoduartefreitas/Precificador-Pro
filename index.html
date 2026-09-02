@@ -571,63 +571,68 @@
     <section id="view-produtos" class="view hidden" aria-label="Meus produtos">
       <div class="view-inner">
 
-        <!-- Cadastro de produto -->
-        <div class="card" id="novo-produto-card">
-          <h2 class="card-title" id="produto-form-title">Novo produto</h2>
-          <input type="hidden" id="produto-edit-id" value="" />
-          <div class="form-grid">
-            <div class="form-field form-field--full">
-              <label for="produto-nome">Nome do produto</label>
-              <input type="text" id="produto-nome" placeholder="Ex: Câmera JBL 360" maxlength="120" autocomplete="off" />
-            </div>
-            <div class="form-field">
-              <label for="produto-categoria">Categoria</label>
-              <select id="produto-categoria" class="form-select"></select>
-            </div>
-            <div class="form-field">
-              <label for="produto-custo">Custo (R$)</label>
-              <input type="number" id="produto-custo" placeholder="0,00" min="0" step="0.01" autocomplete="off" />
-            </div>
-            <div class="form-field">
-              <label for="produto-peso">Peso (kg)</label>
-              <input type="number" id="produto-peso" placeholder="0,00" min="0" step="0.01" autocomplete="off" />
-            </div>
-            <div class="form-field">
-              <label for="produto-plataforma">Plataforma padrão</label>
-              <select id="produto-plataforma" class="form-select"></select>
-            </div>
-            <div class="form-field">
-              <label for="produto-margem">Margem padrão (%)</label>
-              <input type="number" id="produto-margem" placeholder="ex: 30" min="0" max="200" step="1" value="30" autocomplete="off" />
-            </div>
-          </div>
-          <div class="action-row">
-            <button class="btn btn--primary" id="btn-salvar-produto">Salvar produto</button>
-            <button class="btn btn--ghost hidden" id="btn-cancelar-edicao-produto">Cancelar edição</button>
-          </div>
-        </div>
+        <!-- Coluna esquerda: Novo produto + Perfil de negócio, empilhados (a lista não pode empurrar isso) -->
+        <div class="produtos-col-esquerda">
 
-        <!-- Perfil de negócio — usado na Fase 3 para segmentar a inteligência -->
-        <div class="card" id="perfil-negocio-card">
-          <h2 class="card-title">Perfil de negócio</h2>
-          <div class="form-grid">
-            <div class="form-field">
-              <label for="perfil-categoria">Categoria principal</label>
-              <select id="perfil-categoria" class="form-select"></select>
+          <!-- Cadastro de produto -->
+          <div class="card" id="novo-produto-card">
+            <h2 class="card-title" id="produto-form-title">Novo produto</h2>
+            <input type="hidden" id="produto-edit-id" value="" />
+            <div class="form-grid">
+              <div class="form-field form-field--full">
+                <label for="produto-nome">Nome do produto</label>
+                <input type="text" id="produto-nome" placeholder="Ex: Câmera JBL 360" maxlength="120" autocomplete="off" />
+              </div>
+              <div class="form-field">
+                <label for="produto-categoria">Categoria</label>
+                <select id="produto-categoria" class="form-select"></select>
+              </div>
+              <div class="form-field">
+                <label for="produto-custo">Custo (R$)</label>
+                <input type="number" id="produto-custo" placeholder="0,00" min="0" step="0.01" autocomplete="off" />
+              </div>
+              <div class="form-field">
+                <label for="produto-peso">Peso (kg)</label>
+                <input type="number" id="produto-peso" placeholder="0,00" min="0" step="0.01" autocomplete="off" />
+              </div>
+              <div class="form-field">
+                <label for="produto-plataforma">Plataforma padrão</label>
+                <select id="produto-plataforma" class="form-select"></select>
+              </div>
+              <div class="form-field">
+                <label for="produto-margem">Margem padrão (%)</label>
+                <input type="number" id="produto-margem" placeholder="ex: 30" min="0" max="200" step="1" value="30" autocomplete="off" />
+              </div>
             </div>
-            <div class="form-field">
-              <label for="perfil-cep">CEP</label>
-              <input type="text" id="perfil-cep" placeholder="00000-000" maxlength="9" autocomplete="off" />
-            </div>
-            <div class="form-field">
-              <label for="perfil-volume">Volume mensal estimado (pedidos)</label>
-              <input type="number" id="perfil-volume" placeholder="ex: 100" min="0" step="1" autocomplete="off" />
-            </div>
-            <div class="form-field form-field--full">
-              <p class="text-muted" id="perfil-regiao-preview">Região: —</p>
+            <div class="action-row">
+              <button class="btn btn--primary" id="btn-salvar-produto">Salvar produto</button>
+              <button class="btn btn--ghost hidden" id="btn-cancelar-edicao-produto">Cancelar edição</button>
             </div>
           </div>
-          <button class="btn btn--primary" id="btn-salvar-perfil">Salvar perfil</button>
+
+          <!-- Perfil de negócio — usado na Fase 3 para segmentar a inteligência -->
+          <div class="card" id="perfil-negocio-card">
+            <h2 class="card-title">Perfil de negócio</h2>
+            <div class="form-grid">
+              <div class="form-field">
+                <label for="perfil-categoria">Categoria principal</label>
+                <select id="perfil-categoria" class="form-select"></select>
+              </div>
+              <div class="form-field">
+                <label for="perfil-cep">CEP</label>
+                <input type="text" id="perfil-cep" placeholder="00000-000" maxlength="9" autocomplete="off" />
+              </div>
+              <div class="form-field">
+                <label for="perfil-volume">Volume mensal estimado (pedidos)</label>
+                <input type="number" id="perfil-volume" placeholder="ex: 100" min="0" step="1" autocomplete="off" />
+              </div>
+              <div class="form-field form-field--full">
+                <p class="text-muted" id="perfil-regiao-preview">Região: —</p>
+              </div>
+            </div>
+            <button class="btn btn--primary" id="btn-salvar-perfil">Salvar perfil</button>
+          </div>
+
         </div>
 
         <!-- Lista de produtos -->
