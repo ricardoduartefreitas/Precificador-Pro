@@ -225,7 +225,22 @@ function _initCalcView() {
 
   _renderProdutoAtivoBanner();
   window.addEventListener('hashchange', () => {
-    if (_currentRoute() === 'calcular') _renderProdutoAtivoBanner();
+    if (_currentRoute() !== 'calcular') return;
+    _renderProdutoAtivoBanner();
+
+    // FIX (pente fino 02/09): "Calcular" a partir de Meus Produtos troca
+    // state.activePlatform via setState() direto (produtos.js `_handleCalcularProduto`),
+    // sem passar pelo <select id="calc-plataforma"> — o select ficava mostrando a
+    // plataforma ANTERIOR enquanto o motor já calculava para a plataforma do produto
+    // (bug silencioso: usuário via "Mercado Livre" na tela mas o resultado saía com as
+    // regras da plataforma do produto, ex. Shopee). Resincroniza o select sempre que a
+    // rota #/calcular é (re)aberta com o estado divergente.
+    const state = getState();
+    if (platSelect.value !== state.activePlatform) {
+      platSelect.value = state.activePlatform;
+      _updateSellerTypeSelect(tipoSelect, _findPlat(platSelect.value));
+      _renderPlatformaRegras();
+    }
   });
 }
 

@@ -175,6 +175,16 @@ export function initLoginUI() {
     });
   }
 
+  // FIX (pente fino 02/09): "Termos de Uso" e "Política de Privacidade" eram href="#"
+  // sem handler — o clique disparava hashchange → router.js resetava a rota para
+  // "comparar" → como o usuário ainda não está logado, redirecionava para #/login e
+  // APAGAVA o formulário de cadastro em preenchimento. Sem página de termos/privacidade
+  // publicada ainda, o mínimo seguro é neutralizar a navegação (preventDefault).
+  const linkTermos = document.getElementById('link-termos');
+  const linkPrivacidade = document.getElementById('link-privacidade');
+  if (linkTermos) linkTermos.addEventListener('click', (e) => e.preventDefault());
+  if (linkPrivacidade) linkPrivacidade.addEventListener('click', (e) => e.preventDefault());
+
   if (linkBackLoginSignup && signupCard) {
     linkBackLoginSignup.addEventListener('click', (e) => {
       e.preventDefault();
