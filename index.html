@@ -571,29 +571,6 @@
     <section id="view-produtos" class="view hidden" aria-label="Meus produtos">
       <div class="view-inner">
 
-        <!-- Perfil de negócio — usado na Fase 3 para segmentar a inteligência -->
-        <div class="card" id="perfil-negocio-card">
-          <h2 class="card-title">Perfil de negócio</h2>
-          <div class="form-grid">
-            <div class="form-field">
-              <label for="perfil-categoria">Categoria principal</label>
-              <select id="perfil-categoria" class="form-select"></select>
-            </div>
-            <div class="form-field">
-              <label for="perfil-cep">CEP</label>
-              <input type="text" id="perfil-cep" placeholder="00000-000" maxlength="9" autocomplete="off" />
-            </div>
-            <div class="form-field">
-              <label for="perfil-volume">Volume mensal estimado (pedidos)</label>
-              <input type="number" id="perfil-volume" placeholder="ex: 100" min="0" step="1" autocomplete="off" />
-            </div>
-            <div class="form-field form-field--full">
-              <p class="text-muted" id="perfil-regiao-preview">Região: —</p>
-            </div>
-          </div>
-          <button class="btn btn--primary" id="btn-salvar-perfil">Salvar perfil</button>
-        </div>
-
         <!-- Cadastro de produto -->
         <div class="card" id="novo-produto-card">
           <h2 class="card-title" id="produto-form-title">Novo produto</h2>
@@ -630,6 +607,29 @@
           </div>
         </div>
 
+        <!-- Perfil de negócio — usado na Fase 3 para segmentar a inteligência -->
+        <div class="card" id="perfil-negocio-card">
+          <h2 class="card-title">Perfil de negócio</h2>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="perfil-categoria">Categoria principal</label>
+              <select id="perfil-categoria" class="form-select"></select>
+            </div>
+            <div class="form-field">
+              <label for="perfil-cep">CEP</label>
+              <input type="text" id="perfil-cep" placeholder="00000-000" maxlength="9" autocomplete="off" />
+            </div>
+            <div class="form-field">
+              <label for="perfil-volume">Volume mensal estimado (pedidos)</label>
+              <input type="number" id="perfil-volume" placeholder="ex: 100" min="0" step="1" autocomplete="off" />
+            </div>
+            <div class="form-field form-field--full">
+              <p class="text-muted" id="perfil-regiao-preview">Região: —</p>
+            </div>
+          </div>
+          <button class="btn btn--primary" id="btn-salvar-perfil">Salvar perfil</button>
+        </div>
+
         <!-- Lista de produtos -->
         <div class="card" id="produtos-lista-card">
           <h2 class="card-title">Produtos cadastrados</h2>
@@ -656,7 +656,7 @@
       <div class="view-inner">
 
         <!-- Filtros -->
-        <div class="card">
+        <div class="card" id="intel-filtros-card">
           <h2 class="card-title">Inteligência de Mercado</h2>
           <p class="text-muted">Onde a margem está sendo deixada na mesa — agregado e anônimo (categorias com menos de 5 empresas ficam ocultas).</p>
           <div class="form-grid">
@@ -704,46 +704,50 @@
         </div>
 
         <!-- A pergunta central -->
-        <div class="card">
+        <div class="card" id="intel-margem-card">
           <h2 class="card-title">Onde a margem está sendo deixada na mesa?</h2>
-          <table class="faixas-table" id="intel-tabela">
-            <thead>
-              <tr>
-                <th>Categoria</th>
-                <th>Plataforma</th>
-                <th>Região</th>
-                <th>Nº cálculos</th>
-                <th>Custo médio</th>
-                <th>Margem desejada</th>
-                <th>Margem aceita</th>
-                <th>Gap</th>
-                <th>Taxa de aceite</th>
-              </tr>
-            </thead>
-            <tbody id="intel-tabela-tbody"></tbody>
-          </table>
+          <div class="table-scroll">
+            <table class="faixas-table" id="intel-tabela">
+              <thead>
+                <tr>
+                  <th>Categoria</th>
+                  <th>Plataforma</th>
+                  <th>Região</th>
+                  <th>Nº cálculos</th>
+                  <th>Custo médio</th>
+                  <th>Margem desejada</th>
+                  <th>Margem aceita</th>
+                  <th>Gap</th>
+                  <th>Taxa de aceite</th>
+                </tr>
+              </thead>
+              <tbody id="intel-tabela-tbody"></tbody>
+            </table>
+          </div>
           <div class="plat-aviso-box hidden" id="intel-tabela-vazio">
             <p class="plat-aviso-text">Dados insuficientes no período/filtro selecionado — categorias com menos de 5 empresas ficam ocultas (anonimato).</p>
           </div>
         </div>
 
         <!-- Comportamento de ajuste -->
-        <div class="card">
+        <div class="card" id="intel-ajustes-card">
           <h2 class="card-title">Comportamento de ajuste</h2>
           <p class="text-muted">O limite real do mercado: o gap médio quando o usuário PRECISOU ajustar a margem pra baixo.</p>
-          <table class="faixas-table" id="intel-ajustes-tabela">
-            <thead>
-              <tr>
-                <th>Categoria</th>
-                <th>Nº cálculos</th>
-                <th>Sem ajuste</th>
-                <th>Com ajuste</th>
-                <th>Gap médio (c/ ajuste)</th>
-                <th>Descartados</th>
-              </tr>
-            </thead>
-            <tbody id="intel-ajustes-tabela-tbody"></tbody>
-          </table>
+          <div class="table-scroll">
+            <table class="faixas-table" id="intel-ajustes-tabela">
+              <thead>
+                <tr>
+                  <th>Categoria</th>
+                  <th>Nº cálculos</th>
+                  <th>Sem ajuste</th>
+                  <th>Com ajuste</th>
+                  <th>Gap médio (c/ ajuste)</th>
+                  <th>Descartados</th>
+                </tr>
+              </thead>
+              <tbody id="intel-ajustes-tabela-tbody"></tbody>
+            </table>
+          </div>
           <div class="plat-aviso-box hidden" id="intel-ajustes-vazio">
             <p class="plat-aviso-text">Dados insuficientes no período/filtro selecionado (menos de 5 empresas).</p>
           </div>

@@ -1290,6 +1290,52 @@ input[type="range"] {
   }
 }
 
+/* ═══ INTELIGÊNCIA — grade 2x2 (mockup aprovado 02/09) ═══
+   ESQUERDA: filtros (Inteligência de Mercado) + tabela "Comportamento de ajuste"
+   DIREITA: cards de KPI + tabela "Onde a margem está sendo deixada na mesa" */
+#view-inteligencia .view-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "filtros kpis"
+    "ajustes margem";
+  gap: 1.5rem;
+  align-items: start;
+  max-width: 1400px;
+}
+#intel-filtros-card { grid-area: filtros; }
+#intel-kpis         { grid-area: kpis; }
+#intel-ajustes-card { grid-area: ajustes; }
+#intel-margem-card  { grid-area: margem; }
+
+@media (max-width: 900px) {
+  #view-inteligencia .view-inner {
+    grid-template-columns: 1fr;
+    grid-template-areas: "filtros" "kpis" "margem" "ajustes";
+  }
+}
+
+/* Tabelas largas da Inteligência: scroll horizontal no mobile em vez de
+   espremer/quebrar palavras no meio — min-width garante que as colunas
+   respirem, overflow-x: auto só ativa a barra quando não couber. */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-scroll .faixas-table {
+  min-width: 640px;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+@media (max-width: 900px) {
+  .table-scroll .faixas-table th,
+  .table-scroll .faixas-table td {
+    white-space: nowrap;
+  }
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    LOGIN — Tela de autenticação
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -1374,27 +1420,27 @@ input[type="range"] {
   max-width: 1400px;
 }
 
-/* ═══ MEUS PRODUTOS — mesmo padrão em colunas da aba Calcular ═══
-   ESQUERDA: lista de produtos cadastrados (mais larga, é o conteúdo principal)
-   DIREITA: Perfil de negócio empilhado sobre Novo produto */
+/* ═══ MEUS PRODUTOS — mockup v3 aprovado (02/09) ═══
+   ESQUERDA: Novo produto (1º) + Perfil de negócio logo abaixo (2º), empilhados com gap
+   DIREITA: Produtos cadastrados (a lista, ocupando a altura) */
 #view-produtos .view-inner {
   display: grid;
   grid-template-columns: 1fr 1.3fr;
   grid-template-areas:
-    "perfil lista"
-    "novo lista";
+    "novo   lista"
+    "perfil lista";
   gap: 1.5rem;
   align-items: start;
   max-width: 1400px;
 }
 #produtos-lista-card  { grid-area: lista; }
-#perfil-negocio-card  { grid-area: perfil; }
 #novo-produto-card    { grid-area: novo; }
+#perfil-negocio-card  { grid-area: perfil; }
 
 @media (max-width: 900px) {
   #view-produtos .view-inner {
     grid-template-columns: 1fr;
-    grid-template-areas: "perfil" "novo" "lista";
+    grid-template-areas: "novo" "perfil" "lista";
   }
 }
 
