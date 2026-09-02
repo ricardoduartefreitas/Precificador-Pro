@@ -1248,7 +1248,10 @@ input[type="range"] {
 
 .intel-kpis {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  /* minmax(0, 1fr) em vez de 1fr — evita o "grid blowout": sem o minmax, a
+     coluna não encolhe abaixo do conteúdo mínimo e o valor vaza pra fora
+     do card quando é um número/nome comprido. */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-3);
 }
 
@@ -1256,10 +1259,12 @@ input[type="range"] {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  min-width: 0;
   background-color: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: var(--space-4);
+  overflow: hidden;
 }
 
 .intel-kpi-label {
@@ -1274,6 +1279,9 @@ input[type="range"] {
   font-size: var(--text-xl);
   font-weight: var(--font-bold);
   color: var(--text-primary);
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 @media (max-width: 640px) {
@@ -1364,6 +1372,30 @@ input[type="range"] {
 /* Largura total da calculadora (o grid lado a lado precisa do espaço) */
 #view-calcular .view-inner {
   max-width: 1400px;
+}
+
+/* ═══ MEUS PRODUTOS — mesmo padrão em colunas da aba Calcular ═══
+   ESQUERDA: lista de produtos cadastrados (mais larga, é o conteúdo principal)
+   DIREITA: Perfil de negócio empilhado sobre Novo produto */
+#view-produtos .view-inner {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  grid-template-areas:
+    "lista perfil"
+    "lista novo";
+  gap: 1.5rem;
+  align-items: start;
+  max-width: 1400px;
+}
+#produtos-lista-card  { grid-area: lista; }
+#perfil-negocio-card  { grid-area: perfil; }
+#novo-produto-card    { grid-area: novo; }
+
+@media (max-width: 900px) {
+  #view-produtos .view-inner {
+    grid-template-columns: 1fr;
+    grid-template-areas: "perfil" "novo" "lista";
+  }
 }
 
 /* ═══ A DIRETRIZ DO FRETE (restaurada — 14/08) ═══ */
@@ -1819,13 +1851,24 @@ input[type="range"] {
    estreitas fica em fluxo (compacta, empurra o conteúdo, nunca sobrepõe);
    a partir de 1180px vira coluna fixa à direita e reserva espaço no
    .app-main pra nunca cobrir a área de cálculo.
-   -------------------------------------------------------------------------- */
+
+   .ruah-ad-stack agrupa os DOIS carrosséis (dois banners, um embaixo do
+   outro) — é ela quem controla a largura/posição externa e o espaçamento
+   mínimo entre eles (gap); cada .ruah-ad dentro dela é só o cartão do
+   carrossel em si. */
+.ruah-ad-stack {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: var(--space-4) auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4); /* distância mínima entre os dois banners — nunca colados */
+}
+
 .ruah-ad {
   position: relative;
   z-index: 40;
   width: 100%;
-  max-width: var(--max-width);
-  margin: var(--space-4) auto 0;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-areas: "viewport" "footer";
@@ -1873,14 +1916,16 @@ input[type="range"] {
 
 .ruah-ad__track {
   display: flex;
-  width: 300%;
+  /* 2 slides por carrossel (RUAH DESK 360 + Doctor Flow 360 — o slide do
+     PrecificaPRO Pro saiu) — track em 200%, cada slide ocupa metade dele. */
+  width: 200%;
   height: 100%;
   transition: transform 0.6s cubic-bezier(0.33, 1, 0.68, 1);
   will-change: transform;
 }
 
 .ruah-ad__slide {
-  flex: 0 0 33.3333%;
+  flex: 0 0 50%;
   min-width: 0;
   box-sizing: border-box;
   display: flex;
@@ -2028,36 +2073,6 @@ input[type="range"] {
 .ruah-ad__cta--underline:hover,
 .ruah-ad__cta--underline:focus-visible { color: #fff; border-bottom-color: #fff; }
 
-/* ── Slide 3 · PrecificaPRO Pro — chapa invertida em laranja cheio ── */
-.ruah-ad__slide--pro { background: #D8401F; }
-.ruah-ad__slide--pro .ruah-ad__title {
-  margin: 21px 0 0;
-  font: 800 30px/0.92 'Archivo', var(--font-sans);
-  letter-spacing: -0.045em;
-}
-.ruah-ad__slide--pro .ruah-ad__hl--dark { color: #0F1418; }
-.ruah-ad__desc--onorange {
-  margin: 12px 0 0;
-  font: 13px/1.45 'Archivo', var(--font-sans);
-  color: #fff;
-}
-.ruah-ad__cta--block {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 12px 13px;
-  background: #0F1418;
-  color: #fff;
-  font: 700 13.5px 'Archivo', var(--font-sans);
-  letter-spacing: -0.015em;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 9px 100%, 0 calc(100% - 9px));
-  transition: background 0.2s ease;
-}
-.ruah-ad__cta--block:hover,
-.ruah-ad__cta--block:focus-visible { background: #000; }
-.ruah-ad__arrow--onblock { color: #FF7E60; font: 700 13px 'Archivo', sans-serif; }
-
 /* ── Rodapé do card: dots do carrossel + assinatura ── */
 .ruah-ad__footer {
   grid-area: footer;
@@ -2103,17 +2118,20 @@ input[type="range"] {
   .ruah-ad__viewport { height: 300px; }
 }
 
-/* Desktop largo: a aba vira coluna fixa à direita — a calculadora nunca é coberta
-   porque .app-main reserva o espaço equivalente com padding-right. */
+/* Desktop largo: a coluna de anúncios vira fixa à direita — a calculadora nunca é
+   coberta porque .app-main reserva o espaço equivalente com padding-right.
+   Os dois carrosséis (.ruah-ad) ficam empilhados dentro da stack, que é quem
+   fixa a posição; cada .ruah-ad só precisa preencher a largura da coluna. */
 @media (min-width: 1180px) {
-  .ruah-ad {
+  .ruah-ad-stack {
     position: fixed;
     top: calc(var(--header-height) + 20px);
     right: 20px;
     width: 260px;
     max-width: 260px;
-    max-height: calc(100dvh - var(--header-height) - 108px);
+    max-height: calc(100dvh - var(--header-height) - 40px);
     margin: 0;
+    overflow-y: auto;
   }
   .app-main { padding-right: 300px; }
 }

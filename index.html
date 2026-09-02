@@ -39,54 +39,89 @@
   <!-- ═══════════════════════════════════════════ MAIN -->
   <main class="app-main">
 
-    <!-- ═══════════ ABA LATERAL — publicidade Ruah Tecnologia (fixa, aditiva, sem botão de fechar) -->
-    <aside id="ruah-ad" class="ruah-ad" aria-label="Publicidade Ruah Tecnologia">
-      <div class="ruah-ad__spine" aria-hidden="true">
-        <span class="ruah-ad__spine-dot"></span>
-        <span class="ruah-ad__spine-label">PUBLICIDADE</span>
-        <span class="ruah-ad__spine-ticks"><i></i><i></i><i></i></span>
-        <span class="ruah-ad__spine-rt">RT</span>
-      </div>
+    <!-- ═══════════ ABA LATERAL — publicidade Ruah Tecnologia (fixa, aditiva, sem botão de fechar)
+         Dois carrosséis empilhados com espaço mínimo entre eles (.ruah-ad-stack define o gap),
+         cada um autocontido — pente fino removeu o slide do PrecificaPRO Pro (banners agora só
+         para os outros produtos: RUAH DESK 360 e Doctor Flow 360). -->
+    <div class="ruah-ad-stack">
 
-      <div class="ruah-ad__viewport">
-        <div class="ruah-ad__track" id="ruah-ad-track">
-
-          <article class="ruah-ad__slide ruah-ad__slide--desk">
-            <span class="ruah-ad__badge ruah-ad__badge--cut">RT-01 · ATENDIMENTO</span>
-            <h3 class="ruah-ad__title">RUAH<br>DESK&nbsp;<span class="ruah-ad__hl">360</span></h3>
-            <p class="ruah-ad__desc">Atendimento inteligente via WhatsApp com IA para o seu negócio.</p>
-            <a class="ruah-ad__cta ruah-ad__cta--split" href="https://ruahtecnologia.com.br" target="_blank" rel="noopener">
-              <span>Conhecer</span><span class="ruah-ad__arrow" aria-hidden="true">→</span>
-            </a>
-          </article>
-
-          <article class="ruah-ad__slide ruah-ad__slide--doctor">
-            <span class="ruah-ad__badge ruah-ad__badge--outline"><span class="ruah-ad__badge-code">DF-02</span><span class="ruah-ad__badge-cat">SAÚDE</span></span>
-            <h3 class="ruah-ad__title ruah-ad__title--doctor">Doctor<br><span class="ruah-ad__indent">Flow 360</span></h3>
-            <p class="ruah-ad__desc ruah-ad__desc--indent">Gestão completa para clínicas e consultórios.</p>
-            <span class="ruah-ad__tags">AGENDA · PRONTUÁRIO · CAIXA</span>
-            <a class="ruah-ad__cta ruah-ad__cta--underline" href="https://ruahtecnologia.com.br" target="_blank" rel="noopener">Conhecer <span class="ruah-ad__arrow" aria-hidden="true">→</span></a>
-          </article>
-
-          <article class="ruah-ad__slide ruah-ad__slide--pro">
-            <span class="ruah-ad__badge ruah-ad__badge--dark">PP-03 · PRECIFICAÇÃO</span>
-            <h3 class="ruah-ad__title">Precifica<br>PRO&nbsp;<span class="ruah-ad__hl ruah-ad__hl--dark">Pro</span></h3>
-            <p class="ruah-ad__desc ruah-ad__desc--onorange">Cálculos ilimitados e o histórico inteiro das suas simulações salvo.</p>
-            <a class="ruah-ad__cta ruah-ad__cta--block" href="vendas.html" target="_blank" rel="noopener">
-              <span>Assinar</span><span class="ruah-ad__arrow ruah-ad__arrow--onblock" aria-hidden="true">→</span>
-            </a>
-          </article>
-
+      <aside id="ruah-ad" class="ruah-ad" aria-label="Publicidade Ruah Tecnologia">
+        <div class="ruah-ad__spine" aria-hidden="true">
+          <span class="ruah-ad__spine-dot"></span>
+          <span class="ruah-ad__spine-label">PUBLICIDADE</span>
+          <span class="ruah-ad__spine-ticks"><i></i><i></i><i></i></span>
+          <span class="ruah-ad__spine-rt">RT</span>
         </div>
-      </div>
 
-      <div class="ruah-ad__footer">
-        <button type="button" class="ruah-ad__dot" data-i="0" aria-label="Ir para o anúncio de RUAH DESK 360"></button>
-        <button type="button" class="ruah-ad__dot" data-i="1" aria-label="Ir para o anúncio de Doctor Flow 360"></button>
-        <button type="button" class="ruah-ad__dot" data-i="2" aria-label="Ir para o anúncio de PrecificaPRO Pro"></button>
-        <span class="ruah-ad__brand">RUAH TECNOLOGIA</span>
-      </div>
-    </aside>
+        <div class="ruah-ad__viewport">
+          <div class="ruah-ad__track">
+
+            <article class="ruah-ad__slide ruah-ad__slide--desk">
+              <span class="ruah-ad__badge ruah-ad__badge--cut">RT-01 · ATENDIMENTO</span>
+              <h3 class="ruah-ad__title">RUAH<br>DESK&nbsp;<span class="ruah-ad__hl">360</span></h3>
+              <p class="ruah-ad__desc">Atendimento inteligente via WhatsApp com IA para o seu negócio.</p>
+              <a class="ruah-ad__cta ruah-ad__cta--split" href="https://ruahtecnologia.com.br" target="_blank" rel="noopener">
+                <span>Conhecer</span><span class="ruah-ad__arrow" aria-hidden="true">→</span>
+              </a>
+            </article>
+
+            <article class="ruah-ad__slide ruah-ad__slide--doctor">
+              <span class="ruah-ad__badge ruah-ad__badge--outline"><span class="ruah-ad__badge-code">DF-02</span><span class="ruah-ad__badge-cat">SAÚDE</span></span>
+              <h3 class="ruah-ad__title ruah-ad__title--doctor">Doctor<br><span class="ruah-ad__indent">Flow 360</span></h3>
+              <p class="ruah-ad__desc ruah-ad__desc--indent">Gestão completa para clínicas e consultórios.</p>
+              <span class="ruah-ad__tags">AGENDA · PRONTUÁRIO · CAIXA</span>
+              <a class="ruah-ad__cta ruah-ad__cta--underline" href="https://ruahtecnologia.com.br" target="_blank" rel="noopener">Conhecer <span class="ruah-ad__arrow" aria-hidden="true">→</span></a>
+            </article>
+
+          </div>
+        </div>
+
+        <div class="ruah-ad__footer">
+          <button type="button" class="ruah-ad__dot" data-i="0" aria-label="Ir para o anúncio de RUAH DESK 360"></button>
+          <button type="button" class="ruah-ad__dot" data-i="1" aria-label="Ir para o anúncio de Doctor Flow 360"></button>
+          <span class="ruah-ad__brand">RUAH TECNOLOGIA</span>
+        </div>
+      </aside>
+
+      <aside id="ruah-ad-2" class="ruah-ad" aria-label="Publicidade Ruah Tecnologia (2)">
+        <div class="ruah-ad__spine" aria-hidden="true">
+          <span class="ruah-ad__spine-dot"></span>
+          <span class="ruah-ad__spine-label">PUBLICIDADE</span>
+          <span class="ruah-ad__spine-ticks"><i></i><i></i><i></i></span>
+          <span class="ruah-ad__spine-rt">RT</span>
+        </div>
+
+        <div class="ruah-ad__viewport">
+          <div class="ruah-ad__track">
+
+            <article class="ruah-ad__slide ruah-ad__slide--doctor">
+              <span class="ruah-ad__badge ruah-ad__badge--outline"><span class="ruah-ad__badge-code">DF-02</span><span class="ruah-ad__badge-cat">SAÚDE</span></span>
+              <h3 class="ruah-ad__title ruah-ad__title--doctor">Doctor<br><span class="ruah-ad__indent">Flow 360</span></h3>
+              <p class="ruah-ad__desc ruah-ad__desc--indent">Gestão completa para clínicas e consultórios.</p>
+              <span class="ruah-ad__tags">AGENDA · PRONTUÁRIO · CAIXA</span>
+              <a class="ruah-ad__cta ruah-ad__cta--underline" href="https://ruahtecnologia.com.br" target="_blank" rel="noopener">Conhecer <span class="ruah-ad__arrow" aria-hidden="true">→</span></a>
+            </article>
+
+            <article class="ruah-ad__slide ruah-ad__slide--desk">
+              <span class="ruah-ad__badge ruah-ad__badge--cut">RT-01 · ATENDIMENTO</span>
+              <h3 class="ruah-ad__title">RUAH<br>DESK&nbsp;<span class="ruah-ad__hl">360</span></h3>
+              <p class="ruah-ad__desc">Atendimento inteligente via WhatsApp com IA para o seu negócio.</p>
+              <a class="ruah-ad__cta ruah-ad__cta--split" href="https://ruahtecnologia.com.br" target="_blank" rel="noopener">
+                <span>Conhecer</span><span class="ruah-ad__arrow" aria-hidden="true">→</span>
+              </a>
+            </article>
+
+          </div>
+        </div>
+
+        <div class="ruah-ad__footer">
+          <button type="button" class="ruah-ad__dot" data-i="0" aria-label="Ir para o anúncio de Doctor Flow 360"></button>
+          <button type="button" class="ruah-ad__dot" data-i="1" aria-label="Ir para o anúncio de RUAH DESK 360"></button>
+          <span class="ruah-ad__brand">RUAH TECNOLOGIA</span>
+        </div>
+      </aside>
+
+    </div>
 
     <!-- ─────────────────── TELA 0: LOGIN (#/login) -->
     <section id="view-login" class="view" aria-label="Autenticação">
@@ -537,7 +572,7 @@
       <div class="view-inner">
 
         <!-- Perfil de negócio — usado na Fase 3 para segmentar a inteligência -->
-        <div class="card">
+        <div class="card" id="perfil-negocio-card">
           <h2 class="card-title">Perfil de negócio</h2>
           <div class="form-grid">
             <div class="form-field">
@@ -560,7 +595,7 @@
         </div>
 
         <!-- Cadastro de produto -->
-        <div class="card">
+        <div class="card" id="novo-produto-card">
           <h2 class="card-title" id="produto-form-title">Novo produto</h2>
           <input type="hidden" id="produto-edit-id" value="" />
           <div class="form-grid">
@@ -596,7 +631,7 @@
         </div>
 
         <!-- Lista de produtos -->
-        <div class="card">
+        <div class="card" id="produtos-lista-card">
           <h2 class="card-title">Produtos cadastrados</h2>
           <table class="faixas-table" id="produtos-tabela">
             <thead>
