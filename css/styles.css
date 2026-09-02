@@ -286,8 +286,8 @@ img { display: block; max-width: 100%; }
 
 .card-title {
   font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  font-weight: var(--font-semi);
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.1em;
