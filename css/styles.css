@@ -1379,10 +1379,10 @@ input[type="range"] {
    DIREITA: Perfil de negócio empilhado sobre Novo produto */
 #view-produtos .view-inner {
   display: grid;
-  grid-template-columns: 1.3fr 1fr;
+  grid-template-columns: 1fr 1.3fr;
   grid-template-areas:
-    "lista perfil"
-    "lista novo";
+    "perfil lista"
+    "novo lista";
   gap: 1.5rem;
   align-items: start;
   max-width: 1400px;
