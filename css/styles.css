@@ -2284,3 +2284,27 @@ input[type="range"] {
 /* ── Toast e modal sobre base clara ── */
 .toast { background-color: var(--bg-card); box-shadow: var(--shadow-modal); }
 .modal-overlay { background-color: var(--bg-overlay); }
+
+/* ═══ FIX 03/09 — abas do topo acessíveis no celular (retrato) ═══
+   Header (flex row via router.js) tinha UMA linha: logo (~247px) + abas (até 480px)
+   → em viewports < ~730px a barra de abas vazava p/ fora da tela sem scroll.
+   Agora ≤640px: logo em cima (linha cheia), abas embaixo com overflow-x scroll. */
+@media (max-width: 640px) {
+  .app-header { flex-wrap: wrap; }
+  .header-inner { flex: 1 1 100%; max-width: none; }
+  .tab-nav {
+    flex: 1 1 100%;
+    max-width: none;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    justify-content: flex-start;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+  }
+  .tab-nav::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: var(--space-3) var(--space-4);
+  }
+}
