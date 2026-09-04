@@ -73,20 +73,6 @@ a { color: inherit; text-decoration: none; }
   border: 1.5px solid rgba(255,255,255,.28);
   font-size: 15px; padding: 16px 26px; border-radius: 13px;
 }
-.btn-plan-primary {
-  display: block; width: 100%; text-align: center;
-  background: #EE4D2D; color: #fff;
-  font-size: 15px; font-weight: 800;
-  padding: 17px 20px; border-radius: 13px;
-  box-shadow: 0 6px 24px rgba(238,77,45,.32);
-}
-.btn-plan-ghost {
-  display: block; width: 100%; text-align: center;
-  background: transparent; color: #7a8792;
-  border: 2px solid #e7ebef;
-  font-size: 15px; font-weight: 700;
-  padding: 16px 20px; border-radius: 13px;
-}
 .btn-cta-primary {
   background: #fff; color: #EE4D2D;
   font-size: 16px; font-weight: 800;
@@ -615,134 +601,6 @@ h1 {
   color: #aab0b8;
 }
 
-/* === PLANOS === */
-.pricing { background: #fff; }
-.plans-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 22px;
-  max-width: 820px;
-  margin: 0 auto;
-}
-.plan-card {
-  border: 2px solid #e7ebef;
-  border-radius: 22px;
-  padding: 34px 30px;
-  background: #fff;
-  position: relative;
-}
-.plan-card-pro {
-  border-color: #EE4D2D;
-  background: linear-gradient(160deg, #fff9f8 0%, #fff 60%);
-  box-shadow: 0 16px 56px rgba(238,77,45,.14);
-}
-.plan-badge {
-  display: inline-block;
-  font-size: 11px; font-weight: 800;
-  letter-spacing: .06em; text-transform: uppercase;
-  background: #f0f0f0; color: #62707d;
-  padding: 4px 11px; border-radius: 999px;
-  margin-bottom: 18px;
-}
-.plan-badge-pro { background: #EE4D2D; color: #fff; }
-.plan-name {
-  font-size: 26px; font-weight: 900;
-  color: #1b232b; margin-bottom: 10px;
-}
-
-/* Price strike-through layout */
-.plan-price-original {
-  font-size: 16px;
-  color: #aab0b8;
-  text-decoration: line-through;
-  margin-bottom: 2px;
-  display: block;
-}
-.plan-price-promo-badge {
-  display: inline-block;
-  background: #16a34a;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  padding: 3px 9px;
-  border-radius: 999px;
-  margin-bottom: 6px;
-}
-.plan-price {
-  font-size: 54px; font-weight: 900;
-  color: #1b232b; line-height: 1;
-  margin-bottom: 4px;
-}
-.plan-cents { font-size: 28px; font-weight: 700; }
-.plan-desc {
-  font-size: 13px; color: #62707d;
-  margin-bottom: 26px;
-}
-.plan-list {
-  list-style: none;
-  display: grid; gap: 11px;
-  margin-bottom: 24px;
-}
-.plan-li {
-  font-size: 15px;
-  padding-left: 26px;
-  position: relative;
-  color: #1b232b;
-  line-height: 1.4;
-}
-.plan-li-ok::before {
-  content: '✓';
-  position: absolute; left: 0;
-  color: #22c55e; font-weight: 900;
-}
-.plan-li-pro::before {
-  content: '✓';
-  position: absolute; left: 0;
-  color: #EE4D2D; font-weight: 900;
-}
-.plan-li-no { color: #b0b8c1; }
-.plan-li-no::before {
-  content: '✗';
-  position: absolute; left: 0;
-  color: #dde1e5; font-weight: 900;
-}
-.plan-note {
-  font-size: 12px; color: #aab0b8;
-  text-align: center;
-  margin-top: 12px;
-  line-height: 1.5;
-}
-
-/* Guarantee badge inside plan card */
-.garantia-badge-card {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: linear-gradient(135deg, rgba(22,163,74,.08) 0%, rgba(22,163,74,.04) 100%);
-  border: 1px solid rgba(22,163,74,.25);
-  border-radius: 12px;
-  padding: 14px 16px;
-  margin-top: 16px;
-  margin-bottom: 0;
-}
-.garantia-badge-card-icon {
-  font-size: 24px;
-  flex-shrink: 0;
-}
-.garantia-badge-card-text {
-  font-size: 13px;
-  line-height: 1.45;
-  color: #166534;
-}
-.garantia-badge-card-text strong {
-  display: block;
-  font-weight: 800;
-  font-size: 14px;
-  margin-bottom: 1px;
-}
-
 /* === GARANTIA === */
 .section-garantia {
   background: #f5f6f8;
@@ -995,7 +853,6 @@ details[open] > .faq-q::after { content: '−'; }
 
   .features-grid { grid-template-columns: 1fr; }
   .steps-grid { grid-template-columns: 1fr; }
-  .plans-grid { grid-template-columns: 1fr; }
   .benefits-grid { grid-template-columns: 1fr; }
   .social-grid { grid-template-columns: repeat(2, 1fr); }
   .social-stat::after { display: none !important; }
@@ -1005,8 +862,6 @@ details[open] > .faq-q::after { content: '−'; }
 
   .faq-q { font-size: 15px; padding: 18px 20px; }
   .faq-a { padding: 0 20px 20px; }
-
-  .plan-card { padding: 26px 22px; }
 
   .garantia-card { padding: 36px 24px; }
   .garantia-steps { gap: 20px; }
