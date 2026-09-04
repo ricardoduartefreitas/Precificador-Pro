@@ -1,15 +1,13 @@
 // freemium.js — PrecificaPRO
 // Responsabilidade: controle do plano free/pro
-// Free: 30 cálculos gratuitos. PRO: desbloqueado via SHA-256 de senha
+// Decisão do dono (03/09/2026): uso LIBERADO — sem limite de cálculos, sem overlay/CTA
+// de upgrade. A única barreira do app é cadastro/login (auth.js). Este módulo fica
+// inerte (canCalculate sempre true, registerCalculo no-op) — ver BRIEFING_LIBERAR_USO.
 
 import { storageGet, storageSet } from './storage.js';
-import { updatePlanBadge, openOverlayPro, showToast } from './ui.js';
-import { registerFreemiumLimite } from './supabase.js';
+import { updatePlanBadge, showToast } from './ui.js';
 
-const KEY_COUNT = 'u';   // contador de cálculos (prefixado por storage.js → _psp_u)
-const KEY_HASH  = 'h';   // hash da senha PRO (_psp_h)
-const FREE_LIMIT = 30; // 30 cálculos gratuitos
-const WARN_AT    = 25; // avisa perto do limite
+const KEY_HASH  = 'h';   // hash da senha PRO (_psp_h) — mecanismo mantido inerte
 
 // Hashes SHA-256 válidos para ativação PRO (adicionar senhas via config)
 // Para gerar: crypto.subtle.digest('SHA-256', encoder.encode(senha))
@@ -36,50 +34,14 @@ export function isPro() {
   return _checkPro();
 }
 
-export function getUsageCount() {
-  return storageGet(KEY_COUNT, 0);
-}
-
 export function canCalculate() {
-  if (_checkPro()) return true;
-  return getUsageCount() < FREE_LIMIT;
+  return true; // uso liberado — cadastro/login já é a única barreira
 }
 
 // ---------- REGISTRAR CÁLCULO ----------
 
 export function registerCalculo() {
-  if (_checkPro()) return;
-
-  const count = getUsageCount() + 1;
-  storageSet(KEY_COUNT, count);
-
-  if (count === WARN_AT) {
-    showToast(`Você usou ${count} de ${FREE_LIMIT} cálculos gratuitos`, '');
-  }
-
-  if (count >= FREE_LIMIT) {
-    showUpgradeOverlay();
-  }
-}
-
-// ---------- OVERLAY DE UPGRADE ----------
-
-// FASE 2 (31/08): quem esbarra no overlay de upgrade é lead quente de monetização —
-// registra no banco (fire-and-forget) 1x por sessão, sem NUNCA bloquear o app por isso.
-let _limiteRegistradoNestaSessao = false;
-
-export function showUpgradeOverlay() {
-  openOverlayPro();
-  _registrarLimiteComoLead();
-}
-
-function _registrarLimiteComoLead() {
-  if (_limiteRegistradoNestaSessao) return; // evita martelar o banco a cada clique/reload
-  _limiteRegistradoNestaSessao = true;
-
-  registerFreemiumLimite().catch((err) => {
-    console.warn('⚠️ Falha ao registrar lead de freemium (não bloqueia o app):', err.message);
-  });
+  // no-op — uso liberado, não há mais contagem/limite nem overlay de upgrade
 }
 
 // ---------- ATIVAÇÃO PRO ----------

@@ -4,7 +4,7 @@
 // Reusa o motor calcular()/mapPlataformaToInputs() já validado — NÃO reimplementa fórmula
 
 import { calcular, mapPlataformaToInputs } from './calculator.js';
-import { canCalculate, registerCalculo, showUpgradeOverlay } from './freemium.js';
+import { canCalculate, registerCalculo } from './freemium.js';
 import { showToast } from './ui.js';
 import { getCurrentUserId } from './auth.js';
 import { listProdutos, createProduto, createLote, insertLoteItens, insertCalculo } from './supabase.js';
@@ -117,13 +117,8 @@ function _processarLote(linhas) {
 
   const ok    = resultados.filter((r) => r.status === 'ok').length;
   const erros = resultados.length - ok;
-  const limiteAtingido = resultados.some((r) => r.status === 'erro: limite de cálculos grátis atingido');
 
   showToast(`Lote processado: ${ok} calculado(s), ${erros} com erro`, ok > 0 ? 'success' : 'error');
-
-  if (limiteAtingido) {
-    showUpgradeOverlay();
-  }
 
   // FASE 2: liga o lote ao banco (produtos/lotes/lote_itens/calculos) — não bloqueia a UI
   _persistirLote(resultados).catch((err) => console.warn('⚠️ Falha ao persistir lote:', err.message));
@@ -246,9 +241,9 @@ export function processarLinha(linha, plataformas = _plataformas) {
     return { ...base, status: `erro: tipo_anuncio inválido para ${plataformaId}` };
   }
 
-  // Freemium: cada linha calculada conta no limite — mesmo caminho do cálculo individual
+  // Uso liberado — canCalculate() sempre true (mantido por simetria com o cálculo individual)
   if (!canCalculate()) {
-    return { ...base, status: 'erro: limite de cálculos grátis atingido' };
+    return { ...base, status: 'erro: não foi possível calcular' };
   }
 
   const calcInputs = mapPlataformaToInputs({

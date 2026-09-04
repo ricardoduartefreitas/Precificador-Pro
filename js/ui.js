@@ -5,7 +5,7 @@ import { getState, setState, setInput, getInputs } from './state.js';
 import { formatBRL, formatPct, formatDate, parseInputValue } from './formatter.js';
 import { calcular, calcularComDesconto, comparar, mapPlataformaToInputs, identificarFaixa, obterFaixasFormatadas, sugerirImposto } from './calculator.js';
 import { saveEntry, getHistoryFiltered, clearHistory, groupByDate, getStats, exportCSV } from './history.js';
-import { canCalculate, registerCalculo, isPro, showUpgradeOverlay } from './freemium.js';
+import { canCalculate, registerCalculo } from './freemium.js';
 import { initLote } from './lote.js';
 import { insertCalculo, updateCalculo, getProfile } from './supabase.js';
 import { getCurrentUserId } from './auth.js';
@@ -55,14 +55,6 @@ export function updatePlanBadge(pro) {
   if (!badge) return;
   badge.textContent = pro ? 'PRO' : 'FREE';
   badge.classList.toggle('pro', pro);
-}
-
-export function openOverlayPro() {
-  document.getElementById('overlay-pro')?.classList.remove('hidden');
-}
-
-export function closeOverlayPro() {
-  document.getElementById('overlay-pro')?.classList.add('hidden');
 }
 
 export function openModalSalvar() {
@@ -141,13 +133,9 @@ function _aplicarSugestaoImposto() {
 function _bindGlobalModals() {
   document.getElementById('btn-modal-cancelar')?.addEventListener('click', closeModalSalvar);
   document.getElementById('btn-modal-confirmar')?.addEventListener('click', _confirmSave);
-  document.getElementById('btn-fechar-overlay')?.addEventListener('click', closeOverlayPro);
 
   document.getElementById('modal-salvar')?.addEventListener('click', (e) => {
     if (e.target === e.currentTarget) closeModalSalvar();
-  });
-  document.getElementById('overlay-pro')?.addEventListener('click', (e) => {
-    if (e.target === e.currentTarget) closeOverlayPro();
   });
 
   document.getElementById('modal-produto-nome')?.addEventListener('keydown', (e) => {
@@ -367,9 +355,7 @@ function _handleCalcular() {
   console.log('[CALC] Handler iniciado');
 
   if (!canCalculate()) {
-    console.log('[CALC] Bloqueado: não pode calcular (limite free atingido)');
-    showUpgradeOverlay();
-    return;
+    return; // uso liberado — canCalculate() sempre true, nunca deve cair aqui
   }
 
   const state    = getState();
@@ -599,8 +585,7 @@ function _bindComparInputChange() {
 
 function _handleComparar() {
   if (!canCalculate()) {
-    showUpgradeOverlay();
-    return;
+    return; // uso liberado — canCalculate() sempre true, nunca deve cair aqui
   }
 
   const base = {
@@ -633,8 +618,7 @@ function _handleComparar() {
 }
 
 // ─── TELA 3: HISTÓRICO ───────────────────────────────────────────────────────
-
-const FREE_HISTORY_LIMIT = 5;
+// Uso liberado (03/09/2026): histórico sem limite de registros — ver freemium.js
 
 function _initHistoricoView() {
   if (!document.getElementById('history-list')) return;
@@ -651,11 +635,6 @@ function _initHistoricoView() {
   });
 
   document.getElementById('btn-export-csv')?.addEventListener('click', () => {
-    if (!isPro()) {
-      showToast('Exportação CSV disponível apenas no plano PRO', 'error');
-      openOverlayPro();
-      return;
-    }
     const state   = getState();
     const entries = getHistoryFiltered({
       plataforma: state.historyFilter || 'todos',
@@ -731,43 +710,17 @@ function _renderHistoricoList() {
     return;
   }
 
-  const pro    = isPro();
   const groups = groupByDate(entries);
   let html     = '';
-  let count    = 0;
-  let locked   = false;
 
   for (const [label, items] of Object.entries(groups)) {
-    let groupHtml = '';
-    for (const entry of items) {
-      count++;
-      if (!pro && count > FREE_HISTORY_LIMIT) {
-        locked = true;
-        break;
-      }
-      groupHtml += _renderEntry(entry);
-    }
+    const groupHtml = items.map(_renderEntry).join('');
     if (groupHtml) {
       html += `<p class="history-group-label">${_esc(label)}</p>${groupHtml}`;
     }
-    if (locked) break;
-  }
-
-  if (locked) {
-    const remaining = entries.length - FREE_HISTORY_LIMIT;
-    html += `
-      <div class="history-pro-lock">
-        <p class="history-pro-lock-msg">
-          + ${remaining} registro${remaining > 1 ? 's' : ''} bloqueado${remaining > 1 ? 's' : ''}
-        </p>
-        <button class="btn btn--secondary" id="btn-unlock-history">Desbloquear PRO</button>
-      </div>`;
   }
 
   container.innerHTML = html;
-
-  // Evento do botão de unlock gerado dinamicamente
-  document.getElementById('btn-unlock-history')?.addEventListener('click', openOverlayPro);
 }
 
 function _renderEntry(entry) {

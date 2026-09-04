@@ -39,7 +39,7 @@ global.localStorage = new LocalStorageStub();
 
 const { calcular, mapPlataformaToInputs } = await import(path.join(root, 'js/calculator.js'));
 const { processarLinha, parseCSV, toCSV } = await import(path.join(root, 'js/lote.js'));
-const { canCalculate, getUsageCount, registerCalculo } = await import(path.join(root, 'js/freemium.js'));
+const { canCalculate, registerCalculo } = await import(path.join(root, 'js/freemium.js'));
 
 const ML     = (await import(path.join(root, 'platforms/mercadolivre.js'))).default;
 const Shopee = (await import(path.join(root, 'platforms/shopee.js'))).default;
@@ -70,9 +70,6 @@ assert(linhas[3].custo === '', `linha 3 (custo vazio) reconhecida como string va
 assert(Object.keys(linhas[0]).join(',') === 'produto,custo,peso_kg,margem,plataforma,tipo_anuncio', 'header mapeado corretamente');
 
 h1('2. processarLinha — motor REAL (calcular()/mapPlataformaToInputs()) linha a linha');
-
-const contadorAntes = getUsageCount();
-dim(`contador de cálculos ANTES do lote: ${contadorAntes}`);
 
 const resultados = linhas.map((linha) => processarLinha(linha, PLATAFORMAS));
 
@@ -116,11 +113,10 @@ for (const { linha, resultado, plat, tipo } of casosIndividuais) {
     `== preço do cálculo individual (${resultadoIndividual.precoVenda?.toFixed(2)})`);
 }
 
-h1('4. Freemium — cada linha calculada conta no limite (mesmo canCalculate()/registerCalculo())');
+h1('4. Freemium — uso liberado (canCalculate() sempre true, sem contagem/limite)');
 
-const contadorDepois = getUsageCount();
-assert(contadorDepois === contadorAntes + 3, `contador incrementou exatamente +3 (linhas OK) — antes=${contadorAntes} depois=${contadorDepois}`);
-assert(canCalculate() === true, 'canCalculate() ainda permite novos cálculos (limite de dev não atingido)');
+assert(canCalculate() === true, 'canCalculate() sempre permite calcular (uso liberado)');
+assert(registerCalculo() === undefined, 'registerCalculo() é no-op (não conta, não bloqueia, não abre overlay)');
 
 h1('5. toCSV — exportação dos resultados (BOM + ; + round-trip via parseCSV)');
 
