@@ -23,3 +23,6 @@ design_aba_lateral_referencia.html
 # sistema
 .DS_Store
 Thumbs.db
+
+# saída gerada pela ferramenta graphify (não versionar)
+graphify-out/
