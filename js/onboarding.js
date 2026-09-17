@@ -17,6 +17,11 @@ const PLATAFORMAS_ONBOARDING = [
 
 const UFS = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO'];
 
+// LGPD (17/09/2026) — versão da Política de Privacidade aceita no passo 3.
+// Guardada junto com o perfil (consentimento_aceito / consentimento_em / consentimento_versao).
+// Ao publicar uma nova versão da política, atualizar esta constante.
+export const LGPD_VERSAO = 'lgpd-v1-2026-09-17';
+
 let _step = 1;
 let _profile = null;
 let _bound = false;
@@ -31,6 +36,8 @@ export async function initOnboarding() {
     document.getElementById('btn-onboarding-avancar')?.addEventListener('click', _handleAvancar);
     document.getElementById('btn-onboarding-voltar')?.addEventListener('click', _handleVoltar);
     document.getElementById('onboarding-cnpj')?.addEventListener('input', _maskCNPJ);
+    // LGPD: o gate do botão "Concluir" reage ao checkbox de consentimento
+    document.getElementById('onboarding-consentimento-lgpd')?.addEventListener('change', _updateConsentGate);
     window.addEventListener('hashchange', () => {
       if (_currentRoute() === 'onboarding') _loadAndRender();
     });
@@ -63,6 +70,8 @@ async function _loadAndRender() {
   _setSelectVal('onboarding-uf', _profile?.uf);
   _setChecked('onboarding-funcionario', _profile?.tem_funcionario);
   _setChecked('onboarding-outro-precificador', _profile?.usa_outro_precificador);
+  // LGPD: se o aceite já está registrado, o checkbox vem marcado (não repete a pergunta)
+  _setChecked('onboarding-consentimento-lgpd', _profile?.consentimento_aceito);
 
   const plataformasAtivas = _profile?.plataformas || [];
   document.querySelectorAll('#onboarding-plataformas input[type="checkbox"]').forEach((cb) => {
@@ -91,7 +100,27 @@ function _renderStep() {
   document.getElementById('btn-onboarding-voltar')?.classList.toggle('hidden', _step === 1);
   const btnAvancar = document.getElementById('btn-onboarding-avancar');
   if (btnAvancar) btnAvancar.textContent = _step === 3 ? 'Concluir' : 'Avançar';
+  _updateConsentGate();
   _hideError();
+}
+
+// LGPD: no passo 3 o botão "Concluir" só habilita com o consentimento marcado.
+// Se o usuário já aceitou antes (consentimento_aceito no perfil), o checkbox já vem marcado
+// e o botão permanece habilitado.
+function _consentimentoMarcado() {
+  return !!document.getElementById('onboarding-consentimento-lgpd')?.checked;
+}
+
+function _updateConsentGate() {
+  const btnAvancar = document.getElementById('btn-onboarding-avancar');
+  if (!btnAvancar) return;
+  if (_step !== 3) {
+    btnAvancar.disabled = false;
+    return;
+  }
+  const aceito = _consentimentoMarcado() || !!_profile?.consentimento_aceito;
+  btnAvancar.disabled = !aceito;
+  btnAvancar.title = aceito ? '' : 'Marque o consentimento da Política de Privacidade para concluir';
 }
 
 function _handleVoltar() {
@@ -156,6 +185,19 @@ async function _handleAvancar() {
       if (!cidade) return _showError('Informe a cidade');
       if (!uf) return _showError('Selecione a UF');
 
+      // LGPD (17/09/2026): consentimento explícito obrigatório para concluir o cadastro
+      const jaAceitouAntes = !!_profile?.consentimento_aceito;
+      if (!_consentimentoMarcado() && !jaAceitouAntes) {
+        return _showError('Para concluir, aceite a Política de Privacidade');
+      }
+      const consentimentoFields = jaAceitouAntes
+        ? {} // preserva a data/versão do PRIMEIRO aceite (prova do consentimento)
+        : {
+            consentimento_aceito: true,
+            consentimento_em: new Date().toISOString(),
+            consentimento_versao: LGPD_VERSAO,
+          };
+
       const ok = await _save({
         plataformas,
         skus,
@@ -165,8 +207,13 @@ async function _handleAvancar() {
         tem_funcionario: temFuncionario,
         usa_outro_precificador: usaOutroPrecificador,
         onboarding_completo: true,
+        ...consentimentoFields,
       });
       if (!ok) return;
+
+      if (consentimentoFields.consentimento_aceito) {
+        _profile = { ...(_profile || {}), ...consentimentoFields };
+      }
 
       await refreshOnboardingStatus();
       showToast('✅ Cadastro completo! Bem-vindo ao PrecificaPRO.', 'success');
@@ -178,6 +225,8 @@ async function _handleAvancar() {
       // Se o passo mudou (sucesso), _renderStep() já ajustou o texto — só restaura em erro
       if (btnAvancar.textContent === 'Salvando...') btnAvancar.textContent = textoOriginal;
     }
+    // LGPD: reavalia o gate do passo 3 — nunca deixa "Concluir" habilitado sem o consentimento
+    _updateConsentGate();
   }
 }
 

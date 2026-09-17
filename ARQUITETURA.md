@@ -27,6 +27,9 @@
 | `js/freemium.js` | O limite dos 30 cálculos grátis |
 | `js/history.js` | O histórico + o CSV |
 | `js/admin.js` | O painel admin |
+| `js/onboarding.js` | O WIZARD do cadastro estendido (3 passos: Identidade → Fiscal → Operação) + o gate do consentimento LGPD (passo 3) |
+| `js/consent-banner.js` | LGPD: o banner de RE-CONSENTIMENTO para quem já tinha cadastro antes da Política (isolado/defensivo — nunca quebra o boot) |
+| `privacidade.html` | A Política de Privacidade (página institucional pública, linkada no rodapé) |
 | `platforms/*.js` | As 5 plataformas (ML, Shopee, Amazon, TikTok, Shein!) |
 
 ## 3. O FLUXO DO BOOT (a ordem — o app.js!)
@@ -79,3 +82,18 @@
 - O try/catch do initAuth
 - O Network First do SW (a navegação!)
 - O fluxo do aceite do convite (o aceitar-convite NUNCA redireciona!)
+
+## 9. LGPD — POLÍTICA DE PRIVACIDADE E CONSENTIMENTO (17/09/2026)
+- **A Política**: `privacidade.html` (página pública, mesmo CSS/identidade dourada) — linkada no rodapé
+  do app (`footer-site`) e no texto do consentimento. Versão corrente: `lgpd-v1-2026-09-17`.
+- **O consentimento no cadastro**: checkbox obrigatório `#onboarding-consentimento-lgpd` no PASSO 3.
+  O botão "Concluir" **só habilita com o aceite marcado** (o gate `_updateConsentGate()` em
+  `js/onboarding.js` — roda no `_renderStep()` e no `finally` do `_handleAvancar`).
+- **A prova do aceite** (banco): `profiles.consentimento_aceito` · `consentimento_em` (UTC) ·
+  `consentimento_versao`. O PRIMEIRO aceite nunca é sobrescrito (o wizard preserva data/versão
+  originais). Migration: `supabase/migrations/20260917120000_add_lgpd_consent_to_profiles.sql`.
+- **Quem já tinha cadastro (legado)**: `js/consent-banner.js` mostra um banner fixo (não bloqueante)
+  no primeiro login de quem tem `onboarding_completo = true` e `consentimento_aceito = false`, e
+  grava o aceite ao clicar. É isolado (try/catch) — falha nele NUNCA quebra o boot.
+- **O que NÃO tem consentimento no app**: o convite coleta só nome + senha; o resto (e o aceite)
+  vem no onboarding. Não existe self-signup (login apenas por convite).
