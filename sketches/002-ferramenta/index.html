@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PrecificaPRO — calcule agora, aqui na página</title>
+<meta name="description" content="Calculadora de preço para marketplace: informe custo e taxa e veja o lucro real de cada venda. Grátis, sem cadastro para testar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF; --panel:#F6F4F1; --ink:#12100E; --body:#3B3733; --muted:#6E6862;
+  --line:rgba(18,16,14,.14); --accent:#EE4D2D; --accent-ink:#2B0B03;
+  --neg:#B3261E; --ok:#0F6B3C; --r:12px; --pill:999px;
+  --fd:'Archivo',system-ui,sans-serif; --fm:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--fd);background:var(--bg);color:var(--ink);line-height:1.45;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1100px;margin:0 auto;padding:0 22px}
+header{border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(255,255,255,.94);backdrop-filter:blur(6px);z-index:9}
+header .wrap{display:flex;align-items:center;gap:24px;height:66px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:900;font-size:18px;letter-spacing:-.03em;text-decoration:none}
+.brand i{width:24px;height:24px;border-radius:7px;background:var(--accent);display:block}
+nav{display:flex;gap:20px;font-size:14px;color:var(--body)}
+nav a{text-decoration:none}
+.hl{margin-left:auto;display:flex;gap:9px}
+.btn{display:inline-flex;align-items:center;justify-content:center;font-family:var(--fd);font-weight:700;
+  font-size:15.5px;border-radius:var(--pill);padding:13px 22px;text-decoration:none;border:1px solid transparent;
+  cursor:pointer;transition:transform .15s ease}
+.btn:hover{transform:scale(1.03)}
+.btn-p{background:var(--accent);color:var(--accent-ink)}
+.btn-g{border-color:var(--line);color:var(--ink)}
+.btn-sm{padding:9px 15px;font-size:14px}
+/* ---------- a ferramenta É o herói ---------- */
+.topo{display:grid;grid-template-columns:.92fr 1.08fr;gap:40px;align-items:start;padding:46px 0 30px}
+.topo h1{font-weight:900;font-size:clamp(32px,4.6vw,54px);line-height:.98;letter-spacing:-.035em;max-width:18ch}
+.topo h1 span{color:var(--accent)}
+.topo p{color:var(--body);font-size:17px;margin-top:18px;max-width:46ch}
+.bullets{margin-top:22px;display:flex;flex-direction:column;gap:9px;font-size:14.5px;color:var(--body)}
+.bullets s{text-decoration:none;color:var(--ok);font-weight:700;margin-right:8px}
+/* calculadora */
+.calc{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px}
+.calc .ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.calc .ch b{font-size:15px;font-weight:800}
+.calc .ch span{font-family:var(--fm);font-size:11.5px;color:var(--muted)}
+.plats{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.plats button{font-family:var(--fd);font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:var(--pill);
+  border:1px solid var(--line);background:#fff;cursor:pointer}
+.plats button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.grade{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.campo{display:flex;flex-direction:column;gap:6px}
+.campo label{font-size:12.5px;color:var(--muted);font-weight:600}
+.campo input{font-family:var(--fm);font-size:15px;padding:11px 12px;border:1px solid var(--line);
+  border-radius:var(--r);background:#fff;width:100%}
+.campo input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+.res{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.res .l{display:flex;justify-content:space-between;font-family:var(--fm);font-size:14px;padding:7px 0;
+  border-bottom:1px dashed var(--line)}
+.res .l:last-of-type{border-bottom:0}
+.res .l b{font-weight:600}
+.res .grande{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid var(--ink);
+  margin-top:12px;padding-top:14px;background:var(--panel);margin-left:-16px;margin-right:-16px;
+  padding-left:16px;padding-right:16px;padding-bottom:12px;border-radius:0 0 var(--r) var(--r)}
+.res .grande span{font-size:13.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--body)}
+.res .grande strong{font-family:var(--fm);font-size:38px;font-weight:600;letter-spacing:-.02em;line-height:1}
+.selo{display:inline-block;font-size:12px;font-weight:700;border-radius:var(--pill);padding:4px 10px;
+  margin-top:8px;background:#FBEAE5;color:var(--neg)}
+.neg{color:var(--neg)}.ok{color:var(--ok)}
+.aviso{margin-top:12px;font-size:12.5px;color:var(--muted);line-height:1.5}
+/* ---------- prova ---------- */
+.faixa{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--panel)}
+.faixa .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:26px 22px}
+.faixa b{font-family:var(--fm);font-size:22px;display:block}
+.faixa span{font-size:13px;color:var(--muted)}
+section{padding:56px 0}
+.shead h2{font-size:clamp(24px,3vw,34px);font-weight:900;letter-spacing:-.03em;line-height:1.05;max-width:26ch}
+.shead p{color:var(--body);margin-top:12px;font-size:16.5px;max-width:60ch}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:26px}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.card h4{font-size:15.5px;font-weight:700;margin-bottom:7px}
+.card p{font-size:14px;color:var(--body)}
+.erros{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:24px}
+.erro{background:var(--panel);border-radius:var(--r);padding:18px;border-left:3px solid var(--accent)}
+.erro b{font-size:15.5px}.erro p{font-size:14px;color:var(--body);margin-top:6px}
+.fecho{background:var(--ink);border-radius:16px;padding:36px;display:flex;justify-content:space-between;
+  align-items:center;gap:28px;flex-wrap:wrap}
+.fecho h2{color:#fff;font-size:clamp(22px,2.6vw,30px);font-weight:900;letter-spacing:-.03em;line-height:1.06;max-width:24ch}
+.fecho p{color:#C9C3BC;margin-top:10px;font-size:15.5px}
+footer{background:#0E0C0A;color:#B8B2AB;font-size:13px;padding:38px 0 26px;margin-top:56px}
+.fcols{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.2fr;gap:32px}
+footer b{color:#fff;display:block;margin-bottom:10px;font-size:13.5px}
+footer a{color:#B8B2AB;text-decoration:none;display:block;margin-bottom:7px}
+footer a:hover{color:#fff}
+.legal{border-top:1px solid rgba(255,255,255,.12);margin-top:26px;padding-top:18px;display:flex;
+  justify-content:space-between;gap:18px;flex-wrap:wrap;font-size:12px;color:#8E8880}
+@media (max-width:900px){
+  nav{display:none}
+  .topo{grid-template-columns:1fr;gap:26px}
+  .g4,.faixa .wrap,.fcols,.erros{grid-template-columns:1fr 1fr}
+  .grade{grid-template-columns:1fr}
+  .fecho{padding:26px}
+}
+@media (max-width:560px){.g4,.faixa .wrap,.erros,.fcols{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header><div class="wrap">
+  <a class="brand" href="/"><i></i>PrecificaPRO</a>
+  <nav><a href="#ferramenta">Como calcula</a><a href="#prova">Prova</a><a href="#duvidas">Dúvidas</a></nav>
+  <div class="hl"><a class="btn btn-g btn-sm" href="app.html">Entrar</a>
+  <a class="btn btn-p btn-sm" href="app.html#/criar">Criar conta grátis</a></div>
+</div></header>
+
+<main>
+<div class="topo wrap">
+  <div>
+    <h1>Descubra se esse preço <span>dá lucro</span> — aqui mesmo, agora.</h1>
+    <p>É só digitar o custo e as taxas. O cálculo sai na hora, sem cadastro para testar.
+    Com conta, ficam o histórico e o comparador entre plataformas.</p>
+    <div class="bullets">
+      <span><s>✓</s>5 plataformas: ML · Shopee · Amazon · TikTok Shop · Shein</span>
+      <span><s>✓</s>Perfil CPF iniciante, CPF experiente e CNPJ</span>
+      <span><s>✓</s>Instala no celular e funciona sem internet</span>
+    </div>
+  </div>
+
+  <div class="calc">
+    <div class="ch"><b>O lucro real deste produto</b><span id="platsel">Shopee · CNPJ · comissão 14%</span></div>
+    <div class="plats">
+      <button class="on" data-c="14">Shopee CNPJ</button>
+      <button data-c="12">Shopee CPF</button>
+      <button data-c="11">Mercado Livre Clássico</button>
+    </div>
+    <div class="grade">
+      <div class="campo"><label>Custo do produto (R$)</label><input id="custo" type="number" value="85" step="0.01"></div>
+      <div class="campo"><label>Preço de venda (R$)</label><input id="venda" type="number" value="120" step="0.01"></div>
+      <div class="campo"><label>Taxa fixa por item (R$)</label><input id="fixa" type="number" value="20" step="0.01"></div>
+      <div class="campo"><label>Embalagem + frete (R$)</label><input id="emb" type="number" value="8.5" step="0.01"></div>
+      <div class="campo"><label>Campanha (%)</label><input id="camp" type="number" value="2.5" step="0.1"></div>
+      <div class="campo"><label>Comissão (%)</label><input id="com" type="number" value="14" step="0.1"></div>
+    </div>
+    <div class="res">
+      <div class="l"><span>Preço de venda</span><b id="r-venda">R$ 120,00</b></div>
+      <div class="l"><span>Comissão</span><b id="r-com">− R$ 16,80</b></div>
+      <div class="l"><span>Taxa fixa</span><b id="r-fixa">− R$ 20,00</b></div>
+      <div class="l"><span>Embalagem + frete</span><b id="r-emb">− R$ 8,50</b></div>
+      <div class="l"><span>Campanha</span><b id="r-camp">− R$ 3,00</b></div>
+      <div class="l"><span>Custo do produto</span><b id="r-custo">− R$ 85,00</b></div>
+      <div class="grande"><span>Lucro por venda<br><span class="selo" id="r-selo">margem de −11,1%</span></span><strong id="r-final" class="neg">− R$ 13,30</strong></div>
+    </div>
+    <p class="aviso" id="aviso-save">Preço mínimo para não ter prejuízo: <b id="r-min">R$ 135,93</b>.
+    As taxas variam por categoria e por perfil de vendedor — o número final é o que vale para o seu caso.</p>
+    <a class="btn btn-p" style="width:100%;margin-top:14px" href="app.html#/criar">Salvar este cálculo e comparar as 5 plataformas</a>
+  </div>
+</div>
+
+<div class="faixa"><div class="wrap">
+  <div><b>R$ 13,30</b><span>prejuízo por venda no exemplo padrão</span></div>
+  <div><b>30 s</b><span>para calcular qualquer produto</span></div>
+  <div><b>5</b><span>plataformas no mesmo cálculo</span></div>
+  <div><b>R$ 0</b><span>sem mensalidade e sem cartão</span></div>
+</div></div>
+
+<section id="ferramenta"><div class="wrap">
+  <div class="shead">
+    <h2>O cálculo mostra exatamente onde o seu dinheiro vai.</h2>
+    <p>Comissão, taxa fixa por item, frete, embalagem e campanha entram na conta — e você ajusta cada uma
+    para a sua realidade antes de anunciar.</p>
+  </div>
+  <div class="g4">
+    <div class="card"><h4>Preço mínimo</h4><p>O piso: abaixo dele, cada venda tira dinheiro do seu caixa.</p></div>
+    <div class="card"><h4>Preço ideal</h4><p>O preço que entrega a margem que você escolheu, e não a que sobrou.</p></div>
+    <div class="card"><h4>Lucro líquido</h4><p>O valor que efetivamente cai na conta depois de tudo.</p></div>
+    <div class="card"><h4>Comparador</h4><p>O mesmo produto nas 5 plataformas, lado a lado, para decidir onde anunciar.</p></div>
+  </div>
+</div></section>
+
+<section id="prova" style="background:#F6F4F1;border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><div class="wrap">
+  <div class="shead">
+    <h2>Os cinco erros que fazem o vendedor pagar para vender.</h2>
+    <p>Nenhum deles aparece no momento do anúncio. Todos aparecem no extrato do fim do mês — e é isso que
+    a ferramenta antecipa.</p>
+  </div>
+  <div class="erros">
+    <div class="erro"><b>1. Calcular só o custo do produto</b>
+      <p>Falta comissão, taxa fixa, embalagem e frete — o preço nasce abaixo do ponto de equilíbrio.</p></div>
+    <div class="erro"><b>2. Esquecer a taxa fixa por item</b>
+      <p>Em pedido de valor baixo, ela é o que mais pesa — e quase nunca entra na conta.</p></div>
+    <div class="erro"><b>3. Não embutir o frete e a embalagem</b>
+      <p>Custo real de cada envio, que sai do lucro e não do preço.</p></div>
+    <div class="erro"><b>4. Entrar em campanha sem embutir o desconto</b>
+      <p>Cada ponto de desconto sai direto da margem, sem aviso.</p></div>
+    <div class="erro"><b>5. Descobrir o prejuízo no extrato</b>
+      <p>Quando o mês fecha, o dinheiro já saiu — e o histórico não se recupera.</p></div>
+    <div class="erro" style="background:#fff"><b>O que a ferramenta faz com isso</b>
+      <p>Coloca os cinco na conta antes de você publicar o anúncio, e guarda o histórico para você comparar
+      mês a mês com a conta criada.</p></div>
+  </div>
+</div></section>
+
+<section id="duvidas"><div class="wrap" style="max-width:820px">
+  <div class="shead"><h2>Dúvidas honestas</h2></div>
+  <div class="card" style="margin-bottom:12px"><h4>É grátis de verdade?</h4>
+    <p>Sim. Cálculos ilimitados com conta criada, sem mensalidade e sem cartão de crédito. Você usa aqui e
+    no celular.</p></div>
+  <div class="card" style="margin-bottom:12px"><h4>De onde vêm as taxas?</h4>
+    <p>Das tabelas oficiais de cada plataforma, revisadas periodicamente. Como a comissão muda por categoria
+    e por perfil, cada taxa fica visível na conta — e ajustável para o seu caso.</p></div>
+  <div class="card" style="margin-bottom:12px"><h4>Preciso entender de planilha?</h4>
+    <p>Não. Você preenche os campos e o resultado aparece em tempo real. Sem fórmula e sem instalação.</p></div>
+  <div class="card"><h4>Tenho dúvida que não está aqui.</h4>
+    <p>Fala no WhatsApp <a href="https://wa.me/5562981366800">(62) 98136-6800</a> — a Ester responde na hora, e passa para o time quando você pedir.</p></div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap">
+  <div class="fecho">
+    <div><h2>Faça a conta do produto que você mais vende.</h2>
+      <p>Se o preço atual estiver abaixo do preço mínimo, é melhor descobrir hoje do que no extrato.</p></div>
+    <a class="btn btn-p" href="app.html#/criar">Criar conta grátis</a>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <div class="fcols">
+    <div><b>PrecificaPRO</b>
+      <p style="max-width:34ch">Calculadora de precificação para vendedores de marketplace.
+      Um produto da Ruah Tecnologia.</p></div>
+    <div><b>Produto</b><a href="#ferramenta">Como calcula</a><a href="#prova">Os 5 erros</a>
+      <a href="#duvidas">Dúvidas</a></div>
+    <div><b>Contato</b><a href="https://wa.me/5562981366800">WhatsApp (62) 98136-6800</a>
+      <a href="mailto:contato@ruahtecnologia.com.br">contato@ruahtecnologia.com.br</a>
+      <a href="https://ruahtecnologia.com.br">ruahtecnologia.com.br</a></div>
+    <div><b>Legal</b><a href="/privacidade">Política de privacidade</a>
+      <a href="/termos">Termos de uso</a><a href="#" id="cookies">Ajustar cookies</a></div>
+  </div>
+  <div class="legal">
+    <span>Ruah Tecnologia e Ecossistema Logístico Ltda · CNPJ 65.383.875/0001-65 · Goiânia, GO</span>
+    <span>Ferramenta independente de apoio à precificação. Não somos o Mercado Livre, a Shopee, a Amazon,
+    o TikTok Shop nem a Shein.</span>
+  </div>
+</div></footer>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var brl = function(v){ return (v<0?'− ':'') + 'R$ ' + Math.abs(v).toFixed(2).replace('.',','); };
+  var comissao = 14;
+  document.querySelectorAll('.plats button').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.plats button').forEach(function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      comissao = parseFloat(b.dataset.c);
+      $('com').value = comissao;
+      $('platsel').textContent = b.textContent + ' · comissão ' + comissao + '%';
+      calc();
+    });
+  });
+  function calc(){
+    var custo = parseFloat($('custo').value)||0, venda = parseFloat($('venda').value)||0;
+    var fixa = parseFloat($('fixa').value)||0, emb = parseFloat($('emb').value)||0;
+    var camp = parseFloat($('camp').value)||0; var com = parseFloat($('com').value)||0;
+    var vCom = venda*com/100, vCamp = venda*camp/100;
+    var lucro = venda - vCom - fixa - emb - vCamp - custo;
+    $('r-venda').textContent = brl(venda); $('r-com').textContent = '− ' + brl(vCom);
+    $('r-fixa').textContent = '− ' + brl(fixa); $('r-emb').textContent = '− ' + brl(emb);
+    $('r-camp').textContent = '− ' + brl(vCamp); $('r-custo').textContent = '− ' + brl(custo);
+    var el = $('r-final');
+    el.textContent = brl(lucro);
+    el.className = lucro < 0 ? 'neg' : 'ok';
+    var selo = $('r-selo');
+    if (selo) {
+      var m = venda > 0 ? lucro / venda * 100 : 0;
+      selo.textContent = 'margem de ' + (m < 0 ? '−' : '') + Math.abs(m).toFixed(1).replace('.', ',') + '%';
+    }
+    /* preço mínimo: resolve venda tal que lucro = 0 */
+    var divisor = (1 - com/100 - camp/100);
+    $('r-min').textContent = brl(divisor > 0 ? (custo + fixa + emb)/divisor : 0);
+  }
+  ['custo','venda','fixa','emb','camp','com'].forEach(function(id){
+    $(id).addEventListener('input', calc);
+  });
+  calc();
+})();
+</script>
+</body>
+</html>

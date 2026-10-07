@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PrecificaPRO — descubra o lucro real antes de anunciar</title>
+<meta name="description" content="A calculadora que mostra o preço mínimo, o preço ideal e o lucro real de cada venda em Mercado Livre, Shopee, Amazon, TikTok Shop e Shein — antes de você anunciar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800;900&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F5F2; --surface:#FFFFFF; --ink:#12100E; --body:#3B3733; --muted:#6E6862;
+  --line:rgba(18,16,14,.12); --accent:#EE4D2D; --accent-ink:#2B0B03; --soft:#FBEAE5;
+  --neg:#B3261E; --ok:#0F6B3C;
+  --r:16px; --r-lg:28px; --pill:999px;
+  --fd:'Archivo',system-ui,sans-serif; --fm:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--fd);background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+a{color:inherit}
+/* ---------- barra + header ---------- */
+.bar{background:var(--ink);color:#EDE9E4;font-size:13px}
+.bar .wrap{display:flex;gap:18px;align-items:center;height:40px}
+.bar b{color:#fff;font-weight:600}
+.bar .sp{margin-left:auto;display:flex;gap:16px;align-items:center}
+.bar a{text-decoration:none;color:#EDE9E4}
+.bar a:hover{text-decoration:underline}
+header{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:9}
+header .wrap{display:flex;align-items:center;gap:28px;height:74px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.02em;text-decoration:none}
+.brand i{width:26px;height:26px;border-radius:8px;background:var(--accent);display:block}
+nav{display:flex;gap:22px;font-size:14.5px;color:var(--body)}
+nav a{text-decoration:none}nav a:hover{color:var(--ink)}
+.hl{margin-left:auto;display:flex;gap:10px;align-items:center}
+/* ---------- botões (pílula, texto escuro em fundo vivo — contraste 4,95:1) ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--fd);
+  font-weight:700;font-size:16px;border-radius:var(--pill);padding:14px 24px;text-decoration:none;
+  border:1px solid transparent;cursor:pointer;transition:transform .16s ease}
+.btn:hover{transform:scale(1.04)}.btn:active{transform:scale(.97)}
+.btn-p{background:var(--accent);color:var(--accent-ink)}
+.btn-s{background:rgba(18,16,14,.07);color:var(--ink)}
+.btn-g{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn-sm{padding:9px 16px;font-size:14.5px}
+/* ---------- hero ---------- */
+.hero{padding:64px 0 40px}
+.hero .k{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--neg);background:var(--soft);border-radius:var(--pill);padding:7px 14px}
+h1{font-weight:900;font-size:clamp(40px,6.4vw,84px);line-height:.92;letter-spacing:-.035em;margin:22px 0 0;max-width:15ch}
+h1 mark{background:none;color:var(--accent)}
+.lead{font-size:19px;color:var(--body);max-width:62ch;margin-top:22px}
+.cta{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:30px}
+.micro{font-size:14px;color:var(--muted);margin-top:16px;display:flex;gap:20px;flex-wrap:wrap}
+.micro span{display:flex;align-items:center;gap:7px}
+/* ---------- o rombo: prova em tabela ---------- */
+.rombo{margin-top:34px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:28px;box-shadow:0 0 0 1px rgba(18,16,14,.04)}
+.rombo .cap{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.rombo h3{font-size:20px;font-weight:800;letter-spacing:-.01em}
+.rombo .tag{font-family:var(--fm);font-size:12.5px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-family:var(--fm);font-size:14.5px}
+td{padding:11px 0;border-bottom:1px dashed var(--line)}
+td:last-child{text-align:right;font-weight:600;white-space:nowrap}
+tr.tot td{border-bottom:0;border-top:2px solid var(--ink);padding-top:16px;font-size:15px;font-weight:700;letter-spacing:.01em}
+tr.tot td:last-child{color:var(--neg);font-size:36px;font-weight:600;line-height:.95;letter-spacing:-.02em}
+.margem{font-family:var(--fm);font-size:12.5px;color:var(--muted);margin-top:6px;text-align:right;display:block}
+.veredito{margin-top:20px;background:var(--soft);border-radius:var(--r);padding:16px 18px;font-size:16.5px;color:#5C1A0C}
+.veredito b{font-weight:800}
+/* ---------- seções ---------- */
+section{padding:72px 0}
+.shead{max-width:64ch;margin-bottom:34px}
+.shead h2{font-size:clamp(28px,3.6vw,44px);font-weight:900;letter-spacing:-.03em;line-height:1.02}
+.shead p{color:var(--body);font-size:17.5px;margin-top:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:24px}
+.card h4{font-size:18px;font-weight:700;margin-bottom:8px}
+.card p{color:var(--body);font-size:15.5px}
+.num{font-family:var(--fm);font-size:12.5px;color:var(--accent);font-weight:600;margin-bottom:12px;display:block}
+.faq details{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 20px;margin-bottom:10px}
+.faq summary{font-weight:700;font-size:16.5px;cursor:pointer}
+.faq p{color:var(--body);font-size:15.5px;margin-top:10px}
+.fecho{background:var(--ink);color:#F2EFEB;border-radius:var(--r-lg);padding:44px 40px;display:grid;
+  grid-template-columns:1.4fr .6fr;gap:32px;align-items:center}
+.fecho h2{font-size:clamp(26px,3.2vw,38px);font-weight:900;letter-spacing:-.03em;line-height:1.03;color:#fff}
+.fecho p{color:#C9C3BC;margin-top:12px;font-size:16.5px}
+footer{background:#0E0C0A;color:#B8B2AB;font-size:13.5px;padding:44px 0 30px;margin-top:64px}
+.fcols{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.2fr;gap:36px}
+footer b{color:#fff;font-weight:700;display:block;margin-bottom:12px;font-size:14px}
+footer a{color:#B8B2AB;text-decoration:none;display:block;margin-bottom:8px}
+footer a:hover{color:#fff}
+.legal{border-top:1px solid rgba(255,255,255,.12);margin-top:30px;padding-top:20px;display:flex;
+  justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:12.5px;color:#8E8880}
+@media (max-width:900px){
+  nav,.hl nav{display:none}
+  .g3,.fcols,.fecho{grid-template-columns:1fr}
+  h1{font-size:clamp(34px,10vw,48px)}
+  section{padding:52px 0}
+}
+</style>
+</head>
+<body>
+
+<div class="bar"><div class="wrap">
+  <span><b>PrecificaPRO</b> · ferramenta da Ruah Tecnologia</span>
+  <span class="sp">
+    <a href="#duvida">Falar com a gente</a>
+    <a href="app.html">Já tenho conta · Entrar</a>
+  </span>
+</div></div>
+
+<header><div class="wrap">
+  <a class="brand" href="/"><i></i>PrecificaPRO</a>
+  <nav>
+    <a href="#rombo">O rombo</a>
+    <a href="#ferramenta">O que ela faz</a>
+    <a href="#planos">Quanto custa</a>
+    <a href="#duvida">Dúvidas</a>
+  </nav>
+  <div class="hl"><a class="btn btn-s btn-sm" href="app.html">Entrar</a>
+  <a class="btn btn-p btn-sm" href="app.html#/criar">Criar conta grátis</a></div>
+</div></header>
+
+<main>
+<div class="hero wrap">
+  <span class="k">Para quem vende em marketplace</span>
+  <h1>Você não perde dinheiro no preço. <mark>Você perde nas taxas que não entram na conta.</mark></h1>
+  <p class="lead">O PrecificaPRO calcula comissão, taxa fixa, frete, embalagem e campanha — e devolve o
+  preço mínimo, o preço ideal e o lucro real de cada venda, antes de você anunciar.</p>
+  <div class="cta">
+    <a class="btn btn-p" href="app.html#/criar">Calcular sem limite — grátis</a>
+    <a class="btn btn-g" href="#rombo">Ver o rombo de um exemplo real</a>
+  </div>
+  <p class="micro"><span>Sem cartão de crédito</span><span>Funciona no celular</span>
+  <span>Cálculo em 30 segundos</span><span>5 plataformas: ML · Shopee · Amazon · TikTok · Shein</span></p>
+
+  <div class="rombo">
+    <div class="cap"><h3>O mesmo produto, vendido a R$ 120,00</h3>
+    <span class="tag">exemplo de extrato · Shopee CNPJ</span></div>
+    <table>
+      <tr><td>Preço de venda</td><td>R$ 120,00</td></tr>
+      <tr><td>(−) Custo do produto</td><td>− R$ 85,00</td></tr>
+      <tr><td>(−) Comissão 14%</td><td>− R$ 16,80</td></tr>
+      <tr><td>(−) Taxa fixa por item</td><td>− R$ 20,00</td></tr>
+      <tr><td>(−) Embalagem + frete</td><td>− R$ 8,50</td></tr>
+      <tr><td>(−) Campanha 2,5%</td><td>− R$ 3,00</td></tr>
+      <tr class="tot"><td>Resultado real por venda</td><td>− R$ 13,30<span class="margem">margem de −11,1% sobre o preço</span></td></tr>
+    </table>
+    <p class="veredito">Você achou que ia <b>lucrar R$ 35,00</b>. Na conta real, <b>perdeu R$ 13,30</b>.
+    Em 100 vendas, isso é <b>R$ 1.330,00</b> que saíram do seu bolso sem você ver.</p>
+  </div>
+</div>
+
+<section id="ferramenta"><div class="wrap">
+  <div class="shead">
+    <h2>Três números, e você sabe se vale anunciar.</h2>
+    <p>Sem planilha e sem fórmula. Você preenche o custo e as taxas uma vez; o PrecificaPRO devolve o que decide a venda.</p>
+  </div>
+  <div class="g3">
+    <div class="card"><span class="num">01</span><h4>Preço mínimo</h4>
+      <p>O menor preço que você pode cobrar sem entrar no prejuízo, com todas as taxas dentro.</p></div>
+    <div class="card"><span class="num">02</span><h4>Preço ideal</h4>
+      <p>O preço que entrega a margem que você definiu — e o que sobra em cada venda.</p></div>
+    <div class="card"><span class="num">03</span><h4>Lucro líquido</h4>
+      <p>O que cai na conta depois de comissão, taxa fixa, frete, embalagem e campanha.</p></div>
+  </div>
+</div></section>
+
+<section id="planos"><div class="wrap">
+  <div class="shead">
+    <h2>Não tem mensalidade. Não tem plano.</h2>
+    <p>O PrecificaPRO é gratuito com cadastro: cálculos ilimitados, sem cartão de crédito e sem assinatura.
+    Você cria a conta e usa — aqui e no celular.</p>
+  </div>
+  <div class="faq" id="duvida" style="max-width:74ch">
+    <details open><summary>Preciso instalar alguma coisa?</summary>
+      <p>Não. Funciona no navegador do computador e do celular. Se quiser, instala na tela inicial e ele abre
+      como um aplicativo, inclusive sem internet.</p></details>
+    <details><summary>De onde vêm as taxas das plataformas?</summary>
+      <p>Das tabelas oficiais de cada marketplace, revisadas periodicamente. Como as comissões variam por
+      categoria e por perfil de vendedor, o valor de cada taxa fica visível na conta — e você pode ajustar
+      para o seu caso.</p></details>
+    <details><summary>Serve para o meu tipo de vendedor?</summary>
+      <p>Serve para CPF iniciante, CPF experiente e CNPJ, porque a própria plataforma cobra diferente em cada
+      perfil. Você escolhe o seu e o cálculo muda junto.</p></details>
+    <details><summary>Não sei se estou no prejuízo. Isso me ajuda?</summary>
+      <p>É exatamente para isso. Rode 3 produtos que você mais vende: se o preço atual estiver abaixo do preço
+      mínimo, você descobre hoje em vez de descobrir no extrato do fim do mês.</p></details>
+    <details><summary>Ficou uma dúvida que não está aqui.</summary>
+      <p>Chama no WhatsApp <a href="https://wa.me/5562981366800" style="color:var(--accent-ink);text-decoration:underline">(62) 98136-6800</a>
+      — a Ester responde na hora e, se precisar de gente, ela passa para o time.</p></details>
+  </div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap">
+  <div class="fecho">
+    <div><h2>Antes do próximo anúncio, faça a conta.</h2>
+      <p>Leva 30 segundos e pode ser a diferença entre vender com margem e pagar para vender.</p></div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <a class="btn btn-p" href="app.html#/criar">Criar conta grátis</a>
+      <a class="btn btn-g" style="color:#F2EFEB;border-color:rgba(255,255,255,.3)" href="app.html">Entrar na minha conta</a>
+    </div>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <div class="fcols">
+    <div>
+      <b>PrecificaPRO</b>
+      <p style="max-width:34ch">Calculadora de precificação para vendedores de marketplace.
+      Um produto da Ruah Tecnologia.</p>
+    </div>
+    <div><b>O produto</b>
+      <a href="#rombo">O rombo das taxas</a><a href="#ferramenta">O que ela faz</a>
+      <a href="#planos">Quanto custa</a><a href="#duvida">Dúvidas</a></div>
+    <div><b>Contato</b>
+      <a href="https://wa.me/5562981366800">WhatsApp (62) 98136-6800</a>
+      <a href="mailto:contato@ruahtecnologia.com.br">contato@ruahtecnologia.com.br</a>
+      <a href="https://ruahtecnologia.com.br">ruahtecnologia.com.br</a></div>
+    <div><b>Legal</b>
+      <a href="/privacidade">Política de privacidade</a>
+      <a href="/termos">Termos de uso</a>
+      <a href="#" id="cookies">Ajustar cookies</a></div>
+  </div>
+  <div class="legal">
+    <span>Ruah Tecnologia e Ecossistema Logístico Ltda · CNPJ 65.383.875/0001-65 · Goiânia, GO</span>
+    <span>Ferramenta independente de apoio à precificação. Não somos o Mercado Livre, a Shopee, a Amazon,
+    o TikTok Shop nem a Shein.</span>
+  </div>
+</div></footer>
+
+</body>
+</html>

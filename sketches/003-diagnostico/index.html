@@ -5,17 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PrecificaPRO — arraste o preço e veja onde o seu lucro acaba</title>
 <meta name="description" content="Mova o preço na tela e veja em que ponto o lucro acaba. O PrecificaPRO calcula comissão, taxa fixa, frete, embalagem e campanha das 5 plataformas.">
-<link rel="canonical" href="https://precificapro.ruahtecnologia.com.br/">
-<meta property="og:type" content="website">
-<meta property="og:locale" content="pt_BR">
-<meta property="og:url" content="https://precificapro.ruahtecnologia.com.br/">
-<meta property="og:title" content="PrecificaPRO — arraste o preço e veja onde o seu lucro acaba">
-<meta property="og:description" content="Mova o preço na tela e veja em que ponto o lucro acaba. O PrecificaPRO calcula comissão, taxa fixa, frete, embalagem e campanha das 5 plataformas.">
-<meta property="og:image" content="https://precificapro.ruahtecnologia.com.br/assets/landing-hero2.png">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="assets/fontes/fonts.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#F7F5F2; --surface:#fff; --panel:#F1EEE9; --ink:#12100E; --body:#3B3733; --muted:#6E6862;
@@ -116,16 +108,6 @@ footer a:hover{color:#fff}
   .fecho{padding:26px}
 }
 @media (max-width:560px){.fcols{grid-template-columns:1fr}.campos{grid-template-columns:1fr 1fr}}
-
-/* ---------- aviso de cookies ---------- */
-.cookie-banner{position:fixed;left:0;right:0;bottom:-220px;background:var(--surface);border-top:1px solid var(--line);
-  box-shadow:0 -8px 24px rgba(18,16,14,.14);z-index:99;transition:bottom .25s ease;padding:16px 0}
-.cookie-banner.mostrar{bottom:0}
-.cookie-banner__inner{max-width:1140px;margin:0 auto;padding:0 22px;display:flex;align-items:center;gap:18px;
-  flex-wrap:wrap;justify-content:space-between}
-.cookie-banner__inner p{font-size:13.5px;color:var(--body);max-width:62ch;margin:0}
-.cookie-banner__acoes{display:flex;gap:10px;flex-shrink:0}
-@media (max-width:560px){.cookie-banner__inner{flex-direction:column;align-items:stretch}.cookie-banner__acoes{justify-content:flex-end}}
 </style>
 </head>
 <body>
@@ -216,8 +198,7 @@ footer a:hover{color:#fff}
     <p>A conta criada guarda cada produto e compara as cinco no mesmo cálculo — mesma embalagem, mesmo frete,
     só a comissão muda. Serve para escolher onde anunciar, e não só a que preço.</p></details>
   <details><summary>Ficou dúvida que não está aqui.</summary>
-    <p>Fala no WhatsApp <a href="https://wa.me/5562981366800" style="color:var(--accent-ink);text-decoration:underline">(62) 98136-6800</a> —
-    a Ester, nosso atendimento automático por IA, responde na hora e aciona o time quando você pedir.</p></details>
+    <p>Fala no WhatsApp <a href="https://wa.me/5562981366800" style="color:var(--accent-ink);text-decoration:underline">(62) 98136-6800</a> — a Ester responde na hora, e passa para o time quando você pedir.</p></details>
 </div></section>
 
 <section style="padding-top:0"><div class="wrap">
@@ -237,30 +218,18 @@ footer a:hover{color:#fff}
       Um produto da Ruah Tecnologia.</p></div>
     <div><b>Produto</b><a href="#como">Como funciona</a><a href="#erros">Os 5 erros</a>
       <a href="#duvidas">Dúvidas</a></div>
-    <div><b>Contato</b><a href="https://wa.me/5562981366800">WhatsApp (62) 98136-6800 — Ester, atendimento por IA</a>
+    <div><b>Contato</b><a href="https://wa.me/5562981366800">WhatsApp (62) 98136-6800</a>
       <a href="mailto:contato@ruahtecnologia.com.br">contato@ruahtecnologia.com.br</a>
       <a href="https://ruahtecnologia.com.br">ruahtecnologia.com.br</a></div>
-    <div><b>Legal</b><a href="https://ruahtecnologia.com.br/privacidade">Política de privacidade</a>
-      <a href="https://ruahtecnologia.com.br/termos">Termos de uso</a><a href="#" id="cookies">Ajustar cookies</a></div>
+    <div><b>Legal</b><a href="/privacidade">Política de privacidade</a>
+      <a href="/termos">Termos de uso</a><a href="#" id="cookies">Ajustar cookies</a></div>
   </div>
   <div class="legal">
-    <span>Ruah Tecnologia e Ecossistema Logístico Ltda · CNPJ 65.383.875/0001-65 ·
-    Rua 104, n. 415 — Setor Sul, Goiânia-GO, 74.083-300</span>
+    <span>Ruah Tecnologia e Ecossistema Logístico Ltda · CNPJ 65.383.875/0001-65 · Goiânia, GO</span>
     <span>Ferramenta independente de apoio à precificação. As taxas citadas são exemplos de configuração e
     não substituem a tabela oficial do Mercado Livre, da Shopee, da Amazon, do TikTok Shop ou da Shein.</span>
   </div>
 </div></footer>
-
-<div class="cookie-banner" id="cookie-banner" role="dialog" aria-live="polite" aria-label="Aviso de cookies">
-  <div class="cookie-banner__inner">
-    <p>Usamos cookies para medir o desempenho do site e dos anúncios. Você pode aceitar, recusar, ou ajustar
-    essa escolha depois pelo link "Ajustar cookies" no rodapé.</p>
-    <div class="cookie-banner__acoes">
-      <button class="btn btn-g btn-sm" id="cookie-recusar" type="button">Recusar</button>
-      <button class="btn btn-p btn-sm" id="cookie-aceitar" type="button">Aceitar</button>
-    </div>
-  </div>
-</div>
 
 <script>
 (function(){
@@ -390,99 +359,6 @@ footer a:hover{color:#fff}
     var v=parseFloat(this.value)||0; $('preco').value=Math.min(P1,Math.max(P0,v)); desenha(); });
   ['custo','com','fixa','emb','camp'].forEach(function(id){ $(id).addEventListener('input', desenha); });
   desenha();
-})();
-</script>
-
-<script>
-/* Consentimento de cookies (LGPD) — Google Consent Mode v2.
-   Nenhuma tag de medição carrega antes do aceite. A escolha fica em localStorage
-   e pode ser revista a qualquer momento pelo link "Ajustar cookies" no rodapé. */
-(function(){
-  var CONSENT_KEY = 'psp_consentimento';
-  /* IDs da casa — os mesmos que já rodam em marcas360.ruahtecnologia.com.br (conferido no ar). */
-  var GA_MEASUREMENT_ID = 'G-BBEW5PD7XH';
-  var GOOGLE_ADS_ID = 'AW-18485463418';
-  /* Pixel da Meta: não temos conta/pixel em uso. Fica VAZIO de propósito —
-     vazio = nenhum script da Meta é carregado. Preencher só com o ID real do Meta Business. */
-  var FB_PIXEL_ID = '';
-
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){ window.dataLayer.push(arguments); }
-  window.gtag = gtag;
-
-  gtag('consent', 'default', {
-    ad_storage: 'denied',
-    ad_user_data: 'denied',
-    ad_personalization: 'denied',
-    analytics_storage: 'denied'
-  });
-
-  function carregarGA(){
-    if (window.__gaCarregado) return;
-    window.__gaCarregado = true;
-    var s = document.createElement('script');
-    s.async = true;
-    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_MEASUREMENT_ID;
-    document.head.appendChild(s);
-    gtag('js', new Date());
-    gtag('config', GA_MEASUREMENT_ID);
-    gtag('config', GOOGLE_ADS_ID);
-  }
-
-  function carregarMetaPixel(){
-    if (!FB_PIXEL_ID) return;            /* sem pixel nosso: não carrega nada */
-    if (window.__fbCarregado) return;
-    window.__fbCarregado = true;
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-    document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    window.fbq('init', FB_PIXEL_ID);
-    window.fbq('track', 'PageView');
-  }
-
-  function aplicar(escolha){
-    localStorage.setItem(CONSENT_KEY, escolha);
-    if (escolha === 'aceito') {
-      gtag('consent', 'update', {
-        ad_storage: 'granted',
-        ad_user_data: 'granted',
-        ad_personalization: 'granted',
-        analytics_storage: 'granted'
-      });
-      carregarGA();
-      carregarMetaPixel();
-    } else {
-      gtag('consent', 'update', {
-        ad_storage: 'denied',
-        ad_user_data: 'denied',
-        ad_personalization: 'denied',
-        analytics_storage: 'denied'
-      });
-    }
-  }
-
-  function mostrarBanner(){ document.getElementById('cookie-banner').classList.add('mostrar'); }
-  function esconderBanner(){ document.getElementById('cookie-banner').classList.remove('mostrar'); }
-
-  document.addEventListener('DOMContentLoaded', function(){
-    var escolha = localStorage.getItem(CONSENT_KEY);
-    if (escolha === 'aceito' || escolha === 'recusado') {
-      aplicar(escolha);
-    } else {
-      mostrarBanner();
-    }
-    document.getElementById('cookie-aceitar').addEventListener('click', function(){
-      aplicar('aceito'); esconderBanner();
-    });
-    document.getElementById('cookie-recusar').addEventListener('click', function(){
-      aplicar('recusado'); esconderBanner();
-    });
-    document.getElementById('cookies').addEventListener('click', function(e){
-      e.preventDefault(); mostrarBanner();
-    });
-  });
 })();
 </script>
 </body>
