@@ -7,6 +7,8 @@ const CACHE_NAME = 'psp-v22';
 // A LP (./ = index.html) não entra aqui — ela é outro documento, fora do app shell.
 const APP_SHELL = [
   './app.html',
+  './privacidade.html',
+  './termos.html',
   './css/styles.css',
   './js/app.js',
   './js/state.js',
@@ -21,6 +23,7 @@ const APP_SHELL = [
   './js/produtos.js',
   './js/inteligencia.js',
   './js/onboarding.js',
+  './js/consent-banner.js',
   './js/ui-login.js',
   './js/ui-invite-accept.js',
   './js/admin.js',

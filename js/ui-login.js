@@ -1,8 +1,9 @@
 // ui-login.js — PrecificaPRO
 // Responsabilidade: gerenciar interface de login e reset de senha (sem signup — somente por convite)
 
-import { login, resetPassword, signup, getCurrentUserId } from './auth.js';
+import { login, resetPassword, signup, getCurrentUserId, getAuth } from './auth.js';
 import { updateUserProfile } from './supabase.js';
+import { LGPD_VERSAO } from './onboarding.js';
 
 export function initLoginUI() {
   const emailInput = document.getElementById('login-email');
@@ -175,15 +176,21 @@ export function initLoginUI() {
     });
   }
 
-  // FIX (pente fino 02/09): "Termos de Uso" e "Política de Privacidade" eram href="#"
-  // sem handler — o clique disparava hashchange → router.js resetava a rota para
-  // "comparar" → como o usuário ainda não está logado, redirecionava para #/login e
-  // APAGAVA o formulário de cadastro em preenchimento. Sem página de termos/privacidade
-  // publicada ainda, o mínimo seguro é neutralizar a navegação (preventDefault).
+  // LGPD (17/09/2026): as páginas de Termos e Política de Privacidade AGORA existem
+  // (termos.html / privacidade.html). Os links abrem em NOVA ABA (target=_blank — o hash
+  // da SPA não muda, então o formulário de cadastro em preenchimento NÃO é mais apagado).
   const linkTermos = document.getElementById('link-termos');
   const linkPrivacidade = document.getElementById('link-privacidade');
-  if (linkTermos) linkTermos.addEventListener('click', (e) => e.preventDefault());
-  if (linkPrivacidade) linkPrivacidade.addEventListener('click', (e) => e.preventDefault());
+  if (linkTermos) {
+    linkTermos.setAttribute('href', 'termos.html');
+    linkTermos.setAttribute('target', '_blank');
+    linkTermos.setAttribute('rel', 'noopener');
+  }
+  if (linkPrivacidade) {
+    linkPrivacidade.setAttribute('href', 'privacidade.html');
+    linkPrivacidade.setAttribute('target', '_blank');
+    linkPrivacidade.setAttribute('rel', 'noopener');
+  }
 
   if (linkBackLoginSignup && signupCard) {
     linkBackLoginSignup.addEventListener('click', (e) => {
@@ -214,6 +221,7 @@ export function initLoginUI() {
         nome,
         consentimento_lgpd: true,
         consentimento_em: new Date().toISOString(),
+        consentimento_versao: LGPD_VERSAO,
         utm_source: origem.utm_source,
         utm_medium: origem.utm_medium,
         utm_campaign: origem.utm_campaign,
@@ -609,9 +617,21 @@ function _aplicarSignupAposLogin() {
   const userId = getCurrentUserId();
   if (!userId) return; // sessão ainda não hidratada — nada a fazer aqui
 
+  // LGPD (17/09/2026): o cadastro aberto registra o aceite no user_metadata do auth.
+  // Replica nos campos PADRONIZADOS do perfil (profiles.consentimento_*), para que os dois
+  // caminhos de cadastro (aberto e convite/onboarding) tenham a mesma prova de consentimento.
+  const meta = getAuth()?.user?.user_metadata || {};
+  const consentimento = meta.consentimento_lgpd === true
+    ? {
+        consentimento_aceito: true,
+        consentimento_em: meta.consentimento_em || new Date().toISOString(),
+        consentimento_versao: meta.consentimento_versao || LGPD_VERSAO,
+      }
+    : {};
+
   import('./supabase.js').then(({ updateUserProfile }) => {
-    updateUserProfile(userId, { nome: dados.nome })
-      .then(() => console.log('[SIGNUP] Nome gravado no perfil:', dados.nome))
+    updateUserProfile(userId, { nome: dados.nome, ...consentimento })
+      .then(() => console.log('[SIGNUP] Nome/consentimento gravados no perfil:', dados.nome))
       .catch((err) => console.warn('⚠️ Falha ao gravar nome pós-signup:', err.message));
   }).catch(() => { /* módulo já carregado — sem ação */ });
 }

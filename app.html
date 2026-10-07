@@ -235,7 +235,7 @@
             <div class="form-field form-field--full">
               <label class="checkbox-label" style="display: flex; gap: 0.5rem; align-items: flex-start; font-size: 0.85rem; color: #666; cursor: pointer;">
                 <input type="checkbox" id="signup-consent" style="margin-top: 0.2rem;" />
-                <span>Li e concordo com os <a href="#" id="link-termos" style="color: #EE4D2D;">Termos de Uso</a> e a <a href="#" id="link-privacidade" style="color: #EE4D2D;">Política de Privacidade</a>, e autorizo a Ruah Tecnologia a entrar em contato a respeito de meus interesses.</span>
+                <span>Li e concordo com os <a href="termos.html" target="_blank" rel="noopener" id="link-termos" style="color: #EE4D2D;">Termos de Uso</a> e a <a href="privacidade.html" target="_blank" rel="noopener" id="link-privacidade" style="color: #EE4D2D;">Política de Privacidade</a>, e autorizo a Ruah Tecnologia a entrar em contato a respeito de meus interesses.</span>
               </label>
             </div>
           </div>
@@ -354,6 +354,16 @@
                 <label class="toggle-label">
                   <input type="checkbox" id="onboarding-outro-precificador" />
                   <span>Já usa outra ferramenta de precificação?</span>
+                </label>
+              </div>
+
+              <!-- LGPD (17/09/2026): consentimento explícito — obrigatório para concluir o cadastro.
+                   O botão "Concluir" só habilita com o aceite marcado (gate em js/onboarding.js). -->
+              <div class="form-field form-field--full">
+                <label class="toggle-label">
+                  <input type="checkbox" id="onboarding-consentimento-lgpd" required />
+                  <span>Autorizo o contato da Ruah Tecnologia e concordo com a
+                    <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</span>
                 </label>
               </div>
             </div>
@@ -860,7 +870,7 @@
     <div class="footer-inner">
       <p class="footer-marca"><strong>RUAH TECNOLOGIA</strong> <span class="footer-sep">—</span> <span class="footer-tagline">O sopro que impulsiona seus negócios</span></p>
       <p class="footer-copy">&copy; 2026 Ruah Tecnologia. Todos os direitos reservados.</p>
-      <p class="footer-site"><a href="https://ruahtecnologia.com.br" target="_blank" rel="noopener">www.ruahtecnologia.com.br</a></p>
+      <p class="footer-site"><a href="https://ruahtecnologia.com.br" target="_blank" rel="noopener">www.ruahtecnologia.com.br</a> <span class="footer-sep">·</span> <a href="privacidade.html">Política de Privacidade</a></p>
     </div>
   </footer>
 

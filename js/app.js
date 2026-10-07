@@ -8,6 +8,7 @@ import { initProdutos }         from './produtos.js';
 import { initAdminPanel }       from './admin.js';
 import { initInteligencia }     from './inteligencia.js';
 import { initOnboarding }       from './onboarding.js';
+import { initConsentBanner }    from './consent-banner.js';
 import { getInputs, setState }  from './state.js';
 import { initSupabase }         from './supabase.js';
 import { initAuth, onAuthChange, isAdmin, isLoggedIn } from './auth.js';
@@ -85,6 +86,9 @@ async function boot() {
         initAdminPanel();
         initInteligencia(PLATAFORMAS);
         initOnboarding(); // ESCOPO 1 (25/08): wizard de cadastro estendido
+        // LGPD (17/09/2026): pede o aceite da Política para quem já tinha cadastro antes dela.
+        // Isolado/defensivo — nunca quebra o boot (ver js/consent-banner.js).
+        initConsentBanner().catch(() => {});
         addLogoutButton();
         isUIInitialized = true;
       }
