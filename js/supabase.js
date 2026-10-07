@@ -8,7 +8,7 @@ let supabaseClient = null;
 export async function initSupabase() {
   if (typeof window.supabase === 'undefined') {
     // Supabase não foi carregado via script tag
-    console.error('❌ Supabase SDK não está carregado. Verifique o script tag no index.html');
+    console.error('❌ Supabase SDK não está carregado. Verifique o script tag no app.html');
     return null;
   }
 
@@ -67,7 +67,7 @@ export async function signOut() {
 
 export async function resetPasswordForEmail(email) {
   const { data, error } = await getSupabase().auth.resetPasswordForEmail(email, {
-    redirectTo: 'https://precificador.ruahtecnologia.com.br/#/recuperar-senha',
+    redirectTo: 'https://precificapro.ruahtecnologia.com.br/app.html#/recuperar-senha',
   });
   if (error) throw error;
   return data;

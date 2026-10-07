@@ -4,7 +4,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const htmlPath = path.join(process.cwd(), 'index.html');
+const htmlPath = path.join(process.cwd(), 'app.html');
 const uiLoginPath = path.join(process.cwd(), 'js', 'ui-login.js');
 
 console.log('🧪 Validando implementação de Signup...\n');
@@ -67,7 +67,7 @@ console.log(`━━━━━━━━━━━━━━━━━━━━━━�
 if (totalPassed === totalChecks) {
   console.log(`✅ Todas as validações passaram! (${totalPassed}/${totalChecks})`);
   console.log(`\n🚀 Fluxo de signup pronto para testes manuais:`);
-  console.log(`   1. Abra: https://precificador.ruahtecnologia.com.br`);
+  console.log(`   1. Abra: https://precificapro.ruahtecnologia.com.br/app.html`);
   console.log(`   2. Clique em "Criar conta"`);
   console.log(`   3. Preencha: email + senha (mín 6 chars) + confirmar senha`);
   console.log(`   4. Clique em "Criar conta"`);

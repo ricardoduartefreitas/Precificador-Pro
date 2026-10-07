@@ -4,11 +4,17 @@
   <meta charset="utf-8">
   <title>Redirecionando...</title>
   <script>
-    // SPA fallback para o GitHub Pages:
-    // rotas como /auth/confirm?token_hash=... não existem no servidor estático —
-    // este 404.html preserva o query/hash e redireciona para o index.html,
-    // onde o app lê o token do convite e mostra o aceite.
-    var destino = '/' + location.search + location.hash;
+    // SPA fallback para o GitHub Pages.
+    // Regra geral: rota desconhecida → raiz (a LP é a porta de entrada do site).
+    // Exceção: links de e-mail do Supabase (recuperação de senha, convite) chegam
+    // como caminho real (ex.: /auth/confirm?token_hash=...&type=invite) que não
+    // existe no servidor estático — esses preservam query/hash e vão para o app,
+    // que é quem sabe ler o token e completar o fluxo.
+    var qs = location.search || '';
+    var hash = location.hash || '';
+    var pareceAuth = /token_hash=|token=|type=(invite|recovery)/.test(qs + hash)
+      || location.pathname.indexOf('/auth/') !== -1;
+    var destino = pareceAuth ? ('/app.html' + qs + hash) : '/';
     location.replace(destino);
   </script>
 </head>

@@ -9,7 +9,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 
-const htmlPath = path.join(root, 'index.html');
+const htmlPath = path.join(root, 'app.html');
 const html = fs.readFileSync(htmlPath, 'utf-8');
 
 // Cria um DOM virtual

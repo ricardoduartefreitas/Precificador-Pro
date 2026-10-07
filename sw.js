@@ -2,11 +2,11 @@
 // Responsabilidade: cache offline dos assets estáticos (Stale-While-Revalidate — o psp-v6!)
 // Atualizar APP_SHELL ao adicionar novos arquivos ao projeto
 
-const CACHE_NAME = 'psp-v21';
+const CACHE_NAME = 'psp-v22';
 
+// A LP (./ = index.html) não entra aqui — ela é outro documento, fora do app shell.
 const APP_SHELL = [
-  './',
-  './index.html',
+  './app.html',
   './css/styles.css',
   './js/app.js',
   './js/state.js',
@@ -67,7 +67,13 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
           return response;
         })
-        .catch(() => caches.match('./index.html'))
+        .catch(() => {
+          // Fallback offline só para rotas do app — a LP não está no precache
+          // (não existe cache seguro pra oferecer offline se ela nunca foi visitada).
+          const isApp = event.request.url.indexOf('app.html') !== -1;
+          if (isApp) return caches.match('./app.html');
+          return caches.match(event.request).then((cached) => cached || Response.error());
+        })
     );
     return;
   }
