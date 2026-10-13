@@ -26,3 +26,6 @@ Thumbs.db
 
 # saída gerada pela ferramenta graphify (não versionar)
 graphify-out/
+
+# site montado pelo workflow (só o que é público vira site)
+_site/
